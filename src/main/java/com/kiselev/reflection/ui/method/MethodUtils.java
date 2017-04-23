@@ -19,8 +19,7 @@ public class MethodUtils {
 
         List<String> methodList = new ArrayList<String>();
         for (Method method : clazz.getDeclaredMethods()) {
-            boolean isImplementation = clazz.isInterface() || !isRealization(method);
-            methodList.add(getMethod(method, isImplementation));
+            methodList.add(getMethod(method));
         }
 
         if (!methodList.isEmpty()) {
@@ -30,11 +29,7 @@ public class MethodUtils {
         return methods;
     }
 
-    private boolean isRealization(Method method) {
-        return !(Modifier.isAbstract(method.getModifiers()) || Modifier.isNative(method.getModifiers()));
-    }
-
-    private String getMethod(Method method, boolean isImplementation) {
+    private String getMethod(Method method) {
         String methodSignature = "";
 
         String annotations = new AnnotationsUtils().getAnnotations(method);
@@ -53,10 +48,14 @@ public class MethodUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
-        String implementation = isImplementation ? ";" : " {\n" + indent + "}";
+        String body = isMethodRealization(method) ? " {\n" + indent + "}" : ";";
 
-        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + exceptions + implementation;
+        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + exceptions + body;
 
         return methodSignature;
+    }
+
+    private boolean isMethodRealization(Method method) {
+        return !Modifier.isAbstract(method.getModifiers()) && !Modifier.isNative(method.getModifiers());
     }
 }
