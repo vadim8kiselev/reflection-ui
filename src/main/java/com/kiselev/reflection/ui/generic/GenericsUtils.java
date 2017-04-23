@@ -56,7 +56,10 @@ public class GenericsUtils {
             ParameterizedTypeImpl parameterizedType = ParameterizedTypeImpl.class.cast(type);
 
             String parameterizedTypeTypeName = parameterizedType.getRawType().getSimpleName();
-            String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType)) + ">";
+
+            String parametrizedTypeArguments = String.join(", ", getGenericArguments(parameterizedType));
+
+            String genericArguments = "<" + (parametrizedTypeArguments.isEmpty() ? "?" : parametrizedTypeArguments) + ">";
 
             boundType = parameterizedTypeTypeName + genericArguments;
         }
