@@ -17,7 +17,7 @@ public class MethodUtils {
     public String getMethods(Class<?> clazz) {
         String methods = "";
 
-        List<String> methodList = new ArrayList<String>();
+        List<String> methodList = new ArrayList<>();
         for (Method method : clazz.getDeclaredMethods()) {
             methodList.add(getMethod(method));
         }
@@ -36,6 +36,8 @@ public class MethodUtils {
 
         String indent = new IndentUtils().getIndent(method);
 
+        String isDefault = method.isDefault() ? "default " : "";
+
         String modifiers = new ModifiersUtils().getModifiers(method.getModifiers());
 
         String generics = new GenericsUtils().getGenerics(method);
@@ -50,7 +52,7 @@ public class MethodUtils {
 
         String body = isMethodRealization(method) ? " {\n" + indent + "}" : ";";
 
-        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + exceptions + body;
+        methodSignature += annotations + indent + isDefault + modifiers + generics + returnType + " " + methodName + arguments + exceptions + body;
 
         return methodSignature;
     }
