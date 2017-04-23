@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.generic;
 
+import com.kiselev.reflection.ui.name.NameUtils;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.GenericDeclaration;
@@ -19,7 +20,7 @@ public class GenericsUtils {
         TypeVariable<?>[] typeParameters = genericDeclaration.getTypeParameters();
         for (TypeVariable parameter : typeParameters) {
             String bounds = String.join(" & ", getBounds(parameter));
-            generics.add(parameter.getName() + (!bounds.isEmpty() ? " extends " + bounds : "" ));
+            generics.add(parameter.getName() + (!bounds.isEmpty() ? " extends " + bounds : ""));
         }
 
         return (typeParameters.length != 0) ? "<" + String.join(", ", generics) + "> " : whitespace;
@@ -42,7 +43,11 @@ public class GenericsUtils {
         String whitespace = (type instanceof Class) ? " " : "";
 
         if (type instanceof Class) {
-            boundType = Class.class.cast(type).getSimpleName();
+            if (Class.class.cast(type).isSynthetic()) {
+                boundType = new NameUtils().getTypeName(Class.class.cast(type));
+            } else {
+                boundType = Class.class.cast(type).getSimpleName();
+            }
 
         } else if (type instanceof TypeVariable) {
             boundType = TypeVariable.class.cast(type).getName();
