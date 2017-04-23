@@ -29,7 +29,11 @@ public class MethodUtils {
         return methods;
     }
 
-    private String getMethod(Method method) {
+    private boolean isRealization(Method method) {
+        return !(Modifier.isAbstract(method.getModifiers()) || Modifier.isNative(method.getModifiers()));
+    }
+
+    private String getMethod(Method method, boolean isImplementation) {
         String methodSignature = "";
 
         String annotations = new AnnotationsUtils().getAnnotations(method);
@@ -52,7 +56,7 @@ public class MethodUtils {
 
         String body = isMethodRealization(method) ? " {\n" + indent + "}" : ";";
 
-        methodSignature += annotations + indent + isDefault + modifiers + generics + returnType + " " + methodName + arguments + exceptions + body;
+        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + exceptions + body;
 
         return methodSignature;
     }
