@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.field;
 
 import com.kiselev.reflection.ui.annotation.AnnotationsUtils;
+import com.kiselev.reflection.ui.generic.GenericsUtils;
 import com.kiselev.reflection.ui.indent.IndentUtils;
 import com.kiselev.reflection.ui.modifier.ModifiersUtils;
 
@@ -33,9 +34,11 @@ public class FieldUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(field.getModifiers());
 
+        String type = new GenericsUtils().resolveType(field.getGenericType());
+
         String fieldName = field.getName();
 
-        fieldSignature += annotations + indent + modifiers + fieldName + ";";
+        fieldSignature += annotations + indent + modifiers + type + " " + fieldName + ";";
 
         return fieldSignature;
     }
