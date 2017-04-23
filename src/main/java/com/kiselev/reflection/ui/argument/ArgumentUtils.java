@@ -18,7 +18,7 @@ public class ArgumentUtils {
             strings.add(getArgument(parameter));
         }
 
-        arguments += "(" + String.join(", ", strings) + ") ";
+        arguments += "(" + String.join(", ", strings) + ")";
 
         return arguments;
     }

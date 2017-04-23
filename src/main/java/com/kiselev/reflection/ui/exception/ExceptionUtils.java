@@ -17,7 +17,7 @@ public class ExceptionUtils {
         }
 
         if (!exceptionTypes.isEmpty()) {
-            exceptions += "throws " + String.join(", ", exceptionTypes) + " ";
+            exceptions += " throws " + String.join(", ", exceptionTypes);
         }
 
         return exceptions;

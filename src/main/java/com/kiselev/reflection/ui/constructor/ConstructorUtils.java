@@ -45,7 +45,7 @@ public class ConstructorUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(constructor);
 
-        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + "{\n" + indent + "}";
+        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + " {\n" + indent + "}";
 
         return constructorSignature;
     }

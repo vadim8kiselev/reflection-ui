@@ -8,6 +8,7 @@ import com.kiselev.reflection.ui.indent.IndentUtils;
 import com.kiselev.reflection.ui.modifier.ModifiersUtils;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,8 @@ public class MethodUtils {
 
         List<String> methodList = new ArrayList<String>();
         for (Method method : clazz.getDeclaredMethods()) {
-            methodList.add(getMethod(method));
+            boolean isImplementation = getRealization(clazz, method);
+            methodList.add(getMethod(method, isImplementation));
         }
 
         if (!methodList.isEmpty()) {
@@ -28,7 +30,16 @@ public class MethodUtils {
         return methods;
     }
 
-    private String getMethod(Method method) {
+    private boolean getRealization(Class<?> clazz, Method method) {
+        if (clazz.isInterface()) {
+            return true;
+        } else if (Modifier.isNative(method.getModifiers()) || Modifier.isAbstract(method.getModifiers())) {
+            return true;
+        }
+        return false;
+    }
+
+    private String getMethod(Method method, boolean isImplementation) {
         String methodSignature = "";
 
         String annotations = new AnnotationsUtils().getAnnotations(method);
@@ -47,7 +58,9 @@ public class MethodUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
-        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + exceptions + "{\n" + indent + "}";
+        String implementation = isImplementation ? ";" : " {\n" + indent + "}";
+
+        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + exceptions + implementation;
 
         return methodSignature;
     }
