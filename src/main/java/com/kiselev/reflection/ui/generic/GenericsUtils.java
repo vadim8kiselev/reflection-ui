@@ -40,8 +40,6 @@ public class GenericsUtils {
     public String resolveType(Type type) {
         String boundType = "";
 
-        String whitespace = (type instanceof Class) ? " " : "";
-
         if (type instanceof Class) {
             Class clazz = Class.class.cast(type);
             if (clazz.isSynthetic()) {
