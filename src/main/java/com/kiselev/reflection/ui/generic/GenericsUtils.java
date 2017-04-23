@@ -3,10 +3,7 @@ package com.kiselev.reflection.ui.generic;
 import com.kiselev.reflection.ui.name.NameUtils;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
-import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +53,7 @@ public class GenericsUtils {
 
             String parameterizedTypeTypeName = parameterizedType.getRawType().getSimpleName();
 
-            String parametrizedTypeArguments = String.join(", ", getGenericArguments(parameterizedType));
-
-            String genericArguments = "<" + (parametrizedTypeArguments.isEmpty() ? "?" : parametrizedTypeArguments) + ">";
+            String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType)) + ">";
 
             boundType = parameterizedTypeTypeName + genericArguments;
         }
@@ -71,9 +66,30 @@ public class GenericsUtils {
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         for (Type actualTypeArgument : actualTypeArguments) {
-            genericArguments.add(resolveType(actualTypeArgument));
+            try {
+                WildcardType wildcardType = WildcardType.class.cast(actualTypeArgument);
+                String wildcard = "?";
+                wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends");
+                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super");
+                genericArguments.add(wildcard);
+            } catch (ClassCastException exception) {
+                genericArguments.add(resolveType(actualTypeArgument));
+            }
         }
 
         return genericArguments;
+    }
+
+    public String getWildCardsBound(Type[] types, String boundCase) {
+        String wildcard = "";
+        if (types.length != 0) {
+            wildcard = " " + boundCase + " ";
+            List<String> bounds = new ArrayList<>();
+            for (Type bound : types) {
+                bounds.add(resolveType(bound));
+            }
+            wildcard += String.join(" & ", bounds);
+        }
+        return wildcard;
     }
 }
