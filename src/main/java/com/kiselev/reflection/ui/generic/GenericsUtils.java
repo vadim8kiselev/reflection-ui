@@ -43,10 +43,11 @@ public class GenericsUtils {
         String whitespace = (type instanceof Class) ? " " : "";
 
         if (type instanceof Class) {
-            if (Class.class.cast(type).isSynthetic()) {
-                boundType = new NameUtils().getTypeName(Class.class.cast(type));
+            Class clazz = Class.class.cast(type);
+            if (clazz.isSynthetic()) {
+                boundType = new NameUtils().getTypeName(clazz);
             } else {
-                boundType = Class.class.cast(type).getSimpleName();
+                boundType = clazz.getSimpleName();
             }
 
         } else if (type instanceof TypeVariable) {

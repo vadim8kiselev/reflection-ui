@@ -19,7 +19,7 @@ public class MethodUtils {
 
         List<String> methodList = new ArrayList<String>();
         for (Method method : clazz.getDeclaredMethods()) {
-            boolean isImplementation = getRealization(clazz, method);
+            boolean isImplementation = clazz.isInterface() || !isRealization(method);
             methodList.add(getMethod(method, isImplementation));
         }
 
@@ -30,13 +30,8 @@ public class MethodUtils {
         return methods;
     }
 
-    private boolean getRealization(Class<?> clazz, Method method) {
-        if (clazz.isInterface()) {
-            return true;
-        } else if (Modifier.isNative(method.getModifiers()) || Modifier.isAbstract(method.getModifiers())) {
-            return true;
-        }
-        return false;
+    private boolean isRealization(Method method) {
+        return !(Modifier.isAbstract(method.getModifiers()) || Modifier.isNative(method.getModifiers()));
     }
 
     private String getMethod(Method method, boolean isImplementation) {
