@@ -64,28 +64,8 @@ public class AnnotationsUtils {
 
             for (Method method : methods) {
                 method.setAccessible(true);
-
                 Object value = method.invoke(annotation);
-                String fullValue = value.toString();
-
-                if (value.getClass().isArray()) {
-                    List<String> listValue = new ArrayList<String>();
-                    for (Object arrayValue : getArrayValues(value)) {
-                        if (arrayValue.getClass().isEnum()) {
-                            listValue.add(getEnumValue(arrayValue));
-                        } else {
-                            listValue.add(arrayValue.toString());
-                        }
-                    }
-
-                    fullValue = "[" + String.join(", ", listValue) + "]";
-                }
-
-                if (value.getClass().isEnum()) {
-                    fullValue = getEnumValue(value);
-                }
-
-                map.put(method.getName(), fullValue);
+                map.put(method.getName(), getValue(value));
             }
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -94,8 +74,26 @@ public class AnnotationsUtils {
         return map;
     }
 
-    private String getEnumValue(Object object) {
-        return object.getClass().getSimpleName() + "." + object;
+    private String getValue(Object object) throws NoSuchMethodException {
+        Class<?> clazz = object.getClass();
+        if (clazz.isArray()) {
+            List<String> listValue = new ArrayList<String>();
+            for (Object arrayValue : getArrayValues(object)) {
+                listValue.add(getValue(arrayValue));
+            }
+
+            String value = String.join(", ", listValue);
+            if (listValue.size() == 1) return value;
+            else return "{" + value + "}";
+        }
+
+        if (clazz.isEnum()) return clazz.getSimpleName() + "." + object;
+        if (object instanceof String) return "\"" + object + "\"";
+        if (object instanceof Character) return "\'" + object + "\'";
+        if (object instanceof Number || object instanceof Boolean) return object.toString();
+        if (object instanceof Annotation) return getAnnotation(Annotation.class.cast(object));
+
+        return null;
     }
 
     private Object[] getArrayValues(Object object) {
