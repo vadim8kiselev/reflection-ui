@@ -64,14 +64,25 @@ public class GenericsUtils {
 
         } else if (type instanceof GenericArrayType) {
             GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
-            boundType = genericArrayType.getGenericComponentType().getTypeName();
-            int arrayMeasuring = (genericArrayType.getTypeName().length() - boundType.length())/2;
-            for (int i = 0; i < arrayMeasuring; i++) {
+            boundType = resolveType(genericArrayType.getGenericComponentType());
+
+            for (int index = 0; index < getArrayDimension(genericArrayType); index++) {
                 boundType += "[]";
             }
         }
 
         return boundType;
+    }
+
+    private Integer getArrayDimension(GenericArrayType arrayType) {
+        Integer arrayDimension = 0;
+
+        Type outerType = arrayType;
+        while ((outerType = ((GenericArrayType) outerType).getGenericComponentType()) instanceof GenericArrayType) {
+            arrayDimension++;
+        }
+
+        return arrayDimension;
     }
 
     private List<String> getGenericArguments(ParameterizedTypeImpl parameterizedType) {
