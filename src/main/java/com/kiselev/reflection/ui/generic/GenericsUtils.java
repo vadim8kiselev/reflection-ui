@@ -70,13 +70,13 @@ public class GenericsUtils {
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         for (Type actualTypeArgument : actualTypeArguments) {
-            try {
+            if (actualTypeArgument instanceof WildcardType) {
                 WildcardType wildcardType = WildcardType.class.cast(actualTypeArgument);
                 String wildcard = "?";
                 wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends");
                 wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super");
                 genericArguments.add(wildcard);
-            } catch (ClassCastException exception) {
+            } else {
                 genericArguments.add(resolveType(actualTypeArgument));
             }
         }
