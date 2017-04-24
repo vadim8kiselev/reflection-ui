@@ -75,7 +75,7 @@ public class GenericsUtils {
     }
 
     private Integer getArrayDimension(GenericArrayType arrayType) {
-        Integer arrayDimension = 0;
+        Integer arrayDimension = 1;
 
         Type outerType = arrayType;
         while ((outerType = ((GenericArrayType) outerType).getGenericComponentType()) instanceof GenericArrayType) {
