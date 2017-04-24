@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.argument;
 
-import com.kiselev.reflection.ui.annotation.AnnotationsUtils;
+import com.kiselev.reflection.ui.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.generic.GenericsUtils;
 
 import java.lang.reflect.Executable;
@@ -26,7 +26,7 @@ public class ArgumentUtils {
     private String getArgument(Parameter parameter) {
         String argumentSignature = "";
 
-        String annotation = new AnnotationsUtils().getAnnotations(parameter);
+        String annotation = new AnnotationUtils().getAnnotations(parameter);
 
         String genericType = new GenericsUtils().resolveType(parameter.getParameterizedType());
 

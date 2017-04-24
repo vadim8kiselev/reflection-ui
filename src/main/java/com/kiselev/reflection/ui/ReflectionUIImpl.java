@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui;
 
-import com.kiselev.reflection.ui.annotation.AnnotationsUtils;
+import com.kiselev.reflection.ui.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.classes.ClassUtils;
 import com.kiselev.reflection.ui.constructor.ConstructorUtils;
 import com.kiselev.reflection.ui.field.FieldUtils;
@@ -38,7 +38,7 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String packageName = new PackageUtils().getPackage(clazz);
 
-        String annotations = new AnnotationsUtils().getAnnotations(clazz);
+        String annotations = new AnnotationUtils().getAnnotations(clazz);
 
         String indent = new IndentUtils().getIndent(clazz);
 

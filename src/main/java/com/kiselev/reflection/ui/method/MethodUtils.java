@@ -1,11 +1,12 @@
 package com.kiselev.reflection.ui.method;
 
-import com.kiselev.reflection.ui.annotation.AnnotationsUtils;
+import com.kiselev.reflection.ui.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.argument.ArgumentUtils;
 import com.kiselev.reflection.ui.exception.ExceptionUtils;
 import com.kiselev.reflection.ui.generic.GenericsUtils;
 import com.kiselev.reflection.ui.indent.IndentUtils;
 import com.kiselev.reflection.ui.modifier.ModifiersUtils;
+import com.kiselev.reflection.ui.value.ValueUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -32,7 +33,7 @@ public class MethodUtils {
     private String getMethod(Method method) {
         String methodSignature = "";
 
-        String annotations = new AnnotationsUtils().getAnnotations(method);
+        String annotations = new AnnotationUtils().getAnnotations(method);
 
         String indent = new IndentUtils().getIndent(method);
 
@@ -48,13 +49,29 @@ public class MethodUtils {
 
         String arguments = new ArgumentUtils().getArguments(method);
 
+        String defaultAnnotationValue = getDefaultAnnotationValue(method);
+
         String exceptions = new ExceptionUtils().getExceptions(method);
 
         String body = isMethodRealization(method) ? " {\n" + indent + "}" : ";";
 
-        methodSignature += annotations + indent + isDefault + modifiers + generics + returnType + " " + methodName + arguments + exceptions + body;
+        methodSignature += annotations + indent + isDefault + modifiers + generics + returnType + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
 
         return methodSignature;
+    }
+
+    private String getDefaultAnnotationValue(Method method) {
+        String defaultAnnotationValue = "";
+
+        if (method.getDeclaringClass().isAnnotation()) {
+            String defaultValue = new ValueUtils().getValue(method.getDefaultValue());
+
+            if (defaultValue != null) {
+                defaultAnnotationValue += " default " + defaultValue;
+            }
+        }
+
+        return defaultAnnotationValue;
     }
 
     private boolean isMethodRealization(Method method) {
