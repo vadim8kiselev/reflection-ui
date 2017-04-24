@@ -7,6 +7,7 @@ import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,13 @@ public class GenericsUtils {
             String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType)) + ">";
 
             boundType = parameterizedTypeTypeName + genericArguments;
+        } else if (type instanceof GenericArrayType) {
+            GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
+            boundType = genericArrayType.getGenericComponentType().getTypeName();
+            int arrayMeasuring = (genericArrayType.getTypeName().length() - boundType.length())/2;
+            for (int i = 0; i < arrayMeasuring; i++) {
+                boundType += "[]";
+            }
         }
 
         return boundType;
@@ -84,7 +92,7 @@ public class GenericsUtils {
         return genericArguments;
     }
 
-    public String getWildCardsBound(Type[] types, String boundCase) {
+    private String getWildCardsBound(Type[] types, String boundCase) {
         String wildcard = "";
         if (types.length != 0) {
             wildcard = " " + boundCase + " ";
