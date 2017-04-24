@@ -83,8 +83,11 @@ public class AnnotationsUtils {
             }
 
             String value = String.join(", ", listValue);
-            if (listValue.size() == 1) return value;
-            else return "{" + value + "}";
+            if (listValue.size() == 1) {
+                return value;
+            } else {
+                return "{" + value + "}";
+            }
         }
 
         if (clazz.isEnum()) return clazz.getSimpleName() + "." + object;
