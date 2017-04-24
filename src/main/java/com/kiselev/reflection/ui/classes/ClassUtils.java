@@ -10,7 +10,7 @@ public class ClassUtils {
     public String getClasses(Class<?> clazz) {
         String classes = "";
 
-        List<String> classList = new ArrayList<String>();
+        List<String> classList = new ArrayList<>();
         for (Class<?> declaredClass : clazz.getDeclaredClasses()) {
             classList.add(new ReflectionUIImpl().parseClass(declaredClass));
         }

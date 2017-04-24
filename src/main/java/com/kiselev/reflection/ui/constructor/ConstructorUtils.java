@@ -16,7 +16,7 @@ public class ConstructorUtils {
     public String getConstructors(Class<?> clazz) {
         String constructors = "";
 
-        List<String> constructorList = new ArrayList<String>();
+        List<String> constructorList = new ArrayList<>();
         for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
             constructorList.add(getConstructor(constructor));
         }

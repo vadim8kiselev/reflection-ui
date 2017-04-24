@@ -77,7 +77,7 @@ public class AnnotationsUtils {
     private String getValue(Object object) throws NoSuchMethodException {
         Class<?> clazz = object.getClass();
         if (clazz.isArray()) {
-            List<String> listValue = new ArrayList<String>();
+            List<String> listValue = new ArrayList<>();
             for (Object arrayValue : getArrayValues(object)) {
                 listValue.add(getValue(arrayValue));
             }

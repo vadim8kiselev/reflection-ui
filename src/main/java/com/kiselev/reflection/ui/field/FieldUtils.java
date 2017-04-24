@@ -14,7 +14,7 @@ public class FieldUtils {
     public String getFields(Class<?> clazz) {
         String fields = "";
 
-        List<String> fieldList = new ArrayList<String>();
+        List<String> fieldList = new ArrayList<>();
         for (Field field : clazz.getDeclaredFields()) {
             fieldList.add(getField(field));
         }

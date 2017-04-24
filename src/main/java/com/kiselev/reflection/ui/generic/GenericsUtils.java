@@ -15,7 +15,7 @@ import java.util.List;
 public class GenericsUtils {
 
     public String getGenerics(GenericDeclaration genericDeclaration) {
-        List<String> generics = new ArrayList<String>();
+        List<String> generics = new ArrayList<>();
 
         String whitespace = (genericDeclaration instanceof Class) ? " " : "";
 
@@ -29,7 +29,7 @@ public class GenericsUtils {
     }
 
     private List<String> getBounds(TypeVariable parameter) {
-        List<String> bounds = new ArrayList<String>();
+        List<String> bounds = new ArrayList<>();
         for (Type bound : parameter.getBounds()) {
             String boundType = resolveType(bound);
             if (!boundType.isEmpty()) {
@@ -61,6 +61,7 @@ public class GenericsUtils {
             String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType)) + ">";
 
             boundType = parameterizedTypeTypeName + genericArguments;
+
         } else if (type instanceof GenericArrayType) {
             GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
             boundType = genericArrayType.getGenericComponentType().getTypeName();
@@ -74,7 +75,7 @@ public class GenericsUtils {
     }
 
     private List<String> getGenericArguments(ParameterizedTypeImpl parameterizedType) {
-        List<String> genericArguments = new ArrayList<String>();
+        List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         for (Type actualTypeArgument : actualTypeArguments) {

@@ -10,7 +10,7 @@ public class ExceptionUtils {
     public String getExceptions(Executable executable) {
         String exceptions = "";
 
-        List<String> exceptionTypes = new ArrayList<String>();
+        List<String> exceptionTypes = new ArrayList<>();
 
         for (Type type : executable.getGenericExceptionTypes()) {
             exceptionTypes.add(Class.class.cast(type).getSimpleName());
