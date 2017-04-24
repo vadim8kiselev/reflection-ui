@@ -30,10 +30,16 @@ public class ArgumentUtils {
 
         String genericType = new GenericsUtils().resolveType(parameter.getParameterizedType());
 
+        genericType = parameter.isVarArgs() ? convertToVarArg(genericType) : genericType;
+
         String parameterName = parameter.getName(); // TODO : -parameters check
 
         argumentSignature += annotation + genericType + " " + parameterName;
 
         return argumentSignature;
+    }
+
+    private String convertToVarArg(String type) {
+        return type.substring(0, type.length() - 2) + "...";
     }
 }
