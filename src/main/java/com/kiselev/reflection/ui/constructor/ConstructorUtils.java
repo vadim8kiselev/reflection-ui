@@ -6,6 +6,7 @@ import com.kiselev.reflection.ui.exception.ExceptionUtils;
 import com.kiselev.reflection.ui.generic.GenericsUtils;
 import com.kiselev.reflection.ui.indent.IndentUtils;
 import com.kiselev.reflection.ui.modifier.ModifiersUtils;
+import com.kiselev.reflection.ui.name.NameUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ConstructorUtils {
 
         String generics = new GenericsUtils().getGenerics(constructor);
 
-        String constructorName = constructor.getDeclaringClass().getSimpleName();
+        String constructorName = new NameUtils().getTypeName(constructor.getDeclaringClass());
 
         String arguments = new ArgumentUtils().getArguments(constructor);
 
