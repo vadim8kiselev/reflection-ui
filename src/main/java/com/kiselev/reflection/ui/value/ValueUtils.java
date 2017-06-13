@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.value;
 
 import com.kiselev.reflection.ui.annotation.AnnotationUtils;
+import com.kiselev.reflection.ui.name.NameUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -31,6 +32,7 @@ public class ValueUtils {
             if (object instanceof Character) return "\'" + object + "\'";
             if (object instanceof Number || object instanceof Boolean) return object.toString();
             if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(Annotation.class.cast(object));
+            if (object instanceof Class) return new NameUtils().getTypeName(Class.class.cast(object)) + ".class";
         }
 
         return null;

@@ -1,13 +1,12 @@
 package com.kiselev.reflection.ui.generic;
 
 import com.kiselev.reflection.ui.name.NameUtils;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +43,15 @@ public class GenericsUtils {
 
         if (type instanceof Class) {
             Class clazz = Class.class.cast(type);
-            if (clazz.isSynthetic()) {
-                boundType = new NameUtils().getTypeName(clazz);
-            } else {
-                boundType = clazz.getSimpleName();
-            }
+            boundType = new NameUtils().getTypeName(clazz);
 
         } else if (type instanceof TypeVariable) {
             boundType = TypeVariable.class.cast(type).getName();
 
         } else if (type instanceof ParameterizedType) {
-            ParameterizedTypeImpl parameterizedType = ParameterizedTypeImpl.class.cast(type);
+            ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
 
-            String parameterizedTypeTypeName = parameterizedType.getRawType().getSimpleName();
+            String parameterizedTypeTypeName = new NameUtils().getTypeName(Class.class.cast(parameterizedType.getRawType()));
 
             String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType)) + ">";
 
@@ -85,7 +80,7 @@ public class GenericsUtils {
         return arrayDimension;
     }
 
-    private List<String> getGenericArguments(ParameterizedTypeImpl parameterizedType) {
+    private List<String> getGenericArguments(ParameterizedType parameterizedType) {
         List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
