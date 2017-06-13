@@ -2,11 +2,11 @@ package com.kiselev.reflection.ui.impl.generic;
 
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
