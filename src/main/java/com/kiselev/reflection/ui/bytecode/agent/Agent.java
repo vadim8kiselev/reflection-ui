@@ -11,7 +11,11 @@ public class Agent {
         try {
             instrumentation.addTransformer(new Transformer(), true);
             Class[] allLoadedClasses = instrumentation.getAllLoadedClasses();
-            instrumentation.retransformClasses(allLoadedClasses);
+            for (Class loadedClass : allLoadedClasses) {
+                if (!loadedClass.isArray()) {
+                    instrumentation.retransformClasses(loadedClass);
+                }
+            }
         } catch (Exception exception) {
             // sin
         }

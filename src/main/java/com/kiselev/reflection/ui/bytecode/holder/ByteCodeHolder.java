@@ -2,6 +2,8 @@ package com.kiselev.reflection.ui.bytecode.holder;
 
 import com.kiselev.reflection.ui.bytecode.assembly.AgentAssembler;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,12 +21,38 @@ public class ByteCodeHolder {
     public static String getDecompilledByteCode(Class<?> clazz) {
         loadByteCode(clazz);
         byte[] byteCode = byteCodeMap.get(clazz);
-        return byteCode != null ? new String(byteCode) : "empty";
+
+        String classFileName = getTypeName(clazz) + ".class";
+        writeByteCodeToFile(classFileName, byteCode);
+
+        return "Bytecode was saved to file with name " + classFileName;
     }
 
     private static void loadByteCode(Class<?> clazz) {
         if (!AgentAssembler.isAssembled()) {
             AgentAssembler.assembly();
+        }
+    }
+
+    private static String getTypeName(Class<?> clazz) {
+        String typeName = clazz.getSimpleName();
+
+        if ("".equals(typeName)) {
+            typeName = clazz.getName().substring(clazz.getName().lastIndexOf('.') + 1);
+        }
+
+        return typeName;
+    }
+
+    private static void writeByteCodeToFile(String fileName, byte[] byteCode) {
+        if (fileName != null && byteCode != null) {
+            try (FileOutputStream stream = new FileOutputStream(fileName)) {
+                stream.write(byteCode);
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
+        } else {
+            throw new RuntimeException("Empty file name or byte code");
         }
     }
 }
