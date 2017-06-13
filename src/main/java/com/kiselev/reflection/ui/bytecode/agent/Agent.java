@@ -10,8 +10,11 @@ public class Agent {
     public static void agentmain(String args, Instrumentation instrumentation) {
         try {
             instrumentation.addTransformer(new Transformer(), true);
-            Class[] allLoadedClasses = instrumentation.getAllLoadedClasses();
-            instrumentation.retransformClasses(allLoadedClasses);
+            for (Class loadedClass : instrumentation.getAllLoadedClasses()) {
+                if (!loadedClass.isArray()) {
+                    instrumentation.retransformClasses(loadedClass);
+                }
+            }
         } catch (Exception exception) {
             // sin
         }
