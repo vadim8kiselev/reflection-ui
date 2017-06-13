@@ -41,6 +41,9 @@ public class AgentBuilder {
         }
 
         public Builder addManifest(String manifestName) {
+            if (!manifestName.endsWith(Constants.Suffix.MANIFEST_SUFFIX)) {
+                manifestName = manifestName + Constants.Suffix.MANIFEST_SUFFIX;
+            }
             this.manifestName = manifestName;
             return this;
         }
