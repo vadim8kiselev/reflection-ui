@@ -1,4 +1,4 @@
-package com.kiselev.reflection.ui.bytecode.assembly;
+package com.kiselev.reflection.ui.bytecode.assembly.attach;
 
 import com.sun.tools.attach.AgentInitializationException;
 import com.sun.tools.attach.AgentLoadException;
@@ -13,7 +13,7 @@ import java.lang.management.ManagementFactory;
  */
 public class AgentAttacher {
 
-    static void attach(String agentPath) throws IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException {
+    public static void attach(String agentPath) throws IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException {
         String virtualMachineProcessId = getVirtualMachineProcessId();
         VirtualMachine virtualMachine = VirtualMachine.attach(virtualMachineProcessId);
         virtualMachine.loadAgent(agentPath, "");
