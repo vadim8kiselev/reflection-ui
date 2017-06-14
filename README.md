@@ -1,2 +1,2 @@
 # reflection-ui
-Simple util for displaying Java meta-data
+Util for displaying Java decompilled bytecode of static or dynamic generated classes
