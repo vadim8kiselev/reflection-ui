@@ -12,15 +12,15 @@ import java.util.Map;
  */
 public class ByteCodeHolder {
 
-    private static Map<Class<?>, byte[]> byteCodeMap = new HashMap<>();
+    private static Map<String, byte[]> byteCodeMap = new HashMap<>();
 
-    public static void uploadByteCodeForClass(Class<?> clazz, byte[] byteCode) {
-        byteCodeMap.put(clazz, byteCode);
+    public static void uploadByteCodeForClass(String className, byte[] byteCode) {
+        byteCodeMap.put(className, byteCode);
     }
 
     public static String getDecompilledByteCode(Class<?> clazz) {
-        loadByteCode(clazz);
-        byte[] byteCode = byteCodeMap.get(clazz);
+        loadByteCode();
+        byte[] byteCode = byteCodeMap.get(clazz.getName());
 
         String classFileName = getTypeName(clazz) + ".class";
         writeByteCodeToFile(classFileName, byteCode);
@@ -28,7 +28,7 @@ public class ByteCodeHolder {
         return "Bytecode was saved to file with name " + classFileName;
     }
 
-    private static void loadByteCode(Class<?> clazz) {
+    private static void loadByteCode() {
         if (!AgentAssembler.isAssembled()) {
             AgentAssembler.assembly();
         }

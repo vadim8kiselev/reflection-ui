@@ -18,22 +18,11 @@ public class Transformer implements ClassFileTransformer {
                             ProtectionDomain protectionDomain,
                             byte[] byteCode) throws IllegalClassFormatException {
 
-        Class<?> clazz = getClassByName(transformClassName(className));
-        if (clazz != null) {
-            ByteCodeHolder.uploadByteCodeForClass(clazz, byteCode);
-        }
-        return null;
+        ByteCodeHolder.uploadByteCodeForClass(transformClassName(className), byteCode);
+        return byteCode;
     }
 
     private String transformClassName(String canonicalClassName) {
         return canonicalClassName.replace("/", ".");
-    }
-
-    private Class<?> getClassByName(String className) {
-        try {
-            return Class.forName(className);
-        } catch (Exception exception) {
-            return null;
-        }
     }
 }

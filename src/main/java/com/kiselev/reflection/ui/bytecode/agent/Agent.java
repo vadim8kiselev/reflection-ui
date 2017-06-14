@@ -16,6 +16,7 @@ public class Agent {
                     instrumentation.retransformClasses(loadedClass);
                 }
             }
+
         } catch (Exception exception) {
             // sin
         }
