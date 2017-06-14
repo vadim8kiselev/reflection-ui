@@ -11,6 +11,11 @@ public class Constants {
         public static final String JAR_C_FLAG = "-C";
     }
 
+    public static class Properties {
+
+        public static final String HOME_DIR = "user.dir";
+    }
+
     public static class Command {
 
         public static final String JAR_EXE_COMMAND = "\""

@@ -79,7 +79,7 @@ public class AgentBuilder {
         }
 
         private String convertManifestPath() {
-            URL resource = getClass().getClassLoader().getResource("META-INF/" + manifestName);
+            URL resource = getClass().getClassLoader().getResource("META-INF" + File.separator + manifestName);
             if (resource == null) {
                 throw new RuntimeException("Manifest file cannot be null");
             }
@@ -106,7 +106,7 @@ public class AgentBuilder {
         }
 
         private String retrieveAgentPath() {
-            String agentJarPath = System.getProperty("user.dir") + File.separator + agentName;
+            String agentJarPath = System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
             waitForCreationOfFile(agentJarPath);
             return agentJarPath;
         }
