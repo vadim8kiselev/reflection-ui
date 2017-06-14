@@ -4,7 +4,9 @@ import com.kiselev.reflection.ui.bytecode.assembly.AgentAssembler;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +20,12 @@ public class ByteCodeHolder {
         byteCodeMap.put(className, byteCode);
     }
 
+    public static List<String> getClassesNamesForByteCode() {
+        return new ArrayList<>(byteCodeMap.keySet());
+    }
+
     public static String getDecompilledByteCode(Class<?> clazz) {
+        uploadByteCodeForClass(clazz.getName(), null);
         loadByteCode();
         byte[] byteCode = byteCodeMap.get(clazz.getName());
 
