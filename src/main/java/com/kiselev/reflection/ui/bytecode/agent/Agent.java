@@ -14,10 +14,9 @@ public class Agent {
         try {
             instrumentation.addTransformer(new Transformer(), true);
             Class[] allLoadedClasses = instrumentation.getAllLoadedClasses();
-            List<String> neededClasses = ByteCodeHolder.getClassesNamesForByteCode();
 
             for (Class loadedClass : allLoadedClasses) {
-                if (neededClasses.contains(loadedClass.getName())) {
+                if (!loadedClass.isArray()) {
                     instrumentation.retransformClasses(loadedClass);
                 }
             }
