@@ -1,9 +1,6 @@
 package com.kiselev.reflection.ui.bytecode.agent;
 
-import com.kiselev.reflection.ui.bytecode.holder.ByteCodeHolder;
-
 import java.lang.instrument.Instrumentation;
-import java.util.List;
 
 /**
  * Created by Vadim Kiselev on 6/12/2017.
@@ -20,7 +17,6 @@ public class Agent {
                     instrumentation.retransformClasses(loadedClass);
                 }
             }
-
         } catch (Exception exception) {
             // sin
         }
