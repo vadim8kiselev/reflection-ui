@@ -24,19 +24,14 @@ public class ByteCodeHolder {
     }
 
     public static String getDecompilledByteCode(Class<?> clazz) {
-        loadByteCode();
-
-        byte[] byteCode = byteCodeMap.get(clazz.getName());
-
-        String classFileName = getClassFileName(clazz);
-        writeByteCodeToFile(classFileName, byteCode);
-        return "Bytecode was saved to file with name " + classFileName;
-    }
-
-    private static void loadByteCode() {
         if (!AgentAssembler.isAssembled()) {
             AgentAssembler.assembly();
         }
+
+        String classFileName = getClassFileName(clazz);
+        byte[] byteCode = byteCodeMap.get(clazz.getName());
+        writeByteCodeToFile(classFileName, byteCode);
+        return "Bytecode was saved to file with name " + classFileName;
     }
 
     private static String getClassFileName(Class<?> clazz) {
