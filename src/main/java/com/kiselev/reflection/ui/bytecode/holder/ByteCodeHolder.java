@@ -2,17 +2,13 @@ package com.kiselev.reflection.ui.bytecode.holder;
 
 import com.kiselev.reflection.ui.bytecode.assembly.AgentAssembler;
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
-import com.sun.org.apache.regexp.internal.RE;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-<<<<<<< Updated upstream
-=======
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
->>>>>>> Stashed changes
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,27 +24,15 @@ public class ByteCodeHolder {
     }
 
     public static String getDecompilledByteCode(Class<?> clazz) {
-<<<<<<< Updated upstream
-        if (!AgentAssembler.isAssembled()) {
-            AgentAssembler.assembly();
-        }
-
-        String classFileName = getTypeName(clazz) + ".class";
-        byte[] byteCode = byteCodeMap.get(clazz.getName());
-=======
         loadByteCode();
+
         byte[] byteCode = byteCodeMap.get(clazz.getName());
 
         String classFileName = getClassFileName(clazz);
->>>>>>> Stashed changes
         writeByteCodeToFile(classFileName, byteCode);
         return "Bytecode was saved to file with name " + classFileName;
     }
 
-<<<<<<< Updated upstream
-    private static String getTypeName(Class<?> clazz) {
-        String typeName = clazz.getSimpleName();
-=======
     private static void loadByteCode() {
         if (!AgentAssembler.isAssembled()) {
             AgentAssembler.assembly();
@@ -65,7 +49,6 @@ public class ByteCodeHolder {
         String path = System.getProperty(Constants.Properties.HOME_DIR) + File.separator
                 + classFileName.substring(0, classFileName.lastIndexOf(File.separator));
         Path directoryPath = Paths.get(path);
->>>>>>> Stashed changes
 
         try {
             Files.createDirectories(directoryPath).toFile();
@@ -73,7 +56,6 @@ public class ByteCodeHolder {
             throw new RuntimeException(exception);
         }
     }
-
 
     private static void writeByteCodeToFile(String fileName, byte[] byteCode) {
         if (fileName != null && byteCode != null) {
