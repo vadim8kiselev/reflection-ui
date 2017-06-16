@@ -79,7 +79,7 @@ public class AgentBuilder {
         }
 
         private String convertManifestPath() {
-            URL resource = getClass().getClassLoader().getResource("META-INF" + File.separator + manifestName);
+            URL resource = getClass().getClassLoader().getResource("META-INF" + File.separatorChar + manifestName);
             if (resource == null) {
                 throw new RuntimeException("Manifest file cannot be null");
             }

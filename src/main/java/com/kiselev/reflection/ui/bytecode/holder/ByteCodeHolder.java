@@ -6,6 +6,8 @@ import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +21,8 @@ public class ByteCodeHolder {
 
     private static Map<String, byte[]> byteCodeMap = new HashMap<>();
 
+    private static Instrumentation instrumentation;
+
     public static void uploadByteCodeForClass(String className, byte[] byteCode) {
         byteCodeMap.put(className, byteCode);
     }
@@ -27,11 +31,24 @@ public class ByteCodeHolder {
         if (!AgentAssembler.isAssembled()) {
             AgentAssembler.assembly();
         }
+        retransformationClass(clazz);
 
         String classFileName = getClassFileName(clazz);
         byte[] byteCode = byteCodeMap.get(clazz.getName());
         writeByteCodeToFile(classFileName, byteCode);
         return "Bytecode was saved to file with name " + classFileName;
+    }
+
+    public static void registerInstrumentation(Instrumentation instrument) {
+        instrumentation = instrument;
+    }
+
+    private static void retransformationClass(Class<?> clazz) {
+        try {
+            instrumentation.retransformClasses(clazz);
+        } catch (UnmodifiableClassException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     private static String getClassFileName(Class<?> clazz) {
