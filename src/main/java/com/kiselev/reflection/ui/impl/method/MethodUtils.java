@@ -53,7 +53,7 @@ public class MethodUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
-        String body = isMethodRealization(method) ? " {\n" + indent + "}" : ";";
+        String body = isMethodRealization(method) ? " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}" : ";";
 
         methodSignature += annotations + indent + isDefault + modifiers + generics + returnType + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
 

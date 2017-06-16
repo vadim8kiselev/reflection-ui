@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.exception;
 
+import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
+
 import java.lang.reflect.Executable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ public class ExceptionUtils {
         List<String> exceptionTypes = new ArrayList<>();
 
         for (Type type : executable.getGenericExceptionTypes()) {
-            exceptionTypes.add(Class.class.cast(type).getSimpleName());
+            exceptionTypes.add(new GenericsUtils().resolveType(type));
         }
 
         if (!exceptionTypes.isEmpty()) {
