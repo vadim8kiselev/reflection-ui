@@ -21,8 +21,6 @@ public class ByteCodeHolder {
 
     private static Map<String, byte[]> byteCodeMap = new HashMap<>();
 
-    private static Instrumentation instrumentation;
-
     public static void uploadByteCodeForClass(String className, byte[] byteCode) {
         byteCodeMap.put(className, byteCode);
     }
@@ -31,7 +29,6 @@ public class ByteCodeHolder {
         if (!AgentAssembler.isAssembled()) {
             AgentAssembler.assembly();
         }
-        retransformationClass(clazz);
 
         String classFileName = getClassFileName(clazz);
         byte[] byteCode = byteCodeMap.get(clazz.getName());
@@ -39,17 +36,6 @@ public class ByteCodeHolder {
         return "Bytecode was saved to file with name " + classFileName;
     }
 
-    public static void registerInstrumentation(Instrumentation instrument) {
-        instrumentation = instrument;
-    }
-
-    private static void retransformationClass(Class<?> clazz) {
-        try {
-            instrumentation.retransformClasses(clazz);
-        } catch (UnmodifiableClassException exception) {
-            throw new RuntimeException(exception);
-        }
-    }
 
     private static String getClassFileName(Class<?> clazz) {
         String classFileName = "classes" + File.separator + clazz.getName().replace(".", File.separator);
