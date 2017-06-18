@@ -11,6 +11,7 @@ import com.kiselev.reflection.ui.impl.value.ValueUtils;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MethodUtils {
@@ -44,6 +45,7 @@ public class MethodUtils {
         String generics = new GenericsUtils().getGenerics(method, method.getDeclaringClass());
 
         String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(), method.getDeclaringClass());
+        System.out.println(method.getAnnotatedReturnType());
 
         String methodName = method.getName();
 

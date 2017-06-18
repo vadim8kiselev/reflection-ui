@@ -26,10 +26,7 @@ public class ArgumentUtils {
     private String getArgument(Parameter parameter, Class<?> parsedClass) {
         String argumentSignature = "";
 
-        String annotation = new AnnotationUtils().getAnnotations(parameter, parsedClass);
-        if (!"".equals(annotation)) {
-            annotation = annotation.substring(0, annotation.length() - 1);
-        }
+        String annotation = new AnnotationUtils().getInlineAnnotations(parameter, parsedClass);
 
         String genericType = new GenericsUtils().resolveType(parameter.getParameterizedType(), parsedClass);
 

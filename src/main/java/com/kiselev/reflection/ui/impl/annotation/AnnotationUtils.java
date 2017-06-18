@@ -14,6 +14,19 @@ import java.util.Map;
 
 public class AnnotationUtils {
 
+    public String getInlineAnnotations(AnnotatedElement annotatedElement) {
+        return getAnnotations(annotatedElement, null);
+    }
+
+    public String getInlineAnnotations(AnnotatedElement annotatedElement, Class<?> parsedClass) {
+        String annotation = getAnnotations(annotatedElement, parsedClass);
+        if (!"".equals(annotation)) {
+            annotation = annotation.substring(0, annotation.length() - 1) + " ";
+        }
+
+        return annotation;
+    }
+
     public String getAnnotations(AnnotatedElement annotatedElement) {
         return getAnnotations(annotatedElement, null);
     }
@@ -23,7 +36,7 @@ public class AnnotationUtils {
 
         String indent = new IndentUtils().getIndent(annotatedElement);
 
-        for (Annotation annotation : annotatedElement.getAnnotations()) {
+        for (Annotation annotation : annotatedElement.getDeclaredAnnotations()) {
             annotations.append(indent).append(getAnnotation(annotation, parsedClass)).append("\n");
         }
 

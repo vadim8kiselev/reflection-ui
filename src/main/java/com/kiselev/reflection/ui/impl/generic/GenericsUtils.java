@@ -1,7 +1,10 @@
 package com.kiselev.reflection.ui.impl.generic;
 
+import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.AnnotatedWildcardType;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
@@ -9,6 +12,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GenericsUtils {
@@ -25,7 +29,9 @@ public class GenericsUtils {
         TypeVariable<?>[] typeParameters = genericDeclaration.getTypeParameters();
         for (TypeVariable parameter : typeParameters) {
             String bounds = String.join(" & ", getBounds(parameter, parsedClass));
-            generics.add(parameter.getName() + (!bounds.isEmpty() ? " extends " + bounds : ""));
+            String annotations = new AnnotationUtils().getInlineAnnotations(parameter, parsedClass);
+
+            generics.add(annotations + parameter.getName() + (!bounds.isEmpty() ? " extends " + bounds : ""));
         }
 
         return (typeParameters.length != 0) ? "<" + String.join(", ", generics) + "> " : whitespace;
@@ -33,10 +39,15 @@ public class GenericsUtils {
 
     private List<String> getBounds(TypeVariable parameter, Class<?> parsedClass) {
         List<String> bounds = new ArrayList<>();
-        for (Type bound : parameter.getBounds()) {
-            String boundType = resolveType(bound, parsedClass);
+        Type[] typeBounds = parameter.getBounds();
+        AnnotatedType[] annotatedBounds = parameter.getAnnotatedBounds();
+
+        for (int i = 0; i < typeBounds.length; i++) {
+            String annotations = new AnnotationUtils().getInlineAnnotations(annotatedBounds[i], parsedClass);
+
+            String boundType = resolveType(typeBounds[i], parsedClass);
             if (!boundType.isEmpty()) {
-                bounds.add(boundType);
+                bounds.add(annotations + boundType);
             }
         }
         return bounds;
@@ -45,12 +56,13 @@ public class GenericsUtils {
     public String resolveType(Type type, Class<?> parsedClass) {
         String boundType = "";
 
-        if (type instanceof Class || type instanceof Enum) {
+        if (type instanceof Class) {
             Class clazz = Class.class.cast(type);
             boundType = new NameUtils().getTypeName(clazz, parsedClass);
 
         } else if (type instanceof TypeVariable) {
-            boundType = TypeVariable.class.cast(type).getName();
+            TypeVariable typeVariable = TypeVariable.class.cast(type);
+            boundType = typeVariable.getName();
 
         } else if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
