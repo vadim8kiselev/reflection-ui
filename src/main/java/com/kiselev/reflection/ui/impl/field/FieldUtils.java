@@ -5,8 +5,11 @@ import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
 
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FieldUtils {
@@ -34,7 +37,7 @@ public class FieldUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(field.getModifiers());
 
-        String type = new GenericsUtils().resolveType(field.getGenericType(), field.getDeclaringClass());
+        String type = new GenericsUtils().resolveType(field.getGenericType(), field.getAnnotatedType() , field.getDeclaringClass());
 
         String fieldName = field.getName();
 

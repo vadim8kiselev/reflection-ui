@@ -3,6 +3,8 @@ package com.kiselev.reflection.ui.impl.generic;
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
+import java.lang.reflect.AnnotatedArrayType;
+import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.AnnotatedWildcardType;
 import java.lang.reflect.GenericArrayType;
@@ -12,7 +14,6 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GenericsUtils {
@@ -45,7 +46,7 @@ public class GenericsUtils {
         for (int i = 0; i < typeBounds.length; i++) {
             String annotations = new AnnotationUtils().getInlineAnnotations(annotatedBounds[i], parsedClass);
 
-            String boundType = resolveType(typeBounds[i], parsedClass);
+            String boundType = resolveType(typeBounds[i], annotatedBounds[i], parsedClass);
             if (!boundType.isEmpty()) {
                 bounds.add(annotations + boundType);
             }
@@ -54,7 +55,15 @@ public class GenericsUtils {
     }
 
     public String resolveType(Type type, Class<?> parsedClass) {
+        return resolveType(type, null, parsedClass);
+    }
+
+    public String resolveType(Type type, AnnotatedType annotatedType, Class<?> parsedClass) {
+        String annotations = "";
         String boundType = "";
+        if (annotatedType != null) {
+            annotations = new AnnotationUtils().getInlineAnnotations(annotatedType, parsedClass);
+        }
 
         if (type instanceof Class) {
             Class clazz = Class.class.cast(type);
@@ -69,49 +78,56 @@ public class GenericsUtils {
 
             String parametrizedRawTypeName = new NameUtils().getTypeName(Class.class.cast(parameterizedType.getRawType()), parsedClass);
 
-            String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType, parsedClass)) + ">";
+            String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType,
+                    AnnotatedParameterizedType.class.cast(annotatedType), parsedClass)) + ">";
 
             boundType = parametrizedRawTypeName + genericArguments;
 
         } else if (type instanceof GenericArrayType) {
             GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
-            boundType = resolveType(genericArrayType.getGenericComponentType(), parsedClass);
+            AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
+            boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass);
             boundType += "[]";
         }
 
-        return boundType;
+        return annotations + boundType;
     }
 
     public String resolveType(Type type) {
         return resolveType(type, null);
     }
 
-    private List<String> getGenericArguments(ParameterizedType parameterizedType, Class<?> parsedClass) {
+    private List<String> getGenericArguments(ParameterizedType parameterizedType, AnnotatedParameterizedType annotatedParameterizedType, Class<?> parsedClass) {
         List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        for (Type actualTypeArgument : actualTypeArguments) {
-            if (actualTypeArgument instanceof WildcardType) {
-                WildcardType wildcardType = WildcardType.class.cast(actualTypeArgument);
+        AnnotatedType[] annotatedActualTypeArguments = annotatedParameterizedType.getAnnotatedActualTypeArguments();
+
+        for (int i = 0; i < actualTypeArguments.length; i++) {
+            if (actualTypeArguments[i] instanceof WildcardType) {
+                WildcardType wildcardType = WildcardType.class.cast(actualTypeArguments[i]);
+                AnnotatedWildcardType annotatedWildcardType = AnnotatedWildcardType.class.cast(annotatedActualTypeArguments[i]);
                 String wildcard = "?";
-                wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends", parsedClass);
-                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super", parsedClass);
+                wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends",
+                        annotatedWildcardType.getAnnotatedUpperBounds(), parsedClass);
+                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super",
+                        annotatedWildcardType.getAnnotatedLowerBounds(), parsedClass);
                 genericArguments.add(wildcard);
             } else {
-                genericArguments.add(resolveType(actualTypeArgument, parsedClass));
+                genericArguments.add(resolveType(actualTypeArguments[i], annotatedActualTypeArguments[i], parsedClass));
             }
         }
 
         return genericArguments;
     }
 
-    private String getWildCardsBound(Type[] types, String boundCase, Class<?> parsedClass) {
+    private String getWildCardsBound(Type[] types, String boundCase, AnnotatedType[] annotatedTypes, Class<?> parsedClass) {
         String wildcard = "";
         if (types.length != 0) {
             wildcard = " " + boundCase + " ";
             List<String> bounds = new ArrayList<>();
-            for (Type bound : types) {
-                bounds.add(resolveType(bound, parsedClass));
+            for (int i = 0; i < types.length; i++) {
+                bounds.add(resolveType(types[i], annotatedTypes[i], parsedClass));
             }
             wildcard += String.join(" & ", bounds);
         }

@@ -8,6 +8,7 @@ import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
 import com.kiselev.reflection.ui.impl.value.ValueUtils;
 
+import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class MethodUtils {
 
         String generics = new GenericsUtils().getGenerics(method, method.getDeclaringClass());
 
-        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(), method.getDeclaringClass());
-        System.out.println(method.getAnnotatedReturnType());
+        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(),
+                method.getAnnotatedReturnType(), method.getDeclaringClass());
 
         String methodName = method.getName();
 

@@ -38,9 +38,10 @@ public class ConstructorUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(constructor.getModifiers());
 
-        String generics = new GenericsUtils().getGenerics(constructor);
+        String generics = new GenericsUtils().getGenerics(constructor, constructor.getDeclaringClass());
 
-        String constructorName = new NameUtils().getTypeName(constructor.getDeclaringClass(), constructor.getDeclaringClass());
+        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(),
+                constructor.getAnnotatedReturnType(), constructor.getDeclaringClass());
 
         String arguments = new ArgumentUtils().getArguments(constructor);
 

@@ -36,7 +36,7 @@ public class ImportUtils {
         }
 
         if (!classForImport.isPrimitive() &&
-                !"java.lang".contains(getPackageName(classForImport))
+                !"java.lang".equals(getPackageName(classForImport))
                 && !getPackageName(parsedClass).equals(getPackageName(classForImport))) {
 
             if (!isContainsImportBySimpleName(classForImport)) {
