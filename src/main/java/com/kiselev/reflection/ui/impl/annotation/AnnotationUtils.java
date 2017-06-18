@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.annotation;
 
+import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.value.ValueUtils;
 
@@ -14,37 +15,45 @@ import java.util.Map;
 public class AnnotationUtils {
 
     public String getAnnotations(AnnotatedElement annotatedElement) {
-        String annotations = "";
+        return getAnnotations(annotatedElement, null);
+    }
+
+    public String getAnnotations(AnnotatedElement annotatedElement, Class<?> parsedClass) {
+        StringBuilder annotations = new StringBuilder();
 
         String indent = new IndentUtils().getIndent(annotatedElement);
 
         for (Annotation annotation : annotatedElement.getAnnotations()) {
-            annotations += indent + getAnnotation(annotation) + "\n";
+            annotations.append(indent).append(getAnnotation(annotation, parsedClass)).append("\n");
         }
 
-        return annotations;
+        return annotations.toString();
     }
 
     public String getAnnotation(Annotation annotation) {
+        return getAnnotation(annotation, null);
+    }
+
+    public String getAnnotation(Annotation annotation, Class<?> parsedClass) {
         String annotationSignature = "";
 
         String annotationSign = "@";
 
-        String annotationName = annotation.annotationType().getSimpleName();
+        String annotationName = new GenericsUtils().resolveType(annotation.annotationType(), parsedClass);
 
-        String annotationArguments = getAnnotationArguments(annotation);
+        String annotationArguments = getAnnotationArguments(annotation, parsedClass);
 
         annotationSignature += annotationSign + annotationName + annotationArguments;
 
         return annotationSignature;
     }
 
-    private String getAnnotationArguments(Annotation annotation) {
+    private String getAnnotationArguments(Annotation annotation, Class<?> parsedClass) {
         String annotationArguments = "";
 
         List<String> arguments = new ArrayList<>();
 
-        for (Map.Entry<String, Object> entry : getAnnotationMemberTypes(annotation).entrySet()) {
+        for (Map.Entry<String, Object> entry : getAnnotationMemberTypes(annotation, parsedClass).entrySet()) {
             arguments.add(entry.getKey() + " = " + entry.getValue());
         }
 
@@ -55,7 +64,7 @@ public class AnnotationUtils {
         return annotationArguments;
     }
 
-    private Map<String, Object> getAnnotationMemberTypes(Annotation annotation) {
+    private Map<String, Object> getAnnotationMemberTypes(Annotation annotation, Class<?> parsedClass) {
         Map<String, Object> map = new HashMap<>();
 
         try {
@@ -65,7 +74,7 @@ public class AnnotationUtils {
             for (Method method : methods) {
                 method.setAccessible(true);
                 Object value = method.invoke(annotation);
-                map.put(method.getName(), new ValueUtils().getValue(value));
+                map.put(method.getName(), new ValueUtils().getValue(value, parsedClass));
             }
         } catch (Exception exception) {
             // Sin

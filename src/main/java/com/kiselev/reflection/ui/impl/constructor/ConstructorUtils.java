@@ -32,7 +32,7 @@ public class ConstructorUtils {
     private String getConstructor(Constructor constructor) {
         String constructorSignature = "";
 
-        String annotations = new AnnotationUtils().getAnnotations(constructor);
+        String annotations = new AnnotationUtils().getAnnotations(constructor, constructor.getDeclaringClass());
 
         String indent = new IndentUtils().getIndent(constructor);
 
@@ -40,13 +40,14 @@ public class ConstructorUtils {
 
         String generics = new GenericsUtils().getGenerics(constructor);
 
-        String constructorName = new NameUtils().getTypeName(constructor.getDeclaringClass());
+        String constructorName = new NameUtils().getTypeName(constructor.getDeclaringClass(), constructor.getDeclaringClass());
 
         String arguments = new ArgumentUtils().getArguments(constructor);
 
         String exceptions = new ExceptionUtils().getExceptions(constructor);
 
-        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + " {\n" + indent + "}";
+        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments
+                + exceptions + " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}";
 
         return constructorSignature;
     }

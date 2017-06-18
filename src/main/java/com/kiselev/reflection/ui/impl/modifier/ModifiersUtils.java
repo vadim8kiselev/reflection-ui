@@ -4,7 +4,7 @@ import java.lang.reflect.Modifier;
 
 public class ModifiersUtils {
 
-    final int SYNTHETIC = 0x00001000;
+    private final int SYNTHETIC = 0x00001000;
 
     public String getModifiers(int modificatorIndex) {
         String modifiers = "";
@@ -31,7 +31,7 @@ public class ModifiersUtils {
         return modifiers;
     }
 
-    boolean isSynthetic(int modificatorIndex) {
+    private boolean isSynthetic(int modificatorIndex) {
         return (modificatorIndex & SYNTHETIC) != 0;
     }
 }

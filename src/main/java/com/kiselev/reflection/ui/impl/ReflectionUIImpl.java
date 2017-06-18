@@ -1,21 +1,21 @@
 package com.kiselev.reflection.ui.impl;
 
+import com.kiselev.reflection.ui.api.ReflectionUI;
 import com.kiselev.reflection.ui.bytecode.holder.ByteCodeHolder;
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
-import com.kiselev.reflection.ui.api.ReflectionUI;
 import com.kiselev.reflection.ui.impl.classes.ClassUtils;
 import com.kiselev.reflection.ui.impl.constructor.ConstructorUtils;
 import com.kiselev.reflection.ui.impl.field.FieldUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
+import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.inheritance.InheritancesUtils;
 import com.kiselev.reflection.ui.impl.method.MethodUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
+import com.kiselev.reflection.ui.impl.name.NameUtils;
 import com.kiselev.reflection.ui.impl.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.type.TypeUtils;
-import com.kiselev.reflection.ui.impl.name.NameUtils;
 
-import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,13 +25,20 @@ public class ReflectionUIImpl implements ReflectionUI {
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
 
+        String packageName = new PackageUtils().getPackage(clazz);
+
         String indent = new IndentUtils().getIndent(clazz);
 
         String classSignature = getClassSignature(clazz);
 
         String classContent = getClassContent(clazz);
 
-        parsedClass += classSignature + "{\n\n" + classContent + indent + "}";
+        String imports = "";
+        if (!clazz.isMemberClass()) {
+            imports = ManagerImportUtils.getImportUtils(clazz).getImports();
+        }
+
+        parsedClass += packageName + imports + classSignature + "{\n\n" + classContent + indent + "}";
 
         return parsedClass;
     }
@@ -39,9 +46,7 @@ public class ReflectionUIImpl implements ReflectionUI {
     private String getClassSignature(Class<?> clazz) {
         String classSignature = "";
 
-        String packageName = new PackageUtils().getPackage(clazz);
-
-        String annotations = new AnnotationUtils().getAnnotations(clazz);
+        String annotations = new AnnotationUtils().getAnnotations(clazz, clazz);
 
         String indent = new IndentUtils().getIndent(clazz);
 
@@ -49,13 +54,13 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String type = new TypeUtils().getType(clazz);
 
-        String typeName = new NameUtils().getTypeName(clazz);
+        String typeName = new NameUtils().getTypeName(clazz, clazz);
 
-        String generics = new GenericsUtils().getGenerics(clazz);
+        String generics = new GenericsUtils().getGenerics(clazz, clazz);
 
         String inheritances = new InheritancesUtils().getInheritances(clazz);
 
-        classSignature += packageName + annotations + indent + modifiers + type + typeName + generics + inheritances;
+        classSignature += annotations + indent + modifiers + type + typeName + generics + inheritances;
 
         return classSignature;
     }
