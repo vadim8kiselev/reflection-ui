@@ -21,26 +21,26 @@ public class InheritancesUtils {
     }
 
     private String getSuperClass(Class<?> clazz) {
-        String superClass = getSingleParentType(clazz.getGenericSuperclass(), clazz.getAnnotatedSuperclass(), clazz);
+        String superClass = getSingleParentType(clazz.getGenericSuperclass(), clazz.getAnnotatedSuperclass());
         return (!superClass.isEmpty()) ? "extends " + superClass + " " : "";
     }
 
     private String getInterfaces(Class<?> clazz) {
-        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), clazz.getAnnotatedInterfaces(), clazz));
+        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), clazz.getAnnotatedInterfaces()));
         String relationship = clazz.isInterface() ? "extends " : "implements ";
         return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
     }
 
-    private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes, Class<?> parsedClass) {
+    private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
         List<String> multipleParentTypes = new ArrayList<>();
         for (int i = 0; i < parentTypes.length; i++) {
-            multipleParentTypes.add(getSingleParentType(parentTypes[i], annotatedTypes[i], parsedClass));
+            multipleParentTypes.add(getSingleParentType(parentTypes[i], annotatedTypes[i]));
         }
 
         return multipleParentTypes;
     }
 
-    private String getSingleParentType(Type parentType, AnnotatedType annotatedType, Class<?> parsedClass) {
-        return new GenericsUtils().resolveType(parentType, annotatedType, parsedClass);
+    private String getSingleParentType(Type parentType, AnnotatedType annotatedType) {
+        return new GenericsUtils().resolveType(parentType, annotatedType);
     }
 }

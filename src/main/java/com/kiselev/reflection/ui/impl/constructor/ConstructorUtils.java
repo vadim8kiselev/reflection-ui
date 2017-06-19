@@ -6,7 +6,6 @@ import com.kiselev.reflection.ui.impl.exception.ExceptionUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
-import com.kiselev.reflection.ui.impl.name.NameUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -32,16 +31,15 @@ public class ConstructorUtils {
     private String getConstructor(Constructor constructor) {
         String constructorSignature = "";
 
-        String annotations = new AnnotationUtils().getAnnotations(constructor, constructor.getDeclaringClass());
+        String annotations = new AnnotationUtils().getAnnotations(constructor);
 
         String indent = new IndentUtils().getIndent(constructor);
 
         String modifiers = new ModifiersUtils().getModifiers(constructor.getModifiers());
 
-        String generics = new GenericsUtils().getGenerics(constructor, constructor.getDeclaringClass());
+        String generics = new GenericsUtils().getGenerics(constructor);
 
-        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(),
-                constructor.getAnnotatedReturnType(), constructor.getDeclaringClass());
+        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(), constructor.getAnnotatedReturnType());
 
         String arguments = new ArgumentUtils().getArguments(constructor);
 

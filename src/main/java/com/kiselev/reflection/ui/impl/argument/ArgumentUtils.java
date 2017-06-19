@@ -22,7 +22,7 @@ public class ArgumentUtils {
         Parameter[] parameters = executable.getParameters();
 
         for (int i = 0; i < parameters.length; i++) {
-            strings.add(getArgument(parameters[i], annotatedParameterTypes[i],  executable.getDeclaringClass()));
+            strings.add(getArgument(parameters[i], annotatedParameterTypes[i]));
         }
 
         arguments += "(" + String.join(", ", strings) + ")";
@@ -30,13 +30,12 @@ public class ArgumentUtils {
         return arguments;
     }
 
-    private String getArgument(Parameter parameter, AnnotatedType annotatedType, Class<?> parsedClass) {
+    private String getArgument(Parameter parameter, AnnotatedType annotatedType) {
         String argumentSignature = "";
 
-        String annotation = new AnnotationUtils().getInlineAnnotations(parameter, parsedClass);
+        String annotation = new AnnotationUtils().getInlineAnnotations(parameter);
 
-        String genericType = new GenericsUtils().resolveType(parameter.getParameterizedType(),
-                annotatedType, parsedClass);
+        String genericType = new GenericsUtils().resolveType(parameter.getParameterizedType(), annotatedType);
 
         genericType = parameter.isVarArgs() ? convertToVarArg(genericType) : genericType;
 

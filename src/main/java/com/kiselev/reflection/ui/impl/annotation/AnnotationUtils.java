@@ -15,58 +15,46 @@ import java.util.Map;
 public class AnnotationUtils {
 
     public String getInlineAnnotations(AnnotatedElement annotatedElement) {
-        return getAnnotations(annotatedElement, null);
-    }
-
-    public String getInlineAnnotations(AnnotatedElement annotatedElement, Class<?> parsedClass) {
-        String annotation = getAnnotations(annotatedElement, parsedClass);
+        String annotation = getAnnotations(annotatedElement);
         if (!"".equals(annotation)) {
-            annotation = annotation.substring(0, annotation.length() - 1);
+            annotation = annotation.substring(0, annotation.length() - 1).replace("\n", " ");
         }
 
         return annotation;
     }
 
     public String getAnnotations(AnnotatedElement annotatedElement) {
-        return getAnnotations(annotatedElement, null);
-    }
-
-    public String getAnnotations(AnnotatedElement annotatedElement, Class<?> parsedClass) {
         StringBuilder annotations = new StringBuilder();
 
         String indent = new IndentUtils().getIndent(annotatedElement);
 
         for (Annotation annotation : annotatedElement.getDeclaredAnnotations()) {
-            annotations.append(indent).append(getAnnotation(annotation, parsedClass)).append("\n");
+            annotations.append(indent).append(getAnnotation(annotation)).append("\n");
         }
 
         return annotations.toString();
     }
 
     public String getAnnotation(Annotation annotation) {
-        return getAnnotation(annotation, null);
-    }
-
-    public String getAnnotation(Annotation annotation, Class<?> parsedClass) {
         String annotationSignature = "";
 
         String annotationSign = "@";
 
-        String annotationName = new GenericsUtils().resolveType(annotation.annotationType(), parsedClass);
+        String annotationName = new GenericsUtils().resolveType(annotation.annotationType());
 
-        String annotationArguments = getAnnotationArguments(annotation, parsedClass);
+        String annotationArguments = getAnnotationArguments(annotation);
 
         annotationSignature += annotationSign + annotationName + annotationArguments;
 
         return annotationSignature;
     }
 
-    private String getAnnotationArguments(Annotation annotation, Class<?> parsedClass) {
+    private String getAnnotationArguments(Annotation annotation) {
         String annotationArguments = "";
 
         List<String> arguments = new ArrayList<>();
 
-        for (Map.Entry<String, Object> entry : getAnnotationMemberTypes(annotation, parsedClass).entrySet()) {
+        for (Map.Entry<String, Object> entry : getAnnotationMemberTypes(annotation).entrySet()) {
             arguments.add(entry.getKey() + " = " + entry.getValue());
         }
 
@@ -77,7 +65,7 @@ public class AnnotationUtils {
         return annotationArguments;
     }
 
-    private Map<String, Object> getAnnotationMemberTypes(Annotation annotation, Class<?> parsedClass) {
+    private Map<String, Object> getAnnotationMemberTypes(Annotation annotation) {
         Map<String, Object> map = new HashMap<>();
 
         try {
@@ -87,7 +75,7 @@ public class AnnotationUtils {
             for (Method method : methods) {
                 method.setAccessible(true);
                 Object value = method.invoke(annotation);
-                map.put(method.getName(), new ValueUtils().getValue(value, parsedClass));
+                map.put(method.getName(), new ValueUtils().getValue(value));
             }
         } catch (Exception exception) {
             // Sin

@@ -10,13 +10,13 @@ import java.util.List;
 
 public class ValueUtils {
 
-    public String getValue(Object object, Class<?> parsedClass) {
+    public String getValue(Object object) {
         if (object != null) {
             Class<?> clazz = object.getClass();
             if (clazz.isArray()) {
                 List<String> listValues = new ArrayList<>();
                 for (Object listValue : getArrayValues(object)) {
-                    listValues.add(getValue(listValue, parsedClass));
+                    listValues.add(getValue(listValue));
                 }
 
                 String values = String.join(", ", listValues);
@@ -27,12 +27,12 @@ public class ValueUtils {
                 }
             }
 
-            if (clazz.isEnum()) return new GenericsUtils().resolveType(clazz, parsedClass) + "." + object;
+            if (clazz.isEnum()) return new GenericsUtils().resolveType(clazz) + "." + object;
             if (object instanceof String) return "\"" + object + "\"";
             if (object instanceof Character) return "\'" + object + "\'";
             if (object instanceof Number || object instanceof Boolean) return object.toString();
-            if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(Annotation.class.cast(object), parsedClass);
-            if (object instanceof Class) return new GenericsUtils().resolveType(Class.class.cast(object), parsedClass) + ".class";
+            if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(Annotation.class.cast(object));
+            if (object instanceof Class) return new GenericsUtils().resolveType(Class.class.cast(object)) + ".class";
         }
 
         return null;

@@ -35,7 +35,7 @@ public class MethodUtils {
     private String getMethod(Method method) {
         String methodSignature = "";
 
-        String annotations = new AnnotationUtils().getAnnotations(method, method.getDeclaringClass());
+        String annotations = new AnnotationUtils().getAnnotations(method);
 
         String indent = new IndentUtils().getIndent(method);
 
@@ -43,10 +43,9 @@ public class MethodUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(method.getModifiers());
 
-        String generics = new GenericsUtils().getGenerics(method, method.getDeclaringClass());
+        String generics = new GenericsUtils().getGenerics(method);
 
-        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(),
-                method.getAnnotatedReturnType(), method.getDeclaringClass());
+        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(), method.getAnnotatedReturnType());
 
         String methodName = method.getName();
 
@@ -67,7 +66,7 @@ public class MethodUtils {
         String defaultAnnotationValue = "";
 
         if (method.getDeclaringClass().isAnnotation()) {
-            String defaultValue = new ValueUtils().getValue(method.getDefaultValue(), method.getDeclaringClass());
+            String defaultValue = new ValueUtils().getValue(method.getDefaultValue());
 
             if (defaultValue != null) {
                 defaultAnnotationValue += " default " + defaultValue;

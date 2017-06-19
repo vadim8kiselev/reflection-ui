@@ -17,8 +17,7 @@ public class ExceptionUtils {
         AnnotatedType[] annotatedExceptionTypes = executable.getAnnotatedExceptionTypes();
         Type[] genericExceptionTypes = executable.getGenericExceptionTypes();
         for (int i = 0; i < genericExceptionTypes.length; i++) {
-            exceptionTypes.add(new GenericsUtils().resolveType(genericExceptionTypes[i],
-                    annotatedExceptionTypes[i], executable.getDeclaringClass()));
+            exceptionTypes.add(new GenericsUtils().resolveType(genericExceptionTypes[i], annotatedExceptionTypes[i]));
         }
 
         if (!exceptionTypes.isEmpty()) {

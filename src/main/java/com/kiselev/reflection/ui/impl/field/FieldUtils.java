@@ -31,13 +31,13 @@ public class FieldUtils {
     private String getField(Field field) {
         String fieldSignature = "";
 
-        String annotations = new AnnotationUtils().getAnnotations(field, field.getDeclaringClass());
+        String annotations = new AnnotationUtils().getAnnotations(field);
 
         String indent = new IndentUtils().getIndent(field);
 
         String modifiers = new ModifiersUtils().getModifiers(field.getModifiers());
 
-        String type = new GenericsUtils().resolveType(field.getGenericType(), field.getAnnotatedType() , field.getDeclaringClass());
+        String type = new GenericsUtils().resolveType(field.getGenericType(), field.getAnnotatedType());
 
         String fieldName = field.getName();
 

@@ -6,11 +6,7 @@ import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
 public class NameUtils {
 
     public String getTypeName(Class<?> clazz) {
-        return getTypeName(clazz, null);
-    }
-
-    public String getTypeName(Class<?> clazz, Class<?> parsedClass) {
-        ImportUtils importUtils = ManagerImportUtils.getImportUtils(parsedClass);
+        ImportUtils importUtils = ManagerImportUtils.getImportUtils();
         String typeName;
         Class<?> externalClass;
 

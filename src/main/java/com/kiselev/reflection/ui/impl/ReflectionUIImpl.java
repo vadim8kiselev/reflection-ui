@@ -25,6 +25,10 @@ public class ReflectionUIImpl implements ReflectionUI {
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
 
+        if (!clazz.isMemberClass()) {
+            ManagerImportUtils.registerImportUtils(clazz);
+        }
+
         String packageName = new PackageUtils().getPackage(clazz);
 
         String indent = new IndentUtils().getIndent(clazz);
@@ -35,7 +39,7 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String imports = "";
         if (!clazz.isMemberClass()) {
-            imports = ManagerImportUtils.getImportUtils(clazz).getImports();
+            imports = ManagerImportUtils.getImportUtils().getImports();
         }
 
         parsedClass += packageName + imports + classSignature + "{\n\n" + classContent + indent + "}";
@@ -46,7 +50,7 @@ public class ReflectionUIImpl implements ReflectionUI {
     private String getClassSignature(Class<?> clazz) {
         String classSignature = "";
 
-        String annotations = new AnnotationUtils().getAnnotations(clazz, clazz);
+        String annotations = new AnnotationUtils().getAnnotations(clazz);
 
         String indent = new IndentUtils().getIndent(clazz);
 
@@ -54,9 +58,9 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String type = new TypeUtils().getType(clazz);
 
-        String typeName = new NameUtils().getTypeName(clazz, clazz);
+        String typeName = new NameUtils().getTypeName(clazz);
 
-        String generics = new GenericsUtils().getGenerics(clazz, clazz);
+        String generics = new GenericsUtils().getGenerics(clazz);
 
         String inheritances = new InheritancesUtils().getInheritances(clazz);
 

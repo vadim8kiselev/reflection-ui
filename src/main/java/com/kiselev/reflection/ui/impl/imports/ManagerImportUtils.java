@@ -8,17 +8,19 @@ import java.util.Map;
  */
 public class ManagerImportUtils {
 
-    private static Map<Class<?>, ImportUtils> importUtilsMap = new HashMap<>();
+    private static Map<Long, ImportUtils> importUtilsMap = new HashMap<>();
 
-    public static ImportUtils getImportUtils(Class<?> clazz) {
-        while (clazz.getDeclaringClass() != null) {
-            clazz = clazz.getDeclaringClass();
+    public static void registerImportUtils(Class<?> clazz) {
+        long id = Thread.currentThread().getId();
+        importUtilsMap.put(id, new ImportUtils(clazz));
+    }
+
+    public static ImportUtils getImportUtils() {
+        long id = Thread.currentThread().getId();
+        if (!importUtilsMap.containsKey(id)) {
+            throw new RuntimeException("Imports for current thread is not register");
         }
 
-        if (!importUtilsMap.containsKey(clazz)) {
-            importUtilsMap.put(clazz, new ImportUtils(clazz));
-        }
-
-        return importUtilsMap.get(clazz);
+        return importUtilsMap.get(id);
     }
 }
