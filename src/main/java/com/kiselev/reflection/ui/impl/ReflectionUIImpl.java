@@ -15,7 +15,6 @@ import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 import com.kiselev.reflection.ui.impl.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.type.TypeUtils;
-import test.annon.AnnotationParameterType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -21,7 +21,7 @@ public class AnnotationUtils {
     public String getInlineAnnotations(AnnotatedElement annotatedElement, Class<?> parsedClass) {
         String annotation = getAnnotations(annotatedElement, parsedClass);
         if (!"".equals(annotation)) {
-            annotation = annotation.substring(0, annotation.length() - 1) + " ";
+            annotation = annotation.substring(0, annotation.length() - 1);
         }
 
         return annotation;

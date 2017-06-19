@@ -62,12 +62,21 @@ public class GenericsUtils {
         String annotations = "";
         String boundType = "";
         if (annotatedType != null) {
-            annotations = new AnnotationUtils().getInlineAnnotations(annotatedType, parsedClass);
+            if (!(type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType)){
+                annotations = new AnnotationUtils().getInlineAnnotations(annotatedType, parsedClass) + " ";
+            }
         }
 
         if (type instanceof Class) {
             Class clazz = Class.class.cast(type);
-            boundType = new NameUtils().getTypeName(clazz, parsedClass);
+
+            if (clazz.isArray()) {
+                boundType = resolveType(clazz.getComponentType(), annotatedType, parsedClass);
+                AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
+                boundType += new AnnotationUtils().getInlineAnnotations(annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass) + "[]";
+            } else {
+                boundType = new NameUtils().getTypeName(clazz, parsedClass);
+            }
 
         } else if (type instanceof TypeVariable) {
             TypeVariable typeVariable = TypeVariable.class.cast(type);
@@ -87,7 +96,8 @@ public class GenericsUtils {
             GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
             AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass);
-            boundType += "[]";
+
+            boundType += new AnnotationUtils().getInlineAnnotations(annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass) + "[]";
         }
 
         return annotations + boundType;
