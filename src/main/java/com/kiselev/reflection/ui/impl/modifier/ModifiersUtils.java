@@ -6,33 +6,41 @@ public class ModifiersUtils {
 
     private final int SYNTHETIC = 0x00001000;
 
-    public String getModifiers(int modificatorIndex) {
+    private final int IMPLICIT = 0x8000;
+
+    public String getModifiers(int modifierIndex) {
         String modifiers = "";
 
-        if (Modifier.isPublic(modificatorIndex)) modifiers += "public ";
-        if (Modifier.isProtected(modificatorIndex)) modifiers += "protected ";
-        if (Modifier.isPrivate(modificatorIndex)) modifiers += "private ";
+        if (Modifier.isPublic(modifierIndex)) modifiers += "public ";
+        if (Modifier.isProtected(modifierIndex)) modifiers += "protected ";
+        if (Modifier.isPrivate(modifierIndex)) modifiers += "private ";
 
-        if (Modifier.isAbstract(modificatorIndex)) modifiers += "abstract ";
+        if (Modifier.isAbstract(modifierIndex)) modifiers += "abstract ";
 
-        if (Modifier.isSynchronized(modificatorIndex)) modifiers += "synchronized ";
+        if (Modifier.isSynchronized(modifierIndex)) modifiers += "synchronized ";
 
-        if (Modifier.isVolatile(modificatorIndex)) modifiers += "volatile ";
-        if (Modifier.isTransient(modificatorIndex)) modifiers += "transient ";
-        if (Modifier.isStrict(modificatorIndex)) modifiers += "strictfp ";
+        if (Modifier.isVolatile(modifierIndex)) modifiers += "volatile ";
+        if (Modifier.isTransient(modifierIndex)) modifiers += "transient ";
+        if (Modifier.isStrict(modifierIndex)) modifiers += "strictfp ";
 
-        if (Modifier.isStatic(modificatorIndex)) modifiers += "static ";
-        if (Modifier.isNative(modificatorIndex)) modifiers += "native ";
+        if (Modifier.isStatic(modifierIndex)) modifiers += "static ";
+        if (Modifier.isNative(modifierIndex)) modifiers += "native ";
 
-        if (Modifier.isFinal(modificatorIndex)) modifiers += "final ";
+        if (Modifier.isFinal(modifierIndex)) modifiers += "final ";
 
-        if (isSynthetic(modificatorIndex)) modifiers += "synthetic ";
+        if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
+
+        if (isImplicit(modifierIndex)) modifiers += "implicit ";
 
         return modifiers;
     }
 
-    private boolean isSynthetic(int modificatorIndex) {
-        return (modificatorIndex & SYNTHETIC) != 0;
+    private boolean isSynthetic(int modifierIndex) {
+        return (modifierIndex & SYNTHETIC) != 0;
+    }
+
+    private boolean isImplicit(int modifierIndex) {
+        return (modifierIndex & IMPLICIT) != 0;
     }
 }
 

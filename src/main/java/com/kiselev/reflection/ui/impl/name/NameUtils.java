@@ -15,7 +15,7 @@ public class NameUtils {
         Class<?> externalClass;
 
         if (clazz.isMemberClass()) {    //TODO : add resolve name and imports inner classes
-            externalClass = getExternalClass(clazz);
+            externalClass = getTopClass(clazz);
 
         }
 
@@ -37,11 +37,11 @@ public class NameUtils {
         return typeName;
     }
 
-    private Class<?> getExternalClass(Class<?> clazz) {
+    private Class<?> getTopClass(Class<?> clazz) {
         if (clazz.getDeclaringClass() == null) {
             return clazz;
         } else {
-            return getExternalClass(clazz.getDeclaringClass());
+            return getTopClass(clazz.getDeclaringClass());
         }
     }
 }

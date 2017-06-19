@@ -3,16 +3,16 @@ package com.kiselev.reflection.ui.impl.generic;
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
-import java.lang.reflect.AnnotatedArrayType;
-import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.AnnotatedWildcardType;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.AnnotatedArrayType;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.WildcardType;
+import java.lang.reflect.AnnotatedWildcardType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class GenericsUtils {
         String boundType = "";
         if (annotatedType != null) {
             if (!(type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType)){
-                annotations = new AnnotationUtils().getInlineAnnotations(annotatedType, parsedClass) + " ";
+                annotations = new AnnotationUtils().getInlineAnnotations(annotatedType, parsedClass);
             }
         }
 
@@ -71,11 +71,17 @@ public class GenericsUtils {
             Class clazz = Class.class.cast(type);
 
             if (clazz.isArray()) {
-                boundType = resolveType(clazz.getComponentType(), annotatedType, parsedClass);
                 AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
-                boundType += new AnnotationUtils().getInlineAnnotations(annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass) + "[]";
+                boundType = resolveType(clazz.getComponentType(), annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass);
+                boundType += new AnnotationUtils().getInlineAnnotations(annotatedType, parsedClass) + "[]";
             } else {
                 boundType = new NameUtils().getTypeName(clazz, parsedClass);
+                if (boundType.contains(".")) {
+                    String packageName = clazz.getPackage().getName();
+                    String simpleName = new NameUtils().getSimpleName(clazz);
+                    boundType = packageName + "." + annotations + " " + simpleName;
+                    annotations = "";
+                }
             }
 
         } else if (type instanceof TypeVariable) {
@@ -96,11 +102,10 @@ public class GenericsUtils {
             GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
             AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass);
-
-            boundType += new AnnotationUtils().getInlineAnnotations(annotatedArrayType.getAnnotatedGenericComponentType(), parsedClass) + "[]";
+            boundType += new AnnotationUtils().getInlineAnnotations(annotatedType, parsedClass) + "[]";
         }
 
-        return annotations + boundType;
+        return (!"".equals(annotations) ? annotations + " " : "") + boundType;
     }
 
     public String resolveType(Type type) {

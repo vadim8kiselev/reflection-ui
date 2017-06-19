@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.impl.argument;
 
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
+import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.AnnotatedType;
@@ -39,9 +40,11 @@ public class ArgumentUtils {
 
         genericType = parameter.isVarArgs() ? convertToVarArg(genericType) : genericType;
 
+        String modifiers = new ModifiersUtils().getModifiers(parameter.getModifiers());
+
         String parameterName = parameter.getName(); // TODO : -parameters check
 
-        argumentSignature += annotation + genericType + " " + parameterName;
+        argumentSignature += annotation + modifiers + genericType + " " + parameterName;
 
         return argumentSignature;
     }
