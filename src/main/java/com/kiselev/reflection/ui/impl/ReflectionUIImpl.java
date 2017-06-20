@@ -25,9 +25,7 @@ public class ReflectionUIImpl implements ReflectionUI {
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
 
-        if (!clazz.isMemberClass()) {
-            ManagerImportUtils.registerImportUtils(clazz);
-        }
+        ManagerImportUtils.registerImportUtils(clazz);
 
         String packageName = new PackageUtils().getPackage(clazz);
 
@@ -38,7 +36,7 @@ public class ReflectionUIImpl implements ReflectionUI {
         String classContent = getClassContent(clazz);
 
         String imports = "";
-        if (!clazz.isMemberClass()) {
+        if (clazz.equals(ManagerImportUtils.getImportUtils().getParsedClass())) {
             imports = ManagerImportUtils.getImportUtils().getImports();
         }
 

@@ -64,7 +64,13 @@ public class ImportUtils {
             builder.append("\n");
         }
 
+        clear();
         return builder.toString();
+    }
+
+    private void clear() {
+        this.parsedClass = null;
+        this.classesForImport = new ArrayList<>();
     }
 
     private boolean isContainsImportBySimpleName(Class<?> classForImport) {

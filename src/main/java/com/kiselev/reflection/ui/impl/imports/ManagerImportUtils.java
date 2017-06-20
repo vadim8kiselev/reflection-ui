@@ -12,7 +12,14 @@ public class ManagerImportUtils {
 
     public static void registerImportUtils(Class<?> clazz) {
         long id = Thread.currentThread().getId();
-        importUtilsMap.put(id, new ImportUtils(clazz));
+        if (clazz.isMemberClass()) {
+            ImportUtils importUtils = importUtilsMap.get(id);
+            if (importUtils == null || importUtils.getParsedClass() == null) {
+                importUtilsMap.put(id, new ImportUtils(clazz));
+            }
+        } else {
+            importUtilsMap.put(id, new ImportUtils(clazz));
+        }
     }
 
     public static ImportUtils getImportUtils() {
