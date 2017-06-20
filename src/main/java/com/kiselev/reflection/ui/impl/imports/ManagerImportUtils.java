@@ -18,7 +18,7 @@ public class ManagerImportUtils {
     public static ImportUtils getImportUtils() {
         long id = Thread.currentThread().getId();
         if (!importUtilsMap.containsKey(id)) {
-            throw new RuntimeException("Imports for current thread is not register");
+            throw new RuntimeException("Import utils for current thread is not register");
         }
 
         return importUtilsMap.get(id);

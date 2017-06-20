@@ -22,6 +22,10 @@ public class ImportUtils {
         this.utils = new NameUtils();
     }
 
+    public Class<?> getParsedClass() {
+        return parsedClass;
+    }
+
     public boolean addImport(Class<?> classForImport) {
         if (parsedClass == null) {
             return false;
@@ -59,7 +63,6 @@ public class ImportUtils {
         if (builder.length() != 0) {
             builder.append("\n");
         }
-
 
         return builder.toString();
     }

@@ -11,7 +11,7 @@ public class NameUtils {
         Class<?> externalClass;
 
         if (clazz.isMemberClass()) {    //TODO : add resolve name and imports inner classes
-            externalClass = getTopClass(clazz);
+            externalClass = getTopClass(importUtils.getParsedClass());
 
         }
 
