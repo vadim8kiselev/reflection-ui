@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.indent;
 
+import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
+
 import java.lang.reflect.Member;
 
 public class IndentUtils {
@@ -23,8 +25,10 @@ public class IndentUtils {
             return "";
         }
 
-        while ((declaringClass = declaringClass.getDeclaringClass()) != null) {
-            indent.append("    ");
+        if (!ManagerImportUtils.getImportUtils().getParsedClass().equals(declaringClass)) {
+            while (declaringClass != null && (declaringClass = declaringClass.getDeclaringClass()) != null) {
+                indent.append("    ");
+            }
         }
 
         return indent.toString();

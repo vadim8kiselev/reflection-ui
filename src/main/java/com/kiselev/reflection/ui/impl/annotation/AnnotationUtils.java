@@ -16,7 +16,7 @@ public class AnnotationUtils {
 
     public String getInlineAnnotations(AnnotatedElement annotatedElement) {
         String annotation = getAnnotations(annotatedElement);
-        if (!"".equals(annotation)) {
+        if (!annotation.isEmpty()) {
             annotation = annotation.substring(0, annotation.length() - 1).replace("\n", " ");
         }
 
