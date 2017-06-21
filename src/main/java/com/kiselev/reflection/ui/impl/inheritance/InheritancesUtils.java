@@ -1,6 +1,5 @@
 package com.kiselev.reflection.ui.impl.inheritance;
 
-import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 
 import java.lang.reflect.AnnotatedType;

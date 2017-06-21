@@ -5,7 +5,9 @@ import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.value.ValueUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +31,25 @@ public class AnnotationUtils {
         String indent = new IndentUtils().getIndent(annotatedElement);
 
         for (Annotation annotation : annotatedElement.getDeclaredAnnotations()) {
-            annotations.append(indent).append(getAnnotation(annotation)).append("\n");
+            String repeatable = getRepeatable(annotation, indent);
+            if (!repeatable.isEmpty()) {
+                annotations.append(repeatable);
+            } else {
+                annotations.append(indent).append(getAnnotation(annotation)).append("\n");
+            }
         }
 
         return annotations.toString();
+    }
+
+    private String getAnnotations(List<Annotation> annotations, String indent) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Annotation annotation : annotations) {
+            builder.append(indent).append(getAnnotation(annotation)).append("\n");
+        }
+
+        return builder.toString();
     }
 
     public String getAnnotation(Annotation annotation) {
@@ -82,5 +99,31 @@ public class AnnotationUtils {
         }
 
         return map;
+    }
+
+    private String getRepeatable(Annotation annotation, String indent) {
+        String repeatableAnnotations = "";
+        Class<? extends Annotation> annotationTypeClass = annotation.annotationType();
+        try {
+            Method value = annotationTypeClass.getMethod("value");
+            Class<?> type = value.getReturnType();
+            if (type.isArray()) {
+                Class<?> componentType = type.getComponentType();
+                if (componentType.isAnnotation() && componentType.isAnnotationPresent(Repeatable.class)) {
+                    Object invoke = value.invoke(annotation);
+                    List<Annotation> annotations = new ArrayList<>();
+
+                    for (int i = 0; i < Array.getLength(invoke); i++) {
+                        annotations.add(Annotation.class.cast(Array.get(invoke, i)));
+                    }
+
+                    repeatableAnnotations = getAnnotations(annotations, indent);
+                }
+            }
+        } catch (Exception exception) {
+            //Sin
+        }
+
+        return repeatableAnnotations;
     }
 }

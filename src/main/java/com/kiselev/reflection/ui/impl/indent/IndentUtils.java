@@ -26,7 +26,7 @@ public class IndentUtils {
         }
 
         if (!ManagerImportUtils.getImportUtils().getParsedClass().equals(declaringClass)) {
-            while (declaringClass != null && (declaringClass = declaringClass.getDeclaringClass()) != null) {
+            while ((declaringClass = declaringClass.getDeclaringClass()) != null) {
                 indent.append("    ");
             }
         }

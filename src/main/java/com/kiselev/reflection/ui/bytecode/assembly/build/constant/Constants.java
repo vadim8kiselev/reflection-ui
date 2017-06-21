@@ -30,7 +30,7 @@ public class Constants {
 
         public static final String JAR_SUFFIX = ".jar";
 
-        public static final String MANIFEST_SUFFIX = ".mf";
+        public static final String MANIFEST_SUFFIX = ".MF";
 
         public static final String CLASS_FILE_SUFFIX = ".class";
     }

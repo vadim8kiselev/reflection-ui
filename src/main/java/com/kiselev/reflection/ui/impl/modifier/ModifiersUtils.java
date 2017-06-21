@@ -26,11 +26,11 @@ public class ModifiersUtils {
         if (Modifier.isStatic(modifierIndex)) modifiers += "static ";
         if (Modifier.isNative(modifierIndex)) modifiers += "native ";
 
-        if (Modifier.isFinal(modifierIndex)) modifiers += "final ";
+        if (isImplicit(modifierIndex)) modifiers += "implicit ";
 
         if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
 
-        if (isImplicit(modifierIndex)) modifiers += "implicit ";
+        if (Modifier.isFinal(modifierIndex)) modifiers += "final ";
 
         return modifiers;
     }

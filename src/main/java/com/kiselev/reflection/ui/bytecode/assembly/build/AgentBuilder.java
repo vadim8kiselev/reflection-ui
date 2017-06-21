@@ -27,6 +27,8 @@ public class AgentBuilder {
 
         private List<Class<?>> attachedClasses = new ArrayList<>();
 
+        private static final long FAILED_TIME = 3000L;
+
         public Builder addAgentName(String agentName) {
             if (!agentName.endsWith(Constants.Suffix.JAR_SUFFIX)) {
                 agentName = agentName + Constants.Suffix.JAR_SUFFIX;
@@ -79,7 +81,7 @@ public class AgentBuilder {
         }
 
         private String convertManifestPath() {
-            URL resource = getClass().getClassLoader().getResource("META-INF/" + manifestName);
+            URL resource = getClass().getClassLoader().getResource("META-INF/" + manifestName.toUpperCase());
             if (resource == null) {
                 throw new RuntimeException("Manifest file cannot be null");
             }
@@ -113,8 +115,12 @@ public class AgentBuilder {
 
         private void waitForCreationOfFile(String fileName) {
             File file = new File(fileName);
+            long time = System.currentTimeMillis();
+
             while (!file.exists()) {
-                // nothing
+                if (System.currentTimeMillis() > time + FAILED_TIME) {
+                    throw new RuntimeException("Creating jar agent is failed");
+                }
             }
         }
     }

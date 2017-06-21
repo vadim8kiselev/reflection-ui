@@ -3,6 +3,7 @@ package com.kiselev.reflection.ui.impl.imports;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,18 +13,33 @@ public class ImportUtils {
 
     private Class<?> parsedClass;
 
+    private Class<?> currentClass;
+
     private List<Class<?>> classesForImport;
 
     private NameUtils utils;
 
     ImportUtils(Class<?> clazz) {
         this.parsedClass = clazz;
+        this.currentClass = clazz;
         this.classesForImport = new ArrayList<>();
         this.utils = new NameUtils();
     }
 
     public Class<?> getParsedClass() {
         return parsedClass;
+    }
+
+    public void setCurrentClass(Class<?> currentClass) {
+        this.currentClass = currentClass;
+    }
+
+    public Class<?> getCurrentClass() {
+        return this.currentClass;
+    }
+
+    public void popCurrentClass() {
+        this.currentClass = this.currentClass.getDeclaringClass();
     }
 
     public boolean addImport(Class<?> classForImport) {
@@ -54,18 +70,19 @@ public class ImportUtils {
     }
 
     public String getImports() {
-        StringBuilder builder = new StringBuilder();
+        List<String> imports = new ArrayList<>();
 
         for (Class<?> className : classesForImport) {
-            builder.append("import ").append(className.getName()).append(";\n");
+            imports.add("import " + className.getName() + ";");
         }
 
-        if (builder.length() != 0) {
-            builder.append("\n");
+        Collections.sort(imports);
+        if (!imports.isEmpty()) {
+            imports.add("\n");
         }
 
         clear();
-        return builder.toString();
+        return String.join("\n", imports);
     }
 
     private void clear() {

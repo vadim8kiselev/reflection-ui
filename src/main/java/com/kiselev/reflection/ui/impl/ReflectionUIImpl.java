@@ -22,10 +22,13 @@ import java.util.List;
 
 public class ReflectionUIImpl implements ReflectionUI {
 
+    @Override
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
 
         ManagerImportUtils.registerImportUtils(clazz);
+
+        ManagerImportUtils.getImportUtils().setCurrentClass(clazz);
 
         String packageName = new PackageUtils().getPackage(clazz);
 
@@ -41,6 +44,8 @@ public class ReflectionUIImpl implements ReflectionUI {
         }
 
         parsedClass += packageName + imports + classSignature + "{\n\n" + classContent + indent + "}";
+
+        ManagerImportUtils.getImportUtils().popCurrentClass();
 
         return parsedClass;
     }
@@ -97,8 +102,12 @@ public class ReflectionUIImpl implements ReflectionUI {
 
     @Override
     public String parseByteCode(Class<?> clazz) {
-        String decompilledByteCode = ByteCodeHolder.getDecompilledByteCode(clazz);
+        if (clazz.isPrimitive()) {
+            throw new RuntimeException("Primitive types can not be decompiled");
+        }
 
-        return decompilledByteCode;
+        String decompiledByteCode = ByteCodeHolder.getDecompiledByteCode(clazz);
+
+        return decompiledByteCode;
     }
 }

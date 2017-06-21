@@ -28,13 +28,14 @@ public class ByteCodeHolder {
         byteCodeMap.put(className, byteCode);
     }
 
-    public static String getDecompilledByteCode(Class<?> clazz) {
+    public static String getDecompiledByteCode(Class<?> clazz) {
         if (!AgentAssembler.isAssembled()) {
             AgentAssembler.assembly();
         }
+
         retransformClass(clazz);
 
-        byte[] byteCode = byteCodeMap.get(clazz.getName());
+        byte[] byteCode = byteCodeMap.get(getNormalClassName(clazz));
 
         String classFileName = getClassFileName(clazz);
         writeByteCodeToFile(classFileName, byteCode);
@@ -56,7 +57,7 @@ public class ByteCodeHolder {
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = "classes" + File.separator + clazz.getName().replace(".", File.separator);
+        String classFileName = "classes" + File.separator + getNormalClassName(clazz).replace(".", File.separator);
         createClassFileNameDirectory(classFileName);
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
@@ -75,7 +76,7 @@ public class ByteCodeHolder {
 
     private static void writeByteCodeToFile(String fileName, byte[] byteCode) {
         if (fileName != null && byteCode != null) {
-            try (FileOutputStream stream = new FileOutputStream(fileName)) {
+            try (FileOutputStream stream = new FileOutputStream(fileName.replace("$", ""))) { //need for correct name something classes
                 stream.write(byteCode);
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
@@ -83,5 +84,14 @@ public class ByteCodeHolder {
         } else {
             throw new RuntimeException("Empty file name or byte code");
         }
+    }
+
+    private static String getNormalClassName(Class<?> clazz) {
+        String className = clazz.getName();
+        if (className.contains("/")) {
+            className = className.substring(0, className.indexOf("/"));
+        }
+
+        return className;
     }
 }
