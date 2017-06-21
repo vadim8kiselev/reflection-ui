@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.generic;
 
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
+import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
 import java.lang.reflect.AnnotatedArrayType;
@@ -14,6 +15,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GenericsUtils {
@@ -51,11 +53,12 @@ public class GenericsUtils {
         return bounds;
     }
 
+    //If type is inner nested class then type use annotation is invisible :(
     public String resolveType(Type type, AnnotatedType annotatedType) {
         String annotations = "";
         String boundType = "";
-        if (annotatedType != null &&
-                !(type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType)) {
+        if (annotatedType != null && !(type instanceof Class
+                && ((Class) type).isArray() || type instanceof GenericArrayType)) {
             annotations = new AnnotationUtils().getInlineAnnotations(getAnnotatedType(annotatedType));
         }
 
@@ -68,7 +71,12 @@ public class GenericsUtils {
                 boundType += new AnnotationUtils()
                         .getInlineAnnotations(getAnnotatedTypeForArray(clazz, annotatedArrayType)) + "[]";
             } else {
-                boundType = new NameUtils().getTypeName(clazz);
+                if (isNeedNameForInnerClass(clazz)) {
+                    String typeName = resolveType(clazz.getDeclaringClass(), null);
+                    boundType = typeName.isEmpty() ? "" : typeName + ".";
+                }
+
+                boundType += new NameUtils().getTypeName(clazz);
                 if (boundType.contains(".") && !annotations.isEmpty()) {
                     String packageName = clazz.getPackage().getName();
                     String simpleName = new NameUtils().getSimpleName(clazz);
@@ -83,6 +91,10 @@ public class GenericsUtils {
 
         } else if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
+            if (isNeedNameForInnerClass(Class.class.cast(parameterizedType.getRawType()))) {
+                //Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
+                boundType = resolveType(parameterizedType.getOwnerType(), null) + ".";
+            }
 
             String parametrizedRawTypeName = new NameUtils()
                     .getTypeName(Class.class.cast(parameterizedType.getRawType()));
@@ -90,13 +102,13 @@ public class GenericsUtils {
             String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType,
                     AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType)))) + ">";
 
-            boundType = parametrizedRawTypeName + genericArguments;
+            boundType += parametrizedRawTypeName + genericArguments;
 
         } else if (type instanceof GenericArrayType) {
             GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
             AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType);
-            boundType +=  new AnnotationUtils().getInlineAnnotations(getAnnotatedTypeForArray(genericArrayType,
+            boundType += new AnnotationUtils().getInlineAnnotations(getAnnotatedTypeForArray(genericArrayType,
                     annotatedArrayType)) + "[]";
         }
 
@@ -153,7 +165,12 @@ public class GenericsUtils {
         List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        AnnotatedType[] annotatedActualTypeArguments = annotatedParameterizedType.getAnnotatedActualTypeArguments();
+        AnnotatedType[] annotatedActualTypeArguments;
+        if (annotatedParameterizedType != null) {
+            annotatedActualTypeArguments = annotatedParameterizedType.getAnnotatedActualTypeArguments();
+        } else {
+            annotatedActualTypeArguments = new AnnotatedType[0];
+        }
 
         for (int i = 0; i < actualTypeArguments.length; i++) {
             if (actualTypeArguments[i] instanceof WildcardType) {
@@ -167,7 +184,11 @@ public class GenericsUtils {
                         annotatedWildcardType.getAnnotatedLowerBounds());
                 genericArguments.add(wildcard);
             } else {
-                genericArguments.add(resolveType(actualTypeArguments[i], annotatedActualTypeArguments[i]));
+                if (annotatedActualTypeArguments.length == 0) {
+                    genericArguments.add(resolveType(actualTypeArguments[i], null));
+                } else {
+                    genericArguments.add(resolveType(actualTypeArguments[i], annotatedActualTypeArguments[i]));
+                }
             }
         }
 
@@ -189,5 +210,33 @@ public class GenericsUtils {
             wildcard += String.join(" & ", bounds);
         }
         return wildcard;
+    }
+
+    private boolean isNeedNameForInnerClass(Class<?> innerClass) {
+        return innerClass.isMemberClass()
+                && (!getTopClass(innerClass).equals(getTopClass(ManagerImportUtils.getImportUtils().getParsedClass()))
+                || !isInVisibilityZone(innerClass));
+    }
+
+    private Class<?> getTopClass(Class<?> innerClass) {
+        if (innerClass.getDeclaringClass() == null) {
+            return innerClass;
+        } else {
+            return getTopClass(innerClass.getDeclaringClass());
+        }
+    }
+
+    private boolean isInVisibilityZone(Class<?> innerClass) {
+        Class<?> currentClass = ManagerImportUtils.getImportUtils().getCurrentClass();
+        while (currentClass != null) {
+            List<Class<?>> innerClasses = Arrays.asList(currentClass.getDeclaredClasses());
+            if (innerClasses.contains(innerClass)) {
+                return true;
+            }
+
+            currentClass = currentClass.getDeclaringClass();
+        }
+
+        return false;
     }
 }
