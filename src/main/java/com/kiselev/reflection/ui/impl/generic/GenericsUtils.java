@@ -30,8 +30,8 @@ public class GenericsUtils {
             String bounds = String.join(" & ", getBounds(parameter));
             String annotations = new AnnotationUtils().getInlineAnnotations(parameter);
 
-            generics.add((annotations.isEmpty() ? "" : annotations + " ")
-                    + parameter.getName() + (!bounds.isEmpty() ? " extends " + bounds : ""));
+            generics.add(getCorrectAnnotations(annotations) + parameter.getName()
+                    + (!bounds.isEmpty() ? " extends " + bounds : ""));
         }
 
         return (typeParameters.length != 0) ? "<" + String.join(", ", generics) + "> " : whitespace;
@@ -47,7 +47,7 @@ public class GenericsUtils {
 
             String boundType = resolveType(typeBounds[i]);
             if (!boundType.isEmpty()) {
-                bounds.add((annotations.isEmpty() ? "" : annotations + " ") + boundType);
+                bounds.add(getCorrectAnnotations(annotations) + boundType);
             }
         }
         return bounds;
@@ -93,7 +93,8 @@ public class GenericsUtils {
             ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
             if (isNeedNameForInnerClass(Class.class.cast(parameterizedType.getRawType()))) {
                 //Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
-                boundType = resolveType(parameterizedType.getOwnerType(), null) + ".";
+                boundType = resolveType(parameterizedType.getOwnerType(), null) + "." + getCorrectAnnotations(annotations);
+                annotations = "";
             }
 
             String parametrizedRawTypeName = new NameUtils()
@@ -112,7 +113,7 @@ public class GenericsUtils {
                     annotatedArrayType)) + "[]";
         }
 
-        return (!annotations.isEmpty() ? annotations + " " : "") + boundType;
+        return getCorrectAnnotations(annotations) + boundType;
     }
 
     public String resolveType(Type type) {
@@ -238,5 +239,9 @@ public class GenericsUtils {
         }
 
         return false;
+    }
+
+    private String getCorrectAnnotations(String annotations) {
+        return annotations.isEmpty() ? "" : annotations + " ";
     }
 }
