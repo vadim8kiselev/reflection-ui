@@ -109,10 +109,13 @@ public class AnnotationUtils {
             Class<?> type = value.getReturnType();
             if (type.isArray()) {
                 Class<?> componentType = type.getComponentType();
-                if (componentType.isAnnotation() && componentType.isAnnotationPresent(Repeatable.class)) {
+                Annotation containerAnnotation = componentType.getAnnotation(Repeatable.class);
+                if (componentType.isAnnotation() && containerAnnotation != null
+                        && containerAnnotation.getClass().getMethod("value")
+                        .invoke(containerAnnotation).equals(annotationTypeClass)) {
+                    value.setAccessible(true);
                     Object invoke = value.invoke(annotation);
                     List<Annotation> annotations = new ArrayList<>();
-
                     for (int i = 0; i < Array.getLength(invoke); i++) {
                         annotations.add(Annotation.class.cast(Array.get(invoke, i)));
                     }
