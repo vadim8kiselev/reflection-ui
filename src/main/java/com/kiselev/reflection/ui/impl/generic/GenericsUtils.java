@@ -53,7 +53,7 @@ public class GenericsUtils {
         return bounds;
     }
 
-    //If type is inner nested class then type use annotation is invisible :(
+    //If type is inner nested class then "use type" annotations is invisible :(
     public String resolveType(Type type, AnnotatedType annotatedType) {
         String annotations = "";
         String boundType = "";

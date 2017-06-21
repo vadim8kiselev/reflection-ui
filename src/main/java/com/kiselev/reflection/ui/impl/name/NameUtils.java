@@ -7,15 +7,8 @@ public class NameUtils {
 
     public String getTypeName(Class<?> clazz) {
         ImportUtils importUtils = ManagerImportUtils.getImportUtils();
-        String typeName;
 
-        if (importUtils.addImport(clazz)) {
-            typeName = getSimpleName(clazz);
-        } else {
-            typeName = clazz.getName();
-        }
-
-        return typeName;
+        return importUtils.addImport(clazz) ? getSimpleName(clazz) : clazz.getName();
     }
 
     public String getSimpleName(Class<?> clazz) {

@@ -8,11 +8,9 @@ import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
 import com.kiselev.reflection.ui.impl.value.ValueUtils;
 
-import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MethodUtils {
@@ -57,7 +55,8 @@ public class MethodUtils {
 
         String body = isMethodRealization(method) ? " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}" : ";";
 
-        methodSignature += annotations + indent + isDefault + modifiers + generics + returnType + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
+        methodSignature += annotations + indent + isDefault + modifiers + generics + returnType
+                + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
 
         return methodSignature;
     }
