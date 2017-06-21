@@ -4,12 +4,11 @@ import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
+import com.kiselev.reflection.ui.impl.value.ValueUtils;
 
-import java.lang.reflect.AnnotatedParameterizedType;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FieldUtils {
@@ -41,7 +40,19 @@ public class FieldUtils {
 
         String fieldName = field.getName();
 
-        fieldSignature += annotations + indent + modifiers + type + " " + fieldName + ";";
+        String fieldValue = "";
+
+        if (Modifier.isStatic(field.getModifiers())) {
+            try {
+                field.setAccessible(true);
+                fieldValue = new ValueUtils().getValue(field.get(null));
+            } catch (IllegalAccessException exception) {
+                throw new RuntimeException(exception);
+            }
+        }
+
+        fieldSignature += annotations + indent + modifiers + type + " " + fieldName
+                + ("".equals(fieldValue) ? "" : " = " + fieldValue) + ";";
 
         return fieldSignature;
     }

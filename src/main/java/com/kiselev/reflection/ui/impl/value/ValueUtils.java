@@ -20,7 +20,7 @@ public class ValueUtils {
                 }
 
                 String values = String.join(", ", listValues);
-                if (listValues.size() == 1) {
+                if (listValues.size() == 1 || values.isEmpty()) {
                     return values;
                 } else {
                     return "{" + values + "}";
@@ -33,6 +33,7 @@ public class ValueUtils {
             if (object instanceof Number || object instanceof Boolean) return object.toString();
             if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(Annotation.class.cast(object));
             if (object instanceof Class) return new GenericsUtils().resolveType(Class.class.cast(object)) + ".class";
+            return "";
         }
 
         return null;
