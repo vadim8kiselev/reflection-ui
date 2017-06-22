@@ -4,9 +4,9 @@ import java.lang.reflect.Modifier;
 
 public class ModifiersUtils {
 
-    private static final int BRIDGE    = 0x00000040;
+    private static final int BRIDGE = 0x00000040;
 
-    private static final int MANDATED  = 0x00008000;
+    private static final int MANDATED = 0x00008000;
 
     private final int SYNTHETIC = 0x00001000;
 

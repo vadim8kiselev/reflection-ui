@@ -76,6 +76,7 @@ public class AgentBuilder {
                     jarStream.putNextEntry(new JarEntry(getSaveClassName(attachedClass)));
                     jarStream.write(getClassBytes(attachedClass));
                     jarStream.flush();
+                    jarStream.closeEntry();
                 }
                 jarStream.finish();
             } catch (IOException exception) {
@@ -124,7 +125,7 @@ public class AgentBuilder {
         private byte[] getClassBytes(Class<?> clazz) {
             String classFileName = getSaveClassName(clazz);
             try (InputStream stream = getClassLoader().getResourceAsStream(classFileName);
-                    ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
+                 ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
                 int reads = stream.read();
 
                 while (reads != -1) {

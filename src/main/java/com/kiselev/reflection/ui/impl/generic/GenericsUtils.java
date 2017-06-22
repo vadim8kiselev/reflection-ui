@@ -204,7 +204,7 @@ public class GenericsUtils {
             wildcard = " " + boundCase + " ";
             List<String> bounds = new ArrayList<>();
             for (int i = 0; i < types.length; i++) {
-                bounds.add(resolveType(types[i], (annotatedTypes == null ||  annotatedTypes.length == 0
+                bounds.add(resolveType(types[i], (annotatedTypes == null || annotatedTypes.length == 0
                         ? null : annotatedTypes[i])));
             }
             wildcard += String.join(" & ", bounds);
