@@ -16,7 +16,9 @@ public class ValueUtils {
             if (clazz.isArray()) {
                 List<String> listValues = new ArrayList<>();
                 for (Object listValue : getArrayValues(object)) {
-                    listValues.add(getValue(listValue));
+                    if (!(listValue != null && !(listValue instanceof String) && listValue.toString().isEmpty())) {
+                        listValues.add(getValue(listValue));
+                    }
                 }
 
                 String values = String.join(", ", listValues);
