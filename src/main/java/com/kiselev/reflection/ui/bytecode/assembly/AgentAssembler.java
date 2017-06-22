@@ -19,7 +19,7 @@ public class AgentAssembler {
                 String agentPath = AgentBuilder.getBuilder()
                         .addAgentName("agent.jar")
                         .addAgentClass(Agent.class)
-                        .addManifest("REFLECTIONUI-MANIFEST.MF")
+                        .addManifest("RUI-MANIFEST.MF")
                         .addClass(Transformer.class)
                         .build();
 

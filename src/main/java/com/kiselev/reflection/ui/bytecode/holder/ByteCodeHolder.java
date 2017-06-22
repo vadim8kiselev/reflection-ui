@@ -33,7 +33,7 @@ public class ByteCodeHolder {
             AgentAssembler.assembly();
         }
 
-        retransformClass(clazz);
+        retransformationClass(clazz);
 
         byte[] byteCode = byteCodeMap.get(getNormalClassName(clazz));
 
@@ -46,7 +46,7 @@ public class ByteCodeHolder {
         ByteCodeHolder.instrumentation = instrumentation;
     }
 
-    private static void retransformClass(Class<?> clazz) {
+    private static void retransformationClass(Class<?> clazz) {
         if (instrumentation != null) {
             try {
                 instrumentation.retransformClasses(clazz);
@@ -58,7 +58,7 @@ public class ByteCodeHolder {
 
     private static String getClassFileName(Class<?> clazz) {
         String classFileName = "classes" + File.separator + getNormalClassName(clazz)
-                .replace(".", File.separator);
+                .replace(Constants.Symbols.POINT, File.separator);
         createClassFileNameDirectory(classFileName);
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
@@ -89,8 +89,8 @@ public class ByteCodeHolder {
 
     private static String getNormalClassName(Class<?> clazz) {
         String className = clazz.getName();
-        if (className.contains("/")) {
-            className = className.substring(0, className.indexOf("/"));
+        if (className.contains(Constants.Symbols.SLASH)) {
+            className = className.substring(0, className.indexOf(Constants.Symbols.SLASH));
         }
 
         return className;

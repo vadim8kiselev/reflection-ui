@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.name;
 
+import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.imports.ImportUtils;
 import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
 
@@ -14,7 +15,7 @@ public class NameUtils {
     public String getSimpleName(Class<?> clazz) {
         String typeName = clazz.getSimpleName();
         if (typeName.isEmpty()) {
-            typeName = clazz.getName().substring(clazz.getName().lastIndexOf('.') + 1);
+            typeName = clazz.getName().substring(clazz.getName().lastIndexOf(Constants.Symbols.POINT) + 1);
         }
 
         return typeName;

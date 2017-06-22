@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.generic;
 
+import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
@@ -73,14 +74,14 @@ public class GenericsUtils {
             } else {
                 if (isNeedNameForInnerClass(clazz)) {
                     String typeName = resolveType(clazz.getDeclaringClass(), null);
-                    boundType = typeName.isEmpty() ? "" : typeName + ".";
+                    boundType = typeName.isEmpty() ? "" : typeName + Constants.Symbols.POINT;
                 }
 
                 boundType += new NameUtils().getTypeName(clazz);
-                if (!clazz.isMemberClass() && boundType.contains(".") && !annotations.isEmpty()) {
+                if (!clazz.isMemberClass() && boundType.contains(Constants.Symbols.POINT) && !annotations.isEmpty()) {
                     String packageName = clazz.getPackage().getName();
                     String simpleName = new NameUtils().getSimpleName(clazz);
-                    boundType = packageName + "." + annotations + " " + simpleName;
+                    boundType = packageName + Constants.Symbols.POINT + annotations + " " + simpleName;
                     annotations = "";
                 }
             }
@@ -94,7 +95,7 @@ public class GenericsUtils {
             if (isNeedNameForInnerClass(Class.class.cast(parameterizedType.getRawType()))) {
                 //Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
                 boundType = resolveType(parameterizedType.getOwnerType(), null)
-                        + "." + getCorrectAnnotations(annotations);
+                        + Constants.Symbols.POINT + getCorrectAnnotations(annotations);
                 annotations = "";
             }
 

@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.bytecode.agent;
 
+import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.bytecode.holder.ByteCodeHolder;
 
 import java.lang.instrument.ClassFileTransformer;
@@ -23,6 +24,6 @@ public class Transformer implements ClassFileTransformer {
     }
 
     private String transformClassName(String canonicalClassName) {
-        return canonicalClassName.replace("/", ".");
+        return canonicalClassName.replace(Constants.Symbols.SLASH, Constants.Symbols.POINT);
     }
 }

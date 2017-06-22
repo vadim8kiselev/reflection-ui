@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.imports;
 
+import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class ImportUtils {
         List<String> imports = new ArrayList<>();
 
         for (Class<?> className : classesForImport) {
-            imports.add("import " + className.getName().replace("$", ".") + ";");
+            imports.add("import " + className.getName().replace("$", Constants.Symbols.POINT) + ";");
         }
 
         Collections.sort(imports);
