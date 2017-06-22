@@ -27,6 +27,7 @@ public class AnnotationUtils {
 
     public String getAnnotations(AnnotatedElement annotatedElement) {
         StringBuilder annotations = new StringBuilder();
+        if (annotatedElement == null) return "";
 
         String indent = new IndentUtils().getIndent(annotatedElement);
 
