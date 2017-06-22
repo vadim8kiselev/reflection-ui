@@ -28,7 +28,7 @@ public class AgentBuilder {
 
         private Class<?> agentClass;
 
-        private String manifestName = "MANIFEST.MF";
+        private String manifestName = "MANIFEST.mf";
 
         private List<Class<?>> attachedClasses = new ArrayList<>();
 
@@ -84,9 +84,8 @@ public class AgentBuilder {
         }
 
         private Manifest getManifest() {
-            try {
-                InputStream stream = ClassLoader.getSystemClassLoader()
-                        .getResourceAsStream("META-INF/" + manifestName.toUpperCase());
+            String manifest = Constants.Folders.MANIFEST_HOME + Constants.Symbols.SLASH + manifestName;
+            try (InputStream stream = getClassLoader().getResourceAsStream(manifest)) {
                 if (stream == null) {
                     throw new RuntimeException("Manifest file cannot be null");
                 }
@@ -118,13 +117,14 @@ public class AgentBuilder {
         }
 
         private String getSaveClassName(Class<?> clazz) {
-            return clazz.getName().replace(".", File.separator) + Constants.Suffix.CLASS_FILE_SUFFIX;
+            return clazz.getName().replace(Constants.Symbols.POINT, Constants.Symbols.SLASH)
+                    + Constants.Suffix.CLASS_FILE_SUFFIX;
         }
 
         private byte[] getClassBytes(Class<?> clazz) {
             String classFileName = getSaveClassName(clazz);
-            InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(classFileName);
-            try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
+            try (InputStream stream = getClassLoader().getResourceAsStream(classFileName);
+                    ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
                 int reads = stream.read();
 
                 while (reads != -1) {
@@ -136,6 +136,10 @@ public class AgentBuilder {
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
+        }
+
+        private ClassLoader getClassLoader() {
+            return ClassLoader.getSystemClassLoader();
         }
     }
 }
