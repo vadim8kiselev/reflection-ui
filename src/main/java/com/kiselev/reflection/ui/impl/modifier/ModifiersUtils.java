@@ -4,6 +4,10 @@ import java.lang.reflect.Modifier;
 
 public class ModifiersUtils {
 
+    private static final int BRIDGE    = 0x00000040;
+
+    private static final int MANDATED  = 0x00008000;
+
     private final int SYNTHETIC = 0x00001000;
 
     private final int IMPLICIT = 0x8000;
@@ -30,6 +34,10 @@ public class ModifiersUtils {
 
         if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
 
+        if (isMandated(modifierIndex)) modifiers += "mandated ";
+
+        if (isBridge(modifierIndex)) modifiers += "bridge ";
+
         if (Modifier.isFinal(modifierIndex)) modifiers += "final ";
 
         return modifiers;
@@ -41,6 +49,14 @@ public class ModifiersUtils {
 
     private boolean isImplicit(int modifierIndex) {
         return (modifierIndex & IMPLICIT) != 0;
+    }
+
+    private boolean isMandated(int mod) {
+        return (mod & MANDATED) != 0;
+    }
+
+    private boolean isBridge(int mod) {
+        return (mod & MANDATED) != 0;
     }
 }
 
