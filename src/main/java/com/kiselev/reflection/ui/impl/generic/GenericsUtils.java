@@ -77,7 +77,7 @@ public class GenericsUtils {
                 }
 
                 boundType += new NameUtils().getTypeName(clazz);
-                if (boundType.contains(".") && !annotations.isEmpty()) {
+                if (!clazz.isMemberClass() && boundType.contains(".") && !annotations.isEmpty()) {
                     String packageName = clazz.getPackage().getName();
                     String simpleName = new NameUtils().getSimpleName(clazz);
                     boundType = packageName + "." + annotations + " " + simpleName;
@@ -98,12 +98,17 @@ public class GenericsUtils {
                 annotations = "";
             }
 
+            String genericArguments = "";
+
             String parametrizedRawTypeName = new NameUtils()
                     .getTypeName(Class.class.cast(parameterizedType.getRawType()));
 
-            String genericArguments = "<" + String.join(", ", getGenericArguments(parameterizedType,
-                    AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType)))) + ">";
+            List<String> innerGenericTypes = getGenericArguments(parameterizedType,
+                    AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType)));
 
+            if (!innerGenericTypes.isEmpty()) {
+                genericArguments = "<" + String.join(", ", innerGenericTypes) + ">";
+            }
             boundType += parametrizedRawTypeName + genericArguments;
 
         } else if (type instanceof GenericArrayType) {
@@ -175,7 +180,9 @@ public class GenericsUtils {
                 WildcardType wildcardType = WildcardType.class.cast(actualTypeArguments[i]);
                 AnnotatedWildcardType annotatedWildcardType = AnnotatedWildcardType.class
                         .cast(annotatedActualTypeArguments != null ? annotatedActualTypeArguments[i] : null);
-                String wildcard = "?";
+                String wildcard = getCorrectAnnotations(new AnnotationUtils()
+                        .getInlineAnnotations(annotatedWildcardType)) + "?";
+
                 wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends",
                         annotatedWildcardType != null ? annotatedWildcardType.getAnnotatedUpperBounds() : null);
                 wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super",
@@ -196,7 +203,8 @@ public class GenericsUtils {
             wildcard = " " + boundCase + " ";
             List<String> bounds = new ArrayList<>();
             for (int i = 0; i < types.length; i++) {
-                bounds.add(resolveType(types[i], (annotatedTypes != null ? annotatedTypes[i] : null)));
+                bounds.add(resolveType(types[i], (annotatedTypes == null ||  annotatedTypes.length == 0
+                        ? null : annotatedTypes[i])));
             }
             wildcard += String.join(" & ", bounds);
         }
