@@ -73,7 +73,7 @@ public class ImportUtils {
         List<String> imports = new ArrayList<>();
 
         for (Class<?> className : classesForImport) {
-            imports.add("import " + className.getName() + ";");
+            imports.add("import " + className.getName().replace("$", ".") + ";");
         }
 
         Collections.sort(imports);
@@ -109,6 +109,6 @@ public class ImportUtils {
     }
 
     private String getPackageName(Class<?> clazz) {
-        return clazz.getPackage().getName();
+        return clazz.getPackage() == null ? "" : clazz.getPackage().getName();
     }
 }

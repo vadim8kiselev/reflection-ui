@@ -10,7 +10,7 @@ public class ManagerImportUtils {
 
     private static Map<Long, ImportUtils> importUtilsMap = new HashMap<>();
 
-    public static void registerImportUtils(Class<?> clazz) {
+    public static synchronized void registerImportUtils(Class<?> clazz) {
         long id = Thread.currentThread().getId();
         ImportUtils importUtils = importUtilsMap.get(id);
         if (!clazz.isMemberClass() || clazz.isMemberClass()
@@ -19,7 +19,7 @@ public class ManagerImportUtils {
         }
     }
 
-    public static ImportUtils getImportUtils() {
+    public static synchronized ImportUtils getImportUtils() {
         long id = Thread.currentThread().getId();
         if (!importUtilsMap.containsKey(id)) {
             throw new RuntimeException("Import utils for current thread is not register");
