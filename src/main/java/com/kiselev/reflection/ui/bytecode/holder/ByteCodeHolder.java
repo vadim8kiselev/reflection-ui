@@ -57,7 +57,8 @@ public class ByteCodeHolder {
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = "classes" + File.separator + getNormalClassName(clazz).replace(".", File.separator);
+        String classFileName = "classes" + File.separator + getNormalClassName(clazz)
+                .replace(".", File.separator);
         createClassFileNameDirectory(classFileName);
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
@@ -75,8 +76,8 @@ public class ByteCodeHolder {
     }
 
     private static void writeByteCodeToFile(String fileName, byte[] byteCode) {
-        if (fileName != null && byteCode != null) {
-            try (FileOutputStream stream = new FileOutputStream(fileName.replace("$", ""))) { //need for correct name something classes
+        if (fileName != null && byteCode != null) {                     //need for correct name something classes
+            try (FileOutputStream stream = new FileOutputStream(fileName.replace("$", ""))) {
                 stream.write(byteCode);
             } catch (IOException exception) {
                 throw new RuntimeException(exception);

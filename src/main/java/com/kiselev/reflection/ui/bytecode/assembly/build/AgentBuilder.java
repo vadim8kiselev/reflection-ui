@@ -95,8 +95,10 @@ public class AgentBuilder {
             for (Class<?> clazz : attachedClasses) {
                 ProtectionDomain domain = clazz.getProtectionDomain();
                 if (domain != null) {
-                    String classFileProtectionDomain = domain.getCodeSource().getLocation().getPath().substring(1).replace("/", File.separator);
-                    String classFilePath = clazz.getName().replace(".", File.separator) + Constants.Suffix.CLASS_FILE_SUFFIX;
+                    String classFileProtectionDomain = domain.getCodeSource()
+                            .getLocation().getPath().substring(1).replace("/", File.separator);
+                    String classFilePath = clazz.getName().replace(".", File.separator)
+                            + Constants.Suffix.CLASS_FILE_SUFFIX;
 
                     builder.append(Constants.Flag.JAR_C_FLAG).append(Constants.Symbols.GAP)
                             .append(classFileProtectionDomain).append(Constants.Symbols.GAP)

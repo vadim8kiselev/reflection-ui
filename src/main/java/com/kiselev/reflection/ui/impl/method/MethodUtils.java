@@ -43,7 +43,8 @@ public class MethodUtils {
 
         String generics = new GenericsUtils().getGenerics(method);
 
-        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(), method.getAnnotatedReturnType());
+        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(),
+                method.getAnnotatedReturnType());
 
         String methodName = method.getName();
 
@@ -53,7 +54,8 @@ public class MethodUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
-        String body = isMethodRealization(method) ? " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}" : ";";
+        String body = isMethodRealization(method) ? " {\n" + indent
+                + "    /* Compiled code */" + "\n" + indent + "}" : ";";
 
         methodSignature += annotations + indent + isDefault + modifiers + generics + returnType
                 + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;

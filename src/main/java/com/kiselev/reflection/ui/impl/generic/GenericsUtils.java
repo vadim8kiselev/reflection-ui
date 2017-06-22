@@ -93,7 +93,8 @@ public class GenericsUtils {
             ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
             if (isNeedNameForInnerClass(Class.class.cast(parameterizedType.getRawType()))) {
                 //Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
-                boundType = resolveType(parameterizedType.getOwnerType(), null) + "." + getCorrectAnnotations(annotations);
+                boundType = resolveType(parameterizedType.getOwnerType(), null)
+                        + "." + getCorrectAnnotations(annotations);
                 annotations = "";
             }
 

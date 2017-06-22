@@ -41,7 +41,8 @@ public class ArgumentUtils {
 
         String parameterName = parameter.getName(); // TODO : -parameters check
 
-        argumentSignature += (!annotation.isEmpty() ? annotation + " " : "") + modifiers + genericType + " " + parameterName;
+        argumentSignature += (!annotation.isEmpty() ? annotation + " " : "")
+                + modifiers + genericType + " " + parameterName;
 
         return argumentSignature;
     }

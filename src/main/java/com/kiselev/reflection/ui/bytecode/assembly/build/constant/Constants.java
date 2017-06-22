@@ -20,10 +20,15 @@ public class Constants {
 
         public static final String JAR_EXE_COMMAND = "\""
                 + System.getProperty("java.home")
-                + File.separator + ".."
+                + (!isJava9() ? File.separator + ".." : "")
                 + File.separator + "bin"
                 + File.separator + "jar.exe"
                 + "\"";
+
+        private static boolean isJava9() {
+            return System.getProperty("java.version").startsWith("9")
+                    || System.getProperty("java.version").startsWith("1.9");
+        }
     }
 
     public static class Suffix {

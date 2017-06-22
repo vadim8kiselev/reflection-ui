@@ -25,7 +25,8 @@ public class InheritancesUtils {
     }
 
     private String getInterfaces(Class<?> clazz) {
-        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), clazz.getAnnotatedInterfaces()));
+        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(),
+                clazz.getAnnotatedInterfaces()));
         String relationship = clazz.isInterface() ? "extends " : "implements ";
         return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
     }

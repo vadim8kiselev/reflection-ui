@@ -13,7 +13,8 @@ import java.lang.management.ManagementFactory;
  */
 public class AgentAttacher {
 
-    public static void attach(String agentPath) throws IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException {
+    public static void attach(String agentPath) throws IOException,
+            AttachNotSupportedException, AgentLoadException, AgentInitializationException {
         String virtualMachineProcessId = getVirtualMachineProcessId();
         VirtualMachine virtualMachine = VirtualMachine.attach(virtualMachineProcessId);
         virtualMachine.loadAgent(agentPath, "");
