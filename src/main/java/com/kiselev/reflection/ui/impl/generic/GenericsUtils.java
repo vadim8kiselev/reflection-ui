@@ -167,30 +167,23 @@ public class GenericsUtils {
         List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        AnnotatedType[] annotatedActualTypeArguments;
-        if (annotatedParameterizedType != null) {
-            annotatedActualTypeArguments = annotatedParameterizedType.getAnnotatedActualTypeArguments();
-        } else {
-            annotatedActualTypeArguments = new AnnotatedType[0];
-        }
+        AnnotatedType[] annotatedActualTypeArguments = annotatedParameterizedType != null
+                ? annotatedParameterizedType.getAnnotatedActualTypeArguments() : null;
 
         for (int i = 0; i < actualTypeArguments.length; i++) {
             if (actualTypeArguments[i] instanceof WildcardType) {
                 WildcardType wildcardType = WildcardType.class.cast(actualTypeArguments[i]);
                 AnnotatedWildcardType annotatedWildcardType = AnnotatedWildcardType.class
-                        .cast(annotatedActualTypeArguments[i]);
+                        .cast(annotatedActualTypeArguments != null ? annotatedActualTypeArguments[i] : null);
                 String wildcard = "?";
                 wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends",
-                        annotatedWildcardType.getAnnotatedUpperBounds());
+                        annotatedWildcardType != null ? annotatedWildcardType.getAnnotatedUpperBounds() : null);
                 wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super",
-                        annotatedWildcardType.getAnnotatedLowerBounds());
+                        annotatedWildcardType != null ? annotatedWildcardType.getAnnotatedUpperBounds() : null);
                 genericArguments.add(wildcard);
             } else {
-                if (annotatedActualTypeArguments.length == 0) {
-                    genericArguments.add(resolveType(actualTypeArguments[i], null));
-                } else {
-                    genericArguments.add(resolveType(actualTypeArguments[i], annotatedActualTypeArguments[i]));
-                }
+                genericArguments.add(resolveType(actualTypeArguments[i],
+                        annotatedActualTypeArguments != null ? annotatedActualTypeArguments[i] : null));
             }
         }
 
@@ -203,11 +196,7 @@ public class GenericsUtils {
             wildcard = " " + boundCase + " ";
             List<String> bounds = new ArrayList<>();
             for (int i = 0; i < types.length; i++) {
-                if (annotatedTypes.length != 0) {
-                    bounds.add(resolveType(types[i], annotatedTypes[i]));
-                } else {
-                    bounds.add(resolveType(types[i], null));
-                }
+                bounds.add(resolveType(types[i], (annotatedTypes != null ? annotatedTypes[i] : null)));
             }
             wildcard += String.join(" & ", bounds);
         }
