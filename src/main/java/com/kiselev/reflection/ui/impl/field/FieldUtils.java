@@ -40,20 +40,24 @@ public class FieldUtils {
 
         String fieldName = field.getName();
 
-        String fieldValue = "";
-
-        if (Modifier.isStatic(field.getModifiers())) {
-            try {
-                field.setAccessible(true);
-                fieldValue = new ValueUtils().getValue(field.get(null));
-            } catch (IllegalAccessException exception) {
-                throw new RuntimeException(exception);
-            }
-        }
+        String fieldValue = getFieldValue(field);
 
         fieldSignature += annotations + indent + modifiers + type + " " + fieldName
                 + ("".equals(fieldValue) ? "" : " = " + fieldValue) + ";";
 
         return fieldSignature;
+    }
+
+    private String getFieldValue(Field field) {
+        if (Modifier.isStatic(field.getModifiers())) {
+            try {
+                field.setAccessible(true);
+                return new ValueUtils().getValue(field.get(null));
+            } catch (IllegalAccessException exception) {
+                throw new RuntimeException(exception);
+            }
+        }
+
+        return "";
     }
 }
