@@ -83,7 +83,8 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String classes = new ClassUtils().getClasses(clazz);
 
-        classContent += composeContent(Arrays.asList(fields, constructors, methods, classes)); //fields + constructors + methods + classes;
+        //fields + constructors + methods + classes;
+        classContent += composeContent(Arrays.asList(fields, constructors, methods, classes));
 
         return classContent;
     }
