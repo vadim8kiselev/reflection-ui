@@ -30,7 +30,7 @@ public class ImportUtils {
             classForImport = resolveArray(classForImport);
         }
 
-        if (isContainsImportBySimpleName(classForImport)) {
+        if (isContainedImport(classForImport)) {
             return false;
         } else if (!classesForImport.contains(classForImport)
                 && !classForImport.isPrimitive()
@@ -60,9 +60,10 @@ public class ImportUtils {
         this.classesForImport = new HashSet<>();
     }
 
-    private boolean isContainsImportBySimpleName(Class<?> classForImport) {
+    private boolean isContainedImport(Class<?> classForImport) {
         for (Class<?> clazz : classesForImport) {
-            if (areEqualBySimpleClass(clazz, classForImport)) {
+            if (!areEqualByName(clazz, classForImport)
+                    && areEqualBySimpleName(clazz, classForImport)) {
                 return true;
             }
         }
@@ -70,7 +71,11 @@ public class ImportUtils {
         return false;
     }
 
-    private boolean areEqualBySimpleClass(Class<?> source, Class<?> target) {
+    private boolean areEqualByName(Class<?> source, Class<?> target) {
+        return source.getName().equals(target.getName());
+    }
+
+    private boolean areEqualBySimpleName(Class<?> source, Class<?> target) {
         NameUtils nameUtils = new NameUtils();
         return nameUtils.getSimpleName(source).equals(nameUtils.getSimpleName(target));
     }

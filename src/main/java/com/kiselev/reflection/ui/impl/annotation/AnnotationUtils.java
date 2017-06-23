@@ -7,10 +7,12 @@ import com.kiselev.reflection.ui.impl.value.ValueUtils;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 
 public class AnnotationUtils {
 
@@ -131,7 +133,7 @@ public class AnnotationUtils {
         return null;
     }
 
-    private Collection<Annotation> retrieveRepeatableAnnotations(Annotation annotation) {
+    private List<Annotation> retrieveRepeatableAnnotations(Annotation annotation) {
         List<Annotation> annotations = new ArrayList<>();
 
         try {
