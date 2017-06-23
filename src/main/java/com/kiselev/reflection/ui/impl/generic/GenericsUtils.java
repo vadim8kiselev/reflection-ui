@@ -74,10 +74,13 @@ public class GenericsUtils {
             } else {
                 if (isNeedNameForInnerClass(clazz)) {
                     String typeName = resolveType(clazz.getDeclaringClass(), null);
-                    boundType = typeName.isEmpty() ? "" : typeName + Constants.Symbols.POINT;
+                    boundType = typeName.isEmpty() ? "" : typeName + Constants.Symbols.POINT
+                            + getCorrectAnnotations(annotations);
+                    annotations = "";
                 }
 
                 boundType += new NameUtils().getTypeName(clazz);
+
                 if (!clazz.isMemberClass() && boundType.contains(Constants.Symbols.POINT) && !annotations.isEmpty()) {
                     String packageName = clazz.getPackage().getName();
                     String simpleName = new NameUtils().getSimpleName(clazz);
@@ -219,11 +222,9 @@ public class GenericsUtils {
     }
 
     private Class<?> getTopClass(Class<?> innerClass) {
-        if (innerClass.getDeclaringClass() == null) {
-            return innerClass;
-        } else {
-            return getTopClass(innerClass.getDeclaringClass());
-        }
+        return  innerClass.getDeclaringClass() == null ?
+                innerClass : getTopClass(innerClass.getDeclaringClass());
+
     }
 
     private boolean isInVisibilityZone(Class<?> innerClass) {
