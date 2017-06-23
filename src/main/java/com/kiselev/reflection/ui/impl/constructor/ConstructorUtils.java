@@ -6,7 +6,6 @@ import com.kiselev.reflection.ui.impl.exception.ExceptionUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
-import com.kiselev.reflection.ui.impl.name.NameUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -40,13 +39,15 @@ public class ConstructorUtils {
 
         String generics = new GenericsUtils().getGenerics(constructor);
 
-        String constructorName = new NameUtils().getTypeName(constructor.getDeclaringClass());
+        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(),
+                constructor.getAnnotatedReturnType());
 
         String arguments = new ArgumentUtils().getArguments(constructor);
 
         String exceptions = new ExceptionUtils().getExceptions(constructor);
 
-        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + " {\n" + indent + "}";
+        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments
+                + exceptions + " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}";
 
         return constructorSignature;
     }

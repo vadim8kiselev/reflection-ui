@@ -1,29 +1,36 @@
 package com.kiselev.reflection.ui.impl;
 
+import com.kiselev.reflection.ui.api.ReflectionUI;
 import com.kiselev.reflection.ui.bytecode.holder.ByteCodeHolder;
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
-import com.kiselev.reflection.ui.api.ReflectionUI;
 import com.kiselev.reflection.ui.impl.classes.ClassUtils;
 import com.kiselev.reflection.ui.impl.constructor.ConstructorUtils;
 import com.kiselev.reflection.ui.impl.field.FieldUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
+import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.inheritance.InheritancesUtils;
 import com.kiselev.reflection.ui.impl.method.MethodUtils;
 import com.kiselev.reflection.ui.impl.modifier.ModifiersUtils;
+import com.kiselev.reflection.ui.impl.name.NameUtils;
 import com.kiselev.reflection.ui.impl.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.type.TypeUtils;
-import com.kiselev.reflection.ui.impl.name.NameUtils;
 
-import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ReflectionUIImpl implements ReflectionUI {
 
+    @Override
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
+
+        ManagerImportUtils.registerImportUtils(clazz);
+
+        ManagerImportUtils.getImportUtils().setCurrentClass(clazz);
+
+        String packageName = new PackageUtils().getPackage(clazz);
 
         String indent = new IndentUtils().getIndent(clazz);
 
@@ -31,15 +38,20 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String classContent = getClassContent(clazz);
 
-        parsedClass += classSignature + "{\n\n" + classContent + indent + "}";
+        String imports = "";
+        if (clazz.equals(ManagerImportUtils.getImportUtils().getParsedClass())) {
+            imports = ManagerImportUtils.getImportUtils().getImports();
+        }
+
+        parsedClass += packageName + imports + classSignature + "{\n\n" + classContent + indent + "}";
+
+        ManagerImportUtils.getImportUtils().popCurrentClass();
 
         return parsedClass;
     }
 
     private String getClassSignature(Class<?> clazz) {
         String classSignature = "";
-
-        String packageName = new PackageUtils().getPackage(clazz);
 
         String annotations = new AnnotationUtils().getAnnotations(clazz);
 
@@ -55,7 +67,7 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String inheritances = new InheritancesUtils().getInheritances(clazz);
 
-        classSignature += packageName + annotations + indent + modifiers + type + typeName + generics + inheritances;
+        classSignature += annotations + indent + modifiers + type + typeName + generics + inheritances;
 
         return classSignature;
     }
@@ -71,7 +83,8 @@ public class ReflectionUIImpl implements ReflectionUI {
 
         String classes = new ClassUtils().getClasses(clazz);
 
-        classContent += composeContent(Arrays.asList(fields, constructors, methods, classes)); //fields + constructors + methods + classes;
+        //fields + constructors + methods + classes;
+        classContent += composeContent(Arrays.asList(fields, constructors, methods, classes));
 
         return classContent;
     }
@@ -90,8 +103,12 @@ public class ReflectionUIImpl implements ReflectionUI {
 
     @Override
     public String parseByteCode(Class<?> clazz) {
-        String decompilledByteCode = ByteCodeHolder.getDecompilledByteCode(clazz);
+        if (clazz.isPrimitive()) {
+            throw new RuntimeException("Primitive types can not be decompiled");
+        }
 
-        return decompilledByteCode;
+        String decompiledByteCode = ByteCodeHolder.getDecompiledByteCode(clazz);
+
+        return decompiledByteCode;
     }
 }

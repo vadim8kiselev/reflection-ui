@@ -1,11 +1,13 @@
 package com.kiselev.reflection.ui.impl.indent;
 
+import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
+
 import java.lang.reflect.Member;
 
 public class IndentUtils {
 
     public String getIndent(Object object) {
-        String indent = "";
+        StringBuilder indent = new StringBuilder();
 
         Class<?> declaringClass;
 
@@ -15,18 +17,20 @@ public class IndentUtils {
             declaringClass = member.getDeclaringClass();
 
             if (declaringClass != null) {
-                indent += "    ";
+                indent.append("    ");
             }
-        } else if (object instanceof Class){
+        } else if (object instanceof Class) {
             declaringClass = Class.class.cast(object);
         } else {
             return "";
         }
 
-        while ((declaringClass = declaringClass.getDeclaringClass()) != null) {
-            indent += "    ";
+        if (!ManagerImportUtils.getImportUtils().getParsedClass().equals(declaringClass)) {
+            while ((declaringClass = declaringClass.getDeclaringClass()) != null) {
+                indent.append("    ");
+            }
         }
 
-        return indent;
+        return indent.toString();
     }
 }

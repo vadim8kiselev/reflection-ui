@@ -2,13 +2,20 @@ package com.kiselev.reflection.ui.bytecode.assembly.build;
 
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.security.ProtectionDomain;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 
+/**
+ * Created by Алексей on 22.06.2017.
+ */
 public class AgentBuilder {
 
     public static Builder getBuilder() {
@@ -17,8 +24,6 @@ public class AgentBuilder {
 
     public static class Builder {
 
-        private String commandPattern = "%s %s %s %s %s";
-
         private String agentName = "agent.jar";
 
         private Class<?> agentClass;
@@ -26,6 +31,8 @@ public class AgentBuilder {
         private String manifestName = "MANIFEST.mf";
 
         private List<Class<?>> attachedClasses = new ArrayList<>();
+
+        private static final long FAILED_TIME = 3000L;
 
         public Builder addAgentName(String agentName) {
             if (!agentName.endsWith(Constants.Suffix.JAR_SUFFIX)) {
@@ -62,60 +69,80 @@ public class AgentBuilder {
             if (agentClass == null) {
                 throw new RuntimeException("Agent class cannot be null");
             }
-            try {
-                Runtime.getRuntime().exec(convertCommand());
+
+            attachedClasses.add(agentClass);
+            try (JarOutputStream jarStream = new JarOutputStream(new FileOutputStream(getAgentPath()), getManifest())) {
+                for (Class<?> attachedClass : attachedClasses) {
+                    jarStream.putNextEntry(new JarEntry(getSaveClassName(attachedClass)));
+                    jarStream.write(getClassBytes(attachedClass));
+                    jarStream.flush();
+                    jarStream.closeEntry();
+                }
+                jarStream.finish();
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
         }
 
-        private String convertCommand() {
-            return String.format(commandPattern,
-                    Constants.Command.JAR_EXE_COMMAND,
-                    Constants.Flag.JAR_FLAG,
-                    agentName,
-                    convertManifestPath(),
-                    convertAttachedClasses());
-        }
-
-        private String convertManifestPath() {
-            URL resource = getClass().getClassLoader().getResource("META-INF" + File.separator + manifestName);
-            if (resource == null) {
-                throw new RuntimeException("Manifest file cannot be null");
-            }
-            return resource.getPath();
-        }
-
-        private String convertAttachedClasses() {
-            StringBuilder builder = new StringBuilder();
-
-            attachedClasses.add(agentClass);
-            for (Class<?> clazz : attachedClasses) {
-                ProtectionDomain domain = clazz.getProtectionDomain();
-                if (domain != null) {
-                    String classFileProtectionDomain = domain.getCodeSource().getLocation().getPath().substring(1).replace("/", File.separator);
-                    String classFilePath = clazz.getName().replace(".", File.separator) + Constants.Suffix.CLASS_FILE_SUFFIX;
-
-                    builder.append(Constants.Flag.JAR_C_FLAG).append(Constants.Symbols.GAP)
-                            .append(classFileProtectionDomain).append(Constants.Symbols.GAP)
-                            .append(classFilePath).append(Constants.Symbols.GAP);
+        private Manifest getManifest() {
+            String manifest = Constants.Folders.MANIFEST_HOME + Constants.Symbols.SLASH + manifestName;
+            try (InputStream stream = getClassLoader().getResourceAsStream(manifest)) {
+                if (stream == null) {
+                    throw new RuntimeException("Manifest file cannot be null");
                 }
+                return new Manifest(stream);
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
             }
+        }
 
-            return builder.toString();
+        private String getAgentPath() {
+            return System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
         }
 
         private String retrieveAgentPath() {
-            String agentJarPath = System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
+            String agentJarPath = getAgentPath();
             waitForCreationOfFile(agentJarPath);
             return agentJarPath;
         }
 
         private void waitForCreationOfFile(String fileName) {
             File file = new File(fileName);
+            long time = System.currentTimeMillis();
+
             while (!file.exists()) {
-                // nothing
+                if (System.currentTimeMillis() > time + FAILED_TIME) {
+                    throw new RuntimeException("Creating jar agent is failed");
+                }
             }
+        }
+
+        private String getSaveClassName(Class<?> clazz) {
+            return clazz.getName().replace(Constants.Symbols.POINT, Constants.Symbols.SLASH)
+                    + Constants.Suffix.CLASS_FILE_SUFFIX;
+        }
+
+        private byte[] getClassBytes(Class<?> clazz) {
+            String classFileName = getSaveClassName(clazz);
+            try (InputStream stream = getClassLoader().getResourceAsStream(classFileName);
+                 ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
+                int reads = stream.read();
+
+                while (reads != -1) {
+                    byteStream.write(reads);
+                    reads = stream.read();
+                }
+
+                return byteStream.toByteArray();
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
+        }
+
+        private ClassLoader getClassLoader() {
+            return ClassLoader.getSystemClassLoader();
         }
     }
 }
+
+

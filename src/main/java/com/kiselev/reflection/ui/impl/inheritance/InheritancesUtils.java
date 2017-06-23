@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.impl.inheritance;
 
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,25 +20,27 @@ public class InheritancesUtils {
     }
 
     private String getSuperClass(Class<?> clazz) {
-        String superClass = getSingleParentType(clazz.getGenericSuperclass());
+        String superClass = getSingleParentType(clazz.getGenericSuperclass(), clazz.getAnnotatedSuperclass());
         return (!superClass.isEmpty()) ? "extends " + superClass + " " : "";
     }
 
     private String getInterfaces(Class<?> clazz) {
-        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces()));
+        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(),
+                clazz.getAnnotatedInterfaces()));
         String relationship = clazz.isInterface() ? "extends " : "implements ";
         return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
     }
 
-    private List<String> getMultipleParentTypes(Type[] parentTypes) {
+    private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
         List<String> multipleParentTypes = new ArrayList<>();
-        for (Type superType : parentTypes) {
-            multipleParentTypes.add(getSingleParentType(superType));
+        for (int i = 0; i < parentTypes.length; i++) {
+            multipleParentTypes.add(getSingleParentType(parentTypes[i], annotatedTypes[i]));
         }
+
         return multipleParentTypes;
     }
 
-    private String getSingleParentType(Type parentType) {
-        return new GenericsUtils().resolveType(parentType);
+    private String getSingleParentType(Type parentType, AnnotatedType annotatedType) {
+        return new GenericsUtils().resolveType(parentType, annotatedType);
     }
 }

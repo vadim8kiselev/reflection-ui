@@ -1,7 +1,8 @@
 package com.kiselev.reflection.ui.impl.value;
 
+import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
-import com.kiselev.reflection.ui.impl.name.NameUtils;
+import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -16,23 +17,27 @@ public class ValueUtils {
             if (clazz.isArray()) {
                 List<String> listValues = new ArrayList<>();
                 for (Object listValue : getArrayValues(object)) {
-                    listValues.add(getValue(listValue));
+                    if (!(listValue != null && !(listValue instanceof String) && listValue.toString().isEmpty())) {
+                        listValues.add(getValue(listValue));
+                    }
                 }
 
                 String values = String.join(", ", listValues);
-                if (listValues.size() == 1) {
+                if (listValues.size() == 1 || values.isEmpty()) {
                     return values;
                 } else {
                     return "{" + values + "}";
                 }
             }
 
-            if (clazz.isEnum()) return clazz.getSimpleName() + "." + object;
+            if (clazz.isEnum()) return new GenericsUtils().resolveType(clazz) + Constants.Symbols.POINT + object;
             if (object instanceof String) return "\"" + object + "\"";
             if (object instanceof Character) return "\'" + object + "\'";
             if (object instanceof Number || object instanceof Boolean) return object.toString();
             if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(Annotation.class.cast(object));
-            if (object instanceof Class) return new NameUtils().getTypeName(Class.class.cast(object)) + ".class";
+            if (object instanceof Class) return new GenericsUtils().resolveType(Class.class.cast(object))
+                    + Constants.Suffix.CLASS_FILE_SUFFIX;
+            return "";
         }
 
         return null;
