@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.bytecode.holder;
 
 import com.kiselev.reflection.ui.bytecode.assembly.AgentAssembler;
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
+import com.kiselev.reflection.ui.bytecode.decompile.Decompiler;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +40,9 @@ public class ByteCodeHolder {
 
         String classFileName = getClassFileName(clazz);
         writeByteCodeToFile(classFileName, byteCode);
-        return "Bytecode was saved to file with name " + classFileName;
+
+        Decompiler decompiler = new Decompiler();
+        return decompiler.decompile(System.getProperty(Constants.Properties.HOME_DIR) + classFileName, byteCode);
     }
 
     public static void registerInstrumentation(Instrumentation instrumentation) {
