@@ -39,12 +39,11 @@ public class MethodUtils {
 
         String isDefault = method.isDefault() ? "default " : "";
 
-        String modifiers = new ModifiersUtils().getModifiers(method.getModifiers());
+        String modifiers = isDefault + new ModifiersUtils().getModifiers(method.getModifiers());
 
         String generics = new GenericsUtils().getGenerics(method);
 
-        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(),
-                method.getAnnotatedReturnType());
+        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(), method.getAnnotatedReturnType());
 
         String methodName = method.getName();
 
@@ -54,15 +53,14 @@ public class MethodUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
-        String body = isMethodRealization(method) ? " {\n" + indent
-                + "    /* Compiled code */" + "\n" + indent + "}" : ";";
+        String body = isMethodRealization(method) ? " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}" : ";";
 
-        methodSignature += annotations + indent + isDefault + modifiers + generics + returnType
-                + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
+        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
 
         return methodSignature;
     }
 
+    // TODO : Move to *Utils
     private String getDefaultAnnotationValue(Method method) {
         String defaultAnnotationValue = "";
 

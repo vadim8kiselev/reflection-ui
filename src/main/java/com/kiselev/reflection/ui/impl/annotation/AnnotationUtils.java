@@ -8,49 +8,40 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AnnotationUtils {
 
     public String getInlineAnnotations(AnnotatedElement annotatedElement) {
-        String annotation = getAnnotations(annotatedElement);
-        if (!annotation.isEmpty()) {
-            annotation = annotation.substring(0, annotation.length() - 1).replace("\n", " ");
+        List<String> annotations = new ArrayList<>();
+
+        if (annotatedElement != null) {
+            String indent = new IndentUtils().getIndent(annotatedElement);
+
+            for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
+                annotations.add(getAnnotation(annotation));
+            }
+
+            return indent + String.join(" ", annotations);
         }
 
-        return annotation;
+        return "";
     }
 
     public String getAnnotations(AnnotatedElement annotatedElement) {
         StringBuilder annotations = new StringBuilder();
-        if (annotatedElement == null) return "";
 
-        String indent = new IndentUtils().getIndent(annotatedElement);
+        if (annotatedElement != null) {
+            String indent = new IndentUtils().getIndent(annotatedElement);
 
-        for (Annotation annotation : annotatedElement.getDeclaredAnnotations()) {
-            String repeatable = getRepeatable(annotation, indent);
-            if (!repeatable.isEmpty()) {
-                annotations.append(repeatable);
-            } else {
+            for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
                 annotations.append(indent).append(getAnnotation(annotation)).append("\n");
             }
         }
 
         return annotations.toString();
-    }
-
-    private String getAnnotations(List<Annotation> annotations, String indent) {
-        StringBuilder builder = new StringBuilder();
-
-        for (Annotation annotation : annotations) {
-            builder.append(indent).append(getAnnotation(annotation)).append("\n");
-        }
-
-        return builder.toString();
     }
 
     public String getAnnotation(Annotation annotation) {
@@ -96,38 +87,65 @@ public class AnnotationUtils {
                 map.put(method.getName(), new ValueUtils().getValue(value));
             }
         } catch (Exception exception) {
-            // Sin
+            // skip
         }
 
         return map;
     }
 
-    private String getRepeatable(Annotation annotation, String indent) {
-        String repeatableAnnotations = "";
-        Class<? extends Annotation> annotationTypeClass = annotation.annotationType();
-        try {
-            Method value = annotationTypeClass.getMethod("value");
-            Class<?> type = value.getReturnType();
-            if (type.isArray()) {
-                Class<?> componentType = type.getComponentType();
-                Annotation containerAnnotation = componentType.getAnnotation(Repeatable.class);
-                if (componentType.isAnnotation() && containerAnnotation != null
-                        && containerAnnotation.getClass().getMethod("value")
-                        .invoke(containerAnnotation).equals(annotationTypeClass)) {
-                    value.setAccessible(true);
-                    Object invoke = value.invoke(annotation);
-                    List<Annotation> annotations = new ArrayList<>();
-                    for (int i = 0; i < Array.getLength(invoke); i++) {
-                        annotations.add(Annotation.class.cast(Array.get(invoke, i)));
-                    }
+    private Annotation[] unrollAnnotations(Annotation[] declaredAnnotations) {
+        List<Annotation> annotations = new ArrayList<>();
 
-                    repeatableAnnotations = getAnnotations(annotations, indent);
-                }
+        for (Annotation declaredAnnotation : declaredAnnotations) {
+            if (isRepeatableAnnotation(declaredAnnotation)) {
+                annotations.addAll(retrieveRepeatableAnnotations(declaredAnnotation));
+            } else {
+                annotations.add(declaredAnnotation);
             }
-        } catch (Exception exception) {
-            //Sin
         }
 
-        return repeatableAnnotations;
+        return annotations.toArray(new Annotation[annotations.size()]);
+    }
+
+    private boolean isRepeatableAnnotation(Annotation annotation) {
+        Class<? extends Annotation> annotationType = annotation.annotationType();
+        Method valueMethod = retrieveValueMethodFromAnnotation(annotationType);
+        if (valueMethod != null) {
+            Class<?> returnType = valueMethod.getReturnType();
+
+            if (returnType.isArray()) {
+                Class<?> componentType = returnType.getComponentType();
+                Repeatable repeatable = componentType.getAnnotation(Repeatable.class);
+                return repeatable != null && annotationType.equals(repeatable.value());
+            }
+        }
+        return false;
+    }
+
+    private Method retrieveValueMethodFromAnnotation(Class<? extends Annotation> annotationType) {
+        for (Method method : annotationType.getDeclaredMethods()) {
+            if ("value".equals(method.getName())) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    private Collection<Annotation> retrieveRepeatableAnnotations(Annotation annotation) {
+        List<Annotation> annotations = new ArrayList<>();
+
+        try {
+            Class<? extends Annotation> annotationType = annotation.annotationType();
+            Method valueMethod = retrieveValueMethodFromAnnotation(annotationType);
+            if (valueMethod != null) {
+                valueMethod.setAccessible(true);
+                Annotation[] retrievedAnnotations = (Annotation[]) valueMethod.invoke(annotation);
+                annotations.addAll(Arrays.asList(retrievedAnnotations));
+            }
+        } catch (ReflectiveOperationException e) {
+            // skip
+        }
+
+        return annotations;
     }
 }

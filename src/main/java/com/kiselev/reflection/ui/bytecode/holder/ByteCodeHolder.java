@@ -4,14 +4,17 @@ import com.kiselev.reflection.ui.bytecode.assembly.AgentAssembler;
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.bytecode.decompile.Decompiler;
 
+import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +27,6 @@ public class ByteCodeHolder {
 
     private static Instrumentation instrumentation;
 
-
     public static void uploadByteCodeForClass(String className, byte[] byteCode) {
         byteCodeMap.put(className, byteCode);
     }
@@ -34,43 +36,43 @@ public class ByteCodeHolder {
             AgentAssembler.assembly();
         }
 
-        retransformationClass(clazz);
-
-        byte[] byteCode = byteCodeMap.get(getNormalClassName(clazz));
+        retransformClass(clazz);
 
         String classFileName = getClassFileName(clazz);
+        String javaBasedClassName = getJavaBasedClassName(clazz);
+        byte[] byteCode = byteCodeMap.get(javaBasedClassName);
         writeByteCodeToFile(classFileName, byteCode);
 
         Decompiler decompiler = new Decompiler();
-        return decompiler.decompile(System.getProperty(Constants.Properties.HOME_DIR) + classFileName, byteCode);
+        return decompiler.decompile(classFileName, byteCode);
     }
 
     public static void registerInstrumentation(Instrumentation instrumentation) {
         ByteCodeHolder.instrumentation = instrumentation;
     }
 
-    private static void retransformationClass(Class<?> clazz) {
-        if (instrumentation != null) {
-            try {
+    private static void retransformClass(Class<?> clazz) {
+        try {
+            if (instrumentation != null) {
                 instrumentation.retransformClasses(clazz);
-            } catch (UnmodifiableClassException exception) {
-                throw new RuntimeException(exception);
             }
+        } catch (UnmodifiableClassException exception) {
+            throw new RuntimeException(exception);
         }
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = "classes" + File.separator + getNormalClassName(clazz)
-                .replace(Constants.Symbols.POINT, File.separator);
-        createClassFileNameDirectory(classFileName);
+        String classFileName = "classes" + File.separator + getJavaBasedClassName(clazz)
+                .replace(Constants.Symbols.DOT, File.separator);
+        createClassFileNameDirectory(classFileName); // todo
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
+    // TODO : CHECK
     private static void createClassFileNameDirectory(String classFileName) {
         String path = System.getProperty(Constants.Properties.HOME_DIR) + File.separator
                 + classFileName.substring(0, classFileName.lastIndexOf(File.separator));
         Path directoryPath = Paths.get(path);
-
         try {
             Files.createDirectories(directoryPath).toFile();
         } catch (IOException exception) {
@@ -79,8 +81,8 @@ public class ByteCodeHolder {
     }
 
     private static void writeByteCodeToFile(String fileName, byte[] byteCode) {
-        if (fileName != null && byteCode != null) {                     //need for correct name something classes
-            try (FileOutputStream stream = new FileOutputStream(fileName.replace("$", ""))) {
+        if (fileName != null && byteCode != null) {
+            try (FileOutputStream stream = new FileOutputStream(fileName.replace(Constants.Symbols.DOLLAR, ""))) {
                 stream.write(byteCode);
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
@@ -90,7 +92,7 @@ public class ByteCodeHolder {
         }
     }
 
-    private static String getNormalClassName(Class<?> clazz) {
+    private static String getJavaBasedClassName(Class<?> clazz) {
         String className = clazz.getName();
         if (className.contains(Constants.Symbols.SLASH)) {
             className = className.substring(0, className.indexOf(Constants.Symbols.SLASH));

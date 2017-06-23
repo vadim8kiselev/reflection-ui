@@ -9,9 +9,11 @@ public class PackageUtils {
         String packageName = "";
 
         Package classPackage = clazz.getPackage();
-        if (classPackage != null && clazz.equals(ManagerImportUtils.getImportUtils().getParsedClass())) {
-            packageName += new AnnotationUtils().getAnnotations(classPackage)
-                    + "package " + classPackage.getName() + ";\n\n";
+        Class<?> parsedClass = ManagerImportUtils.getImportUtils().getParsedClass();
+        if (classPackage != null && clazz.equals(parsedClass)) {
+
+            String packageAnnotations = new AnnotationUtils().getAnnotations(classPackage);
+            packageName += packageAnnotations + "package " + classPackage.getName() + ";\n\n";
         }
 
         return packageName;

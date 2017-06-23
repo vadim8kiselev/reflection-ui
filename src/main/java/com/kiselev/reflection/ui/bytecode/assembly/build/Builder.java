@@ -1,7 +1,7 @@
 package com.kiselev.reflection.ui.bytecode.assembly.build;
 
 /**
- * Created by Alexey Makarov on 06/13/2017.
+ * Created by Aleksei Makarov on 06/13/2017.
  */
 public interface Builder {
 

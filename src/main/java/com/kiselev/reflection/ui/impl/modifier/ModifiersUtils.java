@@ -15,6 +15,14 @@ public class ModifiersUtils {
     public String getModifiers(int modifierIndex) {
         String modifiers = "";
 
+        if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
+
+        if (isBridge(modifierIndex)) modifiers += "bridge ";
+
+        if (isMandated(modifierIndex)) modifiers += "mandated ";
+
+        if (isImplicit(modifierIndex)) modifiers += "implicit ";
+
         if (Modifier.isPublic(modifierIndex)) modifiers += "public ";
         if (Modifier.isProtected(modifierIndex)) modifiers += "protected ";
         if (Modifier.isPrivate(modifierIndex)) modifiers += "private ";
@@ -30,14 +38,6 @@ public class ModifiersUtils {
         if (Modifier.isStatic(modifierIndex)) modifiers += "static ";
         if (Modifier.isNative(modifierIndex)) modifiers += "native ";
 
-        if (isImplicit(modifierIndex)) modifiers += "implicit ";
-
-        if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
-
-        if (isMandated(modifierIndex)) modifiers += "mandated ";
-
-        if (isBridge(modifierIndex)) modifiers += "bridge ";
-
         if (Modifier.isFinal(modifierIndex)) modifiers += "final ";
 
         return modifiers;
@@ -51,12 +51,12 @@ public class ModifiersUtils {
         return (modifierIndex & IMPLICIT) != 0;
     }
 
-    private boolean isMandated(int mod) {
-        return (mod & MANDATED) != 0;
+    private boolean isMandated(int modifierIndex) {
+        return (modifierIndex & MANDATED) != 0;
     }
 
-    private boolean isBridge(int mod) {
-        return (mod & MANDATED) != 0;
+    private boolean isBridge(int modifierIndex) {
+        return (modifierIndex & BRIDGE) != 0;
     }
 }
 

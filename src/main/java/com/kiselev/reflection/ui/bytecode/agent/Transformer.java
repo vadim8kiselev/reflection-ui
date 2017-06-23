@@ -19,11 +19,16 @@ public class Transformer implements ClassFileTransformer {
                             ProtectionDomain protectionDomain,
                             byte[] byteCode) throws IllegalClassFormatException {
 
-        ByteCodeHolder.uploadByteCodeForClass(transformClassName(className), byteCode);
+        putByteCodeOfClassToHolder(className, byteCode);
         return byteCode;
     }
 
+    private void putByteCodeOfClassToHolder(String className, byte[] byteCode) {
+        String javaBasedClassName = transformClassName(className);
+        ByteCodeHolder.uploadByteCodeForClass(javaBasedClassName, byteCode);
+    }
+
     private String transformClassName(String canonicalClassName) {
-        return canonicalClassName.replace(Constants.Symbols.SLASH, Constants.Symbols.POINT);
+        return canonicalClassName.replace(Constants.Symbols.SLASH, Constants.Symbols.DOT);
     }
 }

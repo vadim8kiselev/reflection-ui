@@ -25,18 +25,16 @@ public class InheritancesUtils {
     }
 
     private String getInterfaces(Class<?> clazz) {
-        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(),
-                clazz.getAnnotatedInterfaces()));
+        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), clazz.getAnnotatedInterfaces()));
         String relationship = clazz.isInterface() ? "extends " : "implements ";
         return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
     }
 
     private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
         List<String> multipleParentTypes = new ArrayList<>();
-        for (int i = 0; i < parentTypes.length; i++) {
-            multipleParentTypes.add(getSingleParentType(parentTypes[i], annotatedTypes[i]));
+        for (int index = 0; index < parentTypes.length; index++) {
+            multipleParentTypes.add(getSingleParentType(parentTypes[index], annotatedTypes[index]));
         }
-
         return multipleParentTypes;
     }
 

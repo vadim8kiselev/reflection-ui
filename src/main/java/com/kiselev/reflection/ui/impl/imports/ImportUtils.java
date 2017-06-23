@@ -1,14 +1,11 @@
 package com.kiselev.reflection.ui.impl.imports;
 
-import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
- * Created by Aleksei Makarov on 18.06.2017.
+ * Created by Aleksei Makarov on 06/18/2017.
  */
 public class ImportUtils {
 
@@ -16,31 +13,12 @@ public class ImportUtils {
 
     private Class<?> currentClass;
 
-    private List<Class<?>> classesForImport;
-
-    private NameUtils utils;
+    private Set<Class<?>> classesForImport;
 
     ImportUtils(Class<?> clazz) {
         this.parsedClass = clazz;
         this.currentClass = clazz;
-        this.classesForImport = new ArrayList<>();
-        this.utils = new NameUtils();
-    }
-
-    public Class<?> getParsedClass() {
-        return parsedClass;
-    }
-
-    public void setCurrentClass(Class<?> currentClass) {
-        this.currentClass = currentClass;
-    }
-
-    public Class<?> getCurrentClass() {
-        return this.currentClass;
-    }
-
-    public void popCurrentClass() {
-        this.currentClass = this.currentClass.getDeclaringClass();
+        this.classesForImport = new HashSet<>();
     }
 
     public boolean addImport(Class<?> classForImport) {
@@ -52,21 +30,15 @@ public class ImportUtils {
             classForImport = resolveArray(classForImport);
         }
 
-        if (classesForImport.contains(classForImport)) {
-            return true;
+        if (isContainsImportBySimpleName(classForImport)) {
+            return false;
+        } else if (!classesForImport.contains(classForImport)
+                && !classForImport.isPrimitive()
+                && !"java.lang".equals(getPackageName(classForImport))
+                && parsedClass.getPackage() != classForImport.getPackage()) {
+
+            classesForImport.add(classForImport);
         }
-
-        if (!classForImport.isPrimitive() &&
-                !"java.lang".equals(getPackageName(classForImport))
-                && !getPackageName(parsedClass).equals(getPackageName(classForImport))) {
-
-            if (!isContainsImportBySimpleName(classForImport)) {
-                classesForImport.add(classForImport);
-            } else {
-                return false;
-            }
-        }
-
         return true;
     }
 
@@ -74,31 +46,33 @@ public class ImportUtils {
         List<String> imports = new ArrayList<>();
 
         for (Class<?> className : classesForImport) {
-            imports.add("import " + className.getName().replace("$", Constants.Symbols.POINT) + ";");
+            imports.add("import " + className.getName() + ";\n");
         }
 
-        Collections.sort(imports);
-        if (!imports.isEmpty()) {
-            imports.add("\n");
-        }
+        Collections.sort(imports); // TODO : Code style
 
-        clear();
-        return String.join("\n", imports);
+        clearState();
+        return !imports.isEmpty() ? String.join("", imports) + "\n" : "";
     }
 
-    private void clear() {
+    private void clearState() {
         this.parsedClass = null;
-        this.classesForImport = new ArrayList<>();
+        this.classesForImport = new HashSet<>();
     }
 
     private boolean isContainsImportBySimpleName(Class<?> classForImport) {
         for (Class<?> clazz : classesForImport) {
-            if (utils.getSimpleName(clazz).equals(utils.getSimpleName(classForImport))) {
+            if (areEqualBySimpleClass(clazz, classForImport)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private boolean areEqualBySimpleClass(Class<?> source, Class<?> target) {
+        NameUtils nameUtils = new NameUtils();
+        return nameUtils.getSimpleName(source).equals(nameUtils.getSimpleName(target));
     }
 
     private Class<?> resolveArray(Class<?> clazz) {
@@ -110,6 +84,22 @@ public class ImportUtils {
     }
 
     private String getPackageName(Class<?> clazz) {
-        return clazz.getPackage() == null ? "" : clazz.getPackage().getName();
+        return clazz.getPackage() != null ? clazz.getPackage().getName() : "";
+    }
+
+    public Class<?> getParsedClass() {
+        return parsedClass;
+    }
+
+    public void popCurrentClass() {
+        this.currentClass = this.currentClass.getDeclaringClass();
+    }
+
+    public Class<?> getCurrentClass() {
+        return currentClass;
+    }
+
+    public void setCurrentClass(Class<?> currentClass) {
+        this.currentClass = currentClass;
     }
 }

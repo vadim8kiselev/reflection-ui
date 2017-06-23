@@ -53,8 +53,8 @@ public class Decompiler implements IResultSaver, IBytecodeProvider {
     }
 
     @Override
-    public void saveClassFile(String classFile, String javaFilename, String s2, String content, int[] ints) {
-        this.sourceCode = content;
+    public void saveClassFile(String classFile, String javaFilename, String s2, String sourceCode, int[] ints) {
+        this.sourceCode = sourceCode;
     }
 
     @Override
@@ -83,31 +83,33 @@ public class Decompiler implements IResultSaver, IBytecodeProvider {
     }
 
     private Map<String, Object> getConfiguration() {
+        String ZERO = "0";
+        String ONE = "1";
         return new HashMap<String, Object>() {
             {
-                put("rbr", "0");          //show bridge methods
-                put("rsy", "0");          //show synthetic class members
-                put("din", "1");          //decompile inner classes
-                put("dc4", "0");          //collapse class references
-                put("das", "1");          //decompile assertions
-                put("hes", "0");          //show empty super invocation
-                put("hdc", "0");          //show empty default constructor
-                put("dgs", "1");          //decompile generic signatures
-                put("ner", "0");          //assume return not throwing exceptions
-                put("den", "1");          //decompile enumerations
-                put("rgn", "0");          //show getClass() invocation, when it is part of a qualified new statement
-                put("lit", "1");          //show output numeric literals "as-is"
-                put("asc", "0");          //for encode non-ASCII characters
-                put("bto", "0");          //don't interpret int 1 as boolean true
-                put("nns", "0");          //allow for set synthetic attribute
-                put("uto", "1");          //consider nameless types as java.lang.Object
-                put("udv", "1");          //reconstruct variable names from debug information, if present
-                put("rer", "0");          //don't remove empty exception ranges
-                put("fdi", "1");          //de-inline finally structures
-                put("mpm", "0");          //don't upper limit for decompilation
-                put("ren", "0");          //don't rename ambiguous classes and class elements
-                put("inn", "0");          //don't check for IntelliJ IDEA-specific @NotNull annotation
-                put("lac", "0");          //don't decompile lambda expressions to anonymous classes
+                put("rbr", ZERO);          //show bridge methods
+                put("rsy", ZERO);          //show synthetic class members
+                put("din", ONE);          //decompile inner classes
+                put("dc4", ZERO);          //collapse class references
+                put("das", ONE);          //decompile assertions
+                put("hes", ZERO);          //show empty super invocation
+                put("hdc", ZERO);          //show empty default constructor
+                put("dgs", ONE);          //decompile generic signatures
+                put("ner", ZERO);          //assume return not throwing exceptions
+                put("den", ONE);          //decompile enumerations
+                put("rgn", ZERO);          //show getClass() invocation, when it is part of a qualified new statement
+                put("lit", ONE);          //show output numeric literals "as-is"
+                put("asc", ZERO);          //for encode non-ASCII characters
+                put("bto", ZERO);          //don't interpret int 1 as boolean true
+                put("nns", ZERO);          //allow for set synthetic attribute
+                put("uto", ONE);          //consider nameless types as java.lang.Object
+                put("udv", ONE);          //reconstruct variable names from debug information, if present
+                put("rer", ZERO);          //don't remove empty exception ranges
+                put("fdi", ONE);          //de-inline finally structures
+                put("mpm", ZERO);          //don't upper limit for decompilation
+                put("ren", ZERO);          //don't rename ambiguous classes and class elements
+                put("inn", ZERO);          //don't check for IntelliJ IDEA-specific @NotNull annotation
+                put("lac", ZERO);          //don't decompile lambda expressions to anonymous classes
                 put("ind", "    ");       //indent spaces
                 put("log", "ERROR");      //log lever
             }

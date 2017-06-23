@@ -14,7 +14,7 @@ public class Agent {
             instrumentation.addTransformer(new Transformer(), true);
             ByteCodeHolder.registerInstrumentation(instrumentation);
         } catch (Exception exception) {
-            // sin
+            // skip
         }
     }
 }

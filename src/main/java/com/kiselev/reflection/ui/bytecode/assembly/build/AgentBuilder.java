@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.bytecode.assembly.build;
 
+import com.kiselev.reflection.ui.bytecode.agent.Agent;
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 
 import java.io.ByteArrayOutputStream;
@@ -14,48 +15,42 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 /**
- * Created by Алексей on 22.06.2017.
+ * Created by Aleksei Makarov on 06/13/2017.
  */
 public class AgentBuilder {
 
     public static Builder getBuilder() {
-        return new Builder();
+        return new AgentJarBuilder();
     }
 
-    public static class Builder {
+    public static class AgentJarBuilder implements Builder {
 
         private String agentName = "agent.jar";
 
-        private Class<?> agentClass;
+        private Class<?> agentClass = Agent.class;
 
         private String manifestName = "MANIFEST.mf";
 
         private List<Class<?>> attachedClasses = new ArrayList<>();
 
-        private static final long FAILED_TIME = 3000L;
+        private long CREATION_TIMEOUT = 3000L;
 
-        public Builder addAgentName(String agentName) {
-            if (!agentName.endsWith(Constants.Suffix.JAR_SUFFIX)) {
-                agentName = agentName + Constants.Suffix.JAR_SUFFIX;
-            }
-            this.agentName = agentName;
+        public AgentJarBuilder addAgentName(String agentName) {
+            this.agentName = appendSuffixIfNeeded(agentName, Constants.Suffix.JAR_SUFFIX);
             return this;
         }
 
-        public Builder addClass(Class<?> attachedClass) {
+        public AgentJarBuilder addClass(Class<?> attachedClass) {
             this.attachedClasses.add(attachedClass);
             return this;
         }
 
-        public Builder addManifest(String manifestName) {
-            if (!manifestName.endsWith(Constants.Suffix.MANIFEST_SUFFIX)) {
-                manifestName = manifestName + Constants.Suffix.MANIFEST_SUFFIX;
-            }
-            this.manifestName = manifestName;
+        public AgentJarBuilder addManifest(String manifestName) {
+            this.manifestName = appendSuffixIfNeeded(manifestName, Constants.Suffix.MANIFEST_SUFFIX);
             return this;
         }
 
-        public Builder addAgentClass(Class<?> agentClass) {
+        public AgentJarBuilder addAgentClass(Class<?> agentClass) {
             this.agentClass = agentClass;
             return this;
         }
@@ -63,6 +58,13 @@ public class AgentBuilder {
         public String build() {
             createAgentJar();
             return retrieveAgentPath();
+        }
+
+        private String appendSuffixIfNeeded(String value, String suffix) {
+            if (!value.endsWith(suffix)) {
+                return value + suffix;
+            }
+            return value;
         }
 
         private void createAgentJar() {
@@ -73,7 +75,7 @@ public class AgentBuilder {
             attachedClasses.add(agentClass);
             try (JarOutputStream jarStream = new JarOutputStream(new FileOutputStream(getAgentPath()), getManifest())) {
                 for (Class<?> attachedClass : attachedClasses) {
-                    jarStream.putNextEntry(new JarEntry(getSaveClassName(attachedClass)));
+                    jarStream.putNextEntry(new JarEntry(getClassFileName(attachedClass)));
                     jarStream.write(getClassBytes(attachedClass));
                     jarStream.flush();
                     jarStream.closeEntry();
@@ -84,9 +86,10 @@ public class AgentBuilder {
             }
         }
 
+        // TODO: CHECK
         private Manifest getManifest() {
             String manifest = Constants.Folders.MANIFEST_HOME + Constants.Symbols.SLASH + manifestName;
-            try (InputStream stream = getClassLoader().getResourceAsStream(manifest)) {
+            try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(manifest)) {
                 if (stream == null) {
                     throw new RuntimeException("Manifest file cannot be null");
                 }
@@ -96,35 +99,9 @@ public class AgentBuilder {
             }
         }
 
-        private String getAgentPath() {
-            return System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
-        }
-
-        private String retrieveAgentPath() {
-            String agentJarPath = getAgentPath();
-            waitForCreationOfFile(agentJarPath);
-            return agentJarPath;
-        }
-
-        private void waitForCreationOfFile(String fileName) {
-            File file = new File(fileName);
-            long time = System.currentTimeMillis();
-
-            while (!file.exists()) {
-                if (System.currentTimeMillis() > time + FAILED_TIME) {
-                    throw new RuntimeException("Creating jar agent is failed");
-                }
-            }
-        }
-
-        private String getSaveClassName(Class<?> clazz) {
-            return clazz.getName().replace(Constants.Symbols.POINT, Constants.Symbols.SLASH)
-                    + Constants.Suffix.CLASS_FILE_SUFFIX;
-        }
-
         private byte[] getClassBytes(Class<?> clazz) {
-            String classFileName = getSaveClassName(clazz);
-            try (InputStream stream = getClassLoader().getResourceAsStream(classFileName);
+            String classFileName = getClassFileName(clazz);
+            try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(classFileName);
                  ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
                 int reads = stream.read();
 
@@ -139,10 +116,31 @@ public class AgentBuilder {
             }
         }
 
-        private ClassLoader getClassLoader() {
-            return ClassLoader.getSystemClassLoader();
+        private String getClassFileName(Class<?> clazz) {
+            return clazz.getName().replace(Constants.Symbols.DOT, Constants.Symbols.SLASH)
+                    + Constants.Suffix.CLASS_FILE_SUFFIX;
+        }
+
+        private String retrieveAgentPath() {
+            String agentJarPath = getAgentPath();
+            waitForCreationOfFile(agentJarPath);
+            return agentJarPath;
+        }
+
+        private String getAgentPath() {
+            return System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
+        }
+
+        // TODO: CHECK
+        private void waitForCreationOfFile(String fileName) {
+            File file = new File(fileName);
+            long timeout = System.currentTimeMillis() + CREATION_TIMEOUT;
+
+            while (!file.exists()) {
+                if (System.currentTimeMillis() > timeout) {
+                    throw new RuntimeException("Creating jar agent is failed");
+                }
+            }
         }
     }
 }
-
-

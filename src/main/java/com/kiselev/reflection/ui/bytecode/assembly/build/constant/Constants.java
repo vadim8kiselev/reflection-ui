@@ -1,5 +1,8 @@
 package com.kiselev.reflection.ui.bytecode.assembly.build.constant;
 
+/**
+ * Created by Vadim Kiselev on 06/14/2017.
+ */
 public class Constants {
 
     public static class Folders {
@@ -27,6 +30,8 @@ public class Constants {
 
         public static final String SLASH = "/";
 
-        public static final String POINT = ".";
+        public static final String DOLLAR = "$";
+
+        public static final String DOT = ".";
     }
 }

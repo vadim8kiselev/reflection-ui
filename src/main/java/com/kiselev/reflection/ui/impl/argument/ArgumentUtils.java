@@ -19,8 +19,8 @@ public class ArgumentUtils {
         AnnotatedType[] annotatedParameterTypes = executable.getAnnotatedParameterTypes();
         Parameter[] parameters = executable.getParameters();
 
-        for (int i = 0; i < parameters.length; i++) {
-            strings.add(getArgument(parameters[i], annotatedParameterTypes[i]));
+        for (int index = 0; index < parameters.length; index++) {
+            strings.add(getArgument(parameters[index], annotatedParameterTypes[index]));
         }
 
         arguments += "(" + String.join(", ", strings) + ")";
@@ -31,7 +31,7 @@ public class ArgumentUtils {
     private String getArgument(Parameter parameter, AnnotatedType annotatedType) {
         String argumentSignature = "";
 
-        String annotation = new AnnotationUtils().getInlineAnnotations(parameter);
+        String annotations = getArgumentAnnotations(parameter);
 
         String genericType = new GenericsUtils().resolveType(parameter.getParameterizedType(), annotatedType);
 
@@ -39,12 +39,16 @@ public class ArgumentUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(parameter.getModifiers());
 
-        String parameterName = parameter.getName(); // TODO : -parameters check
+        String parameterName = parameter.getName();
 
-        argumentSignature += (!annotation.isEmpty() ? annotation + " " : "")
-                + modifiers + genericType + " " + parameterName;
+        argumentSignature += annotations + modifiers + genericType + " " + parameterName;
 
         return argumentSignature;
+    }
+
+    private String getArgumentAnnotations(Parameter parameter) {
+        String annotations = new AnnotationUtils().getInlineAnnotations(parameter);
+        return !annotations.isEmpty() ? annotations + " " : "";
     }
 
     private String convertToVarArg(String type) {

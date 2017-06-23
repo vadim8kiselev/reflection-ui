@@ -39,15 +39,15 @@ public class ConstructorUtils {
 
         String generics = new GenericsUtils().getGenerics(constructor);
 
-        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(),
-                constructor.getAnnotatedReturnType());
+        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(), constructor.getAnnotatedReturnType());
 
         String arguments = new ArgumentUtils().getArguments(constructor);
 
         String exceptions = new ExceptionUtils().getExceptions(constructor);
 
-        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments
-                + exceptions + " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}";
+        String body = " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}";
+
+        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + body;
 
         return constructorSignature;
     }

@@ -42,17 +42,22 @@ public class FieldUtils {
 
         String fieldValue = getFieldValue(field);
 
-        fieldSignature += annotations + indent + modifiers + type + " " + fieldName
-                + ("".equals(fieldValue) ? "" : " = " + fieldValue) + ";";
+        fieldSignature += annotations + indent + modifiers + type + " " + fieldName + fieldValue + ";";
 
         return fieldSignature;
     }
 
+    // TODO : Think about business case for that functionality
     private String getFieldValue(Field field) {
         if (Modifier.isStatic(field.getModifiers())) {
             try {
                 field.setAccessible(true);
-                return new ValueUtils().getValue(field.get(null));
+                String fieldValue = new ValueUtils().getValue(field.get(null));
+                if (!"".equals(fieldValue)) {
+                    return " = " + fieldValue;
+                } else {
+                    return "";
+                }
             } catch (IllegalAccessException exception) {
                 throw new RuntimeException(exception);
             }
