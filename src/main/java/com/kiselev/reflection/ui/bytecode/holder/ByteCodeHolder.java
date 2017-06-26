@@ -3,19 +3,20 @@ package com.kiselev.reflection.ui.bytecode.holder;
 import com.kiselev.reflection.ui.bytecode.assembly.AgentAssembler;
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.bytecode.decompile.Decompiler;
-
-import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
+import com.kiselev.reflection.ui.bytecode.decompile.FernflowerDecompiler;
+import com.kiselev.reflection.ui.bytecode.uploader.NestedClassLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,8 +44,21 @@ public class ByteCodeHolder {
         byte[] byteCode = byteCodeMap.get(javaBasedClassName);
         writeByteCodeToFile(classFileName, byteCode);
 
-        Decompiler decompiler = new Decompiler();
-        return decompiler.decompile(classFileName, byteCode);
+        Decompiler decompiler = new FernflowerDecompiler();
+        appendNestedClassesDecompiler(clazz, decompiler);
+        return decompiler.decompile(byteCode);
+    }
+
+    public static void appendNestedClassesDecompiler(Class<?> clazz, Decompiler decompiler) {
+        NestedClassLoader loader = new NestedClassLoader(clazz);
+        List<byte[]> nestedClasses = new ArrayList<>();
+
+        for (Class<?> nestedClass : loader.getNestedClasses()) {
+            retransformClass(nestedClass);
+            nestedClasses.add(byteCodeMap.get(nestedClass.getName()));
+        }
+
+        decompiler.appendNestedClasses(nestedClasses);
     }
 
     public static void registerInstrumentation(Instrumentation instrumentation) {
