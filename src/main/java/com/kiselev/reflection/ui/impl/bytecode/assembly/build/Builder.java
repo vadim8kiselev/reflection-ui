@@ -7,7 +7,7 @@ public interface Builder {
 
     Builder addAgentName(String agentName);
 
-    Builder addClasses(Class<?>...attachedClasses);
+    Builder addClasses(Class<?>... attachedClasses);
 
     Builder addManifest(String manifestName);
 

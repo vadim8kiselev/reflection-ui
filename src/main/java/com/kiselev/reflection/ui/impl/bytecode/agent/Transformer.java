@@ -14,10 +14,10 @@ public final class Transformer implements ClassFileTransformer {
 
     @Override
     public final byte[] transform(ClassLoader loader,
-                            String className,
-                            Class<?> classBeingRedefined,
-                            ProtectionDomain protectionDomain,
-                            byte[] byteCode) throws IllegalClassFormatException {
+                                  String className,
+                                  Class<?> classBeingRedefined,
+                                  ProtectionDomain protectionDomain,
+                                  byte[] byteCode) throws IllegalClassFormatException {
 
         uploadByteCodeOfClassToHolder(className, byteCode);
         return byteCode;
