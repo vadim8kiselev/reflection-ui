@@ -18,7 +18,7 @@
             <systemPath>${java.home}\..\lib\tools.jar</systemPath>
         </dependency>
 
-        <!-- FernFloFernflowerDecompileriler -->
+        <!-- FernFlower Decompiler -->
         <dependency>
             <groupId>org.jboss.windup.decompiler.fernflower</groupId>
             <artifactId>fernflower</artifactId>
