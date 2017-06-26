@@ -7,7 +7,7 @@ import com.kiselev.reflection.ui.impl.classes.ClassUtils;
 import com.kiselev.reflection.ui.impl.constructor.ConstructorUtils;
 import com.kiselev.reflection.ui.impl.field.FieldUtils;
 import com.kiselev.reflection.ui.impl.generic.GenericsUtils;
-import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
+import com.kiselev.reflection.ui.impl.imports.StateManager;
 import com.kiselev.reflection.ui.impl.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.inheritance.InheritancesUtils;
 import com.kiselev.reflection.ui.impl.method.MethodUtils;
@@ -26,9 +26,9 @@ public class ReflectionUIImpl implements ReflectionUI {
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
 
-        ManagerImportUtils.registerImportUtils(clazz);
+        StateManager.registerImportUtils(clazz);
 
-        ManagerImportUtils.getImportUtils().setCurrentClass(clazz);
+        StateManager.setCurrentClass(clazz);
 
         String packageName = new PackageUtils().getPackage(clazz);
 
@@ -39,13 +39,13 @@ public class ReflectionUIImpl implements ReflectionUI {
         String classContent = getClassContent(clazz);
 
         String imports = "";
-        if (clazz.equals(ManagerImportUtils.getImportUtils().getParsedClass())) {
-            imports = ManagerImportUtils.getImportUtils().getImports();
+        if (clazz.equals(StateManager.getParsedClass())) {
+            imports = StateManager.getImportUtils().getImports();
         }
 
         parsedClass += packageName + imports + classSignature + "{\n\n" + classContent + indent + "}";
 
-        ManagerImportUtils.getImportUtils().popCurrentClass();
+        StateManager.popCurrentClass();
 
         return parsedClass;
     }

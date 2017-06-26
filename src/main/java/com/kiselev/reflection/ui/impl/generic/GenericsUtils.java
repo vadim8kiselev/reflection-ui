@@ -2,7 +2,7 @@ package com.kiselev.reflection.ui.impl.generic;
 
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
-import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
+import com.kiselev.reflection.ui.impl.imports.StateManager;
 import com.kiselev.reflection.ui.impl.name.NameUtils;
 
 import java.lang.reflect.AnnotatedArrayType;
@@ -212,14 +212,14 @@ public class GenericsUtils {
     }
 
     private boolean isNeedNameForInnerClass(Class<?> innerClass) {
-        Class<?> parsedClass = ManagerImportUtils.getImportUtils().getParsedClass();
+        Class<?> parsedClass = StateManager.getParsedClass();
         return innerClass.isMemberClass()
                 && (!getTopClass(innerClass).equals(getTopClass(parsedClass))
                 || !isInVisibilityZone(innerClass));
     }
 
     private boolean isInVisibilityZone(Class<?> innerClass) {
-        Class<?> currentClass = ManagerImportUtils.getImportUtils().getCurrentClass();
+        Class<?> currentClass = StateManager.getCurrentClass();
         while (currentClass != null) {
             List<Class<?>> innerClasses = Arrays.asList(currentClass.getDeclaredClasses());
             if (innerClasses.contains(innerClass)) {

@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.impl.indent;
 
-import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
+import com.kiselev.reflection.ui.impl.imports.StateManager;
 
 import java.lang.reflect.Member;
 
@@ -25,7 +25,7 @@ public class IndentUtils {
             return "";
         }
 
-        Class<?> parsedClass = ManagerImportUtils.getImportUtils().getParsedClass();
+        Class<?> parsedClass = StateManager.getParsedClass();
         if (declaringClass != null && !parsedClass.equals(declaringClass)) {
             while ((declaringClass = declaringClass.getDeclaringClass()) != null) {
                 indent.append("    ");

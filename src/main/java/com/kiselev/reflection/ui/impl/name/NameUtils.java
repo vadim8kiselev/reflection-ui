@@ -2,12 +2,12 @@ package com.kiselev.reflection.ui.impl.name;
 
 import com.kiselev.reflection.ui.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.imports.ImportUtils;
-import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
+import com.kiselev.reflection.ui.impl.imports.StateManager;
 
 public class NameUtils {
 
     public String getTypeName(Class<?> clazz) {
-        ImportUtils importUtils = ManagerImportUtils.getImportUtils();
+        ImportUtils importUtils = StateManager.getImportUtils();
         return importUtils.addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
     }
 

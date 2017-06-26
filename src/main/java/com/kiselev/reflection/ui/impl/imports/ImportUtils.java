@@ -9,20 +9,14 @@ import java.util.*;
  */
 public class ImportUtils {
 
-    private Class<?> parsedClass;
-
-    private Class<?> currentClass;
-
     private Set<Class<?>> classesForImport;
 
-    ImportUtils(Class<?> clazz) {
-        this.parsedClass = clazz;
-        this.currentClass = clazz;
+    ImportUtils() {
         this.classesForImport = new HashSet<>();
     }
 
     public boolean addImport(Class<?> classForImport) {
-        if (parsedClass == null) {
+        if (StateManager.getParsedClass() == null) {
             return false;
         }
 
@@ -35,7 +29,7 @@ public class ImportUtils {
         } else if (!classesForImport.contains(classForImport)
                 && !classForImport.isPrimitive()
                 && !"java.lang".equals(getPackageName(classForImport))
-                && parsedClass.getPackage() != classForImport.getPackage()) {
+                && StateManager.getParsedClass().getPackage() != classForImport.getPackage()) {
 
             classesForImport.add(classForImport);
         }
@@ -56,7 +50,7 @@ public class ImportUtils {
     }
 
     private void clearState() {
-        this.parsedClass = null;
+        StateManager.clearState();
         this.classesForImport = new HashSet<>();
     }
 
@@ -92,19 +86,7 @@ public class ImportUtils {
         return clazz.getPackage() != null ? clazz.getPackage().getName() : "";
     }
 
-    public Class<?> getParsedClass() {
-        return parsedClass;
-    }
-
-    public void popCurrentClass() {
-        this.currentClass = this.currentClass.getDeclaringClass();
-    }
-
-    public Class<?> getCurrentClass() {
-        return currentClass;
-    }
-
-    public void setCurrentClass(Class<?> currentClass) {
-        this.currentClass = currentClass;
+    public boolean isCleared() {
+        return StateManager.getParsedClass() == null;
     }
 }

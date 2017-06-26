@@ -1,7 +1,7 @@
 package com.kiselev.reflection.ui.impl.packages;
 
 import com.kiselev.reflection.ui.impl.annotation.AnnotationUtils;
-import com.kiselev.reflection.ui.impl.imports.ManagerImportUtils;
+import com.kiselev.reflection.ui.impl.imports.StateManager;
 
 public class PackageUtils {
 
@@ -9,7 +9,7 @@ public class PackageUtils {
         String packageName = "";
 
         Package classPackage = clazz.getPackage();
-        Class<?> parsedClass = ManagerImportUtils.getImportUtils().getParsedClass();
+        Class<?> parsedClass = StateManager.getParsedClass();
         if (classPackage != null && clazz.equals(parsedClass)) {
 
             String packageAnnotations = new AnnotationUtils().getAnnotations(classPackage);
