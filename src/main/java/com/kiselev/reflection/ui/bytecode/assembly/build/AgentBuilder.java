@@ -33,8 +33,6 @@ public class AgentBuilder {
 
         private List<Class<?>> attachedClasses = new ArrayList<>();
 
-        private long CREATION_TIMEOUT = 3000L;
-
         public AgentJarBuilder addAgentName(String agentName) {
             this.agentName = appendSuffixIfNeeded(agentName, Constants.Suffix.JAR_SUFFIX);
             return this;
@@ -57,7 +55,7 @@ public class AgentBuilder {
 
         public String build() {
             createAgentJar();
-            return retrieveAgentPath();
+            return getAgentPath();
         }
 
         private String appendSuffixIfNeeded(String value, String suffix) {
@@ -121,26 +119,8 @@ public class AgentBuilder {
                     + Constants.Suffix.CLASS_FILE_SUFFIX;
         }
 
-        private String retrieveAgentPath() {
-            String agentJarPath = getAgentPath();
-            waitForCreationOfFile(agentJarPath);
-            return agentJarPath;
-        }
-
         private String getAgentPath() {
             return System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
-        }
-
-        // TODO: CHECK
-        private void waitForCreationOfFile(String fileName) {
-            File file = new File(fileName);
-            long timeout = System.currentTimeMillis() + CREATION_TIMEOUT;
-
-            while (!file.exists()) {
-                if (System.currentTimeMillis() > timeout) {
-                    throw new RuntimeException("Creating jar agent is failed");
-                }
-            }
         }
     }
 }
