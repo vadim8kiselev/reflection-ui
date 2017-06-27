@@ -24,6 +24,10 @@ public class ImportUtils {
             return false;
         }
 
+        if (classForImport.isMemberClass()) {
+            classForImport = resolveMemberClass(classForImport);
+        }
+
         if (classForImport.isArray()) {
             classForImport = resolveArray(classForImport);
         }
@@ -81,6 +85,13 @@ public class ImportUtils {
     private Class<?> resolveArray(Class<?> clazz) {
         if (clazz.isArray()) {
             return resolveArray(clazz.getComponentType());
+        } else {
+            return clazz;
+        }
+    }
+    private Class<?> resolveMemberClass(Class<?> clazz) {
+        if (clazz.isMemberClass()) {
+            return resolveMemberClass(clazz.getEnclosingClass());
         } else {
             return clazz;
         }
