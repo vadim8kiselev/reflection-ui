@@ -54,7 +54,7 @@ public class ByteCodeHolder {
         return decompiler.decompile(byteCode);
     }
 
-    public static void appendInnerClassesToDecompiler(Class<?> clazz, Decompiler decompiler) {
+    private static void appendInnerClassesToDecompiler(Class<?> clazz, Decompiler decompiler) {
         List<byte[]> innerClasses = new ArrayList<>();
 
         for (Class<?> innerClass : InnerClassesCollector.getInnerClasses(clazz)) {
