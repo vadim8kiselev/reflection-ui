@@ -27,7 +27,7 @@ public class InnerClassesCollector {
     private static Collection<Class<?>> getAnonymousOrSyntheticClasses(Class<?> clazz) {
         Collection<Class<?>> anonymousOrSyntheticClasses = new ArrayList<>();
 
-        int classId = 1;
+        int classId = 0;
         while (classId++ < 2 << 15) {
             try {
                 Class<?> foundedClass = Class.forName(clazz.getName() + Constants.Symbols.DOLLAR + classId);
