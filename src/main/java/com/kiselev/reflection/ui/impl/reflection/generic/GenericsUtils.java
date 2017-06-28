@@ -63,7 +63,8 @@ public class GenericsUtils {
                 boundType += new NameUtils().getTypeName(clazz);
 
                 if (!clazz.isMemberClass() && boundType.contains(Constants.Symbols.DOT) && !annotations.isEmpty()) {
-                    String packageName = clazz.getPackage().getName();
+                    Package pack = clazz.getPackage();
+                    String packageName = pack != null ? pack.getName() : "";
                     String simpleName = new NameUtils().getSimpleName(clazz);
                     boundType = packageName + Constants.Symbols.DOT + annotations + " " + simpleName;
                     annotations = "";
