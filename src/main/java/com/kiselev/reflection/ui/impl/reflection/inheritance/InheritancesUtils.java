@@ -33,12 +33,16 @@ public class InheritancesUtils {
     private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
         List<String> multipleParentTypes = new ArrayList<>();
         for (int index = 0; index < parentTypes.length; index++) {
-            multipleParentTypes.add(getSingleParentType(parentTypes[index], annotatedTypes.length != 0 ? annotatedTypes[index] : null));
+            multipleParentTypes.add(getSingleParentType(parentTypes[index], ifEmpty(annotatedTypes, index)));
         }
         return multipleParentTypes;
     }
 
     private String getSingleParentType(Type parentType, AnnotatedType annotatedType) {
         return new GenericsUtils().resolveType(parentType, annotatedType);
+    }
+
+    private AnnotatedType ifEmpty(AnnotatedType[] types, int index) {
+        return types == null || types.length == 0 ? null : types[index];
     }
 }

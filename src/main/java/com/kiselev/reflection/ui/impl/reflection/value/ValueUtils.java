@@ -17,7 +17,7 @@ public class ValueUtils {
             if (clazz.isArray()) {
                 List<String> listValues = new ArrayList<>();
                 for (Object listValue : getArrayValues(object)) {
-                    if (!(listValue != null && !(listValue instanceof String) && listValue.toString().isEmpty())) {
+                    if (!isObjectValue(listValue)) {
                         listValues.add(getValue(listValue));
                     }
                 }
@@ -35,11 +35,16 @@ public class ValueUtils {
             if (object instanceof Character) return "\'" + object + "\'";
             if (object instanceof Number || object instanceof Boolean) return object.toString();
             if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(Annotation.class.cast(object));
-            if (object instanceof Class) return new GenericsUtils().resolveType(Class.class.cast(object)) + Constants.Suffix.CLASS_FILE_SUFFIX;
+            if (object instanceof Class)
+                return new GenericsUtils().resolveType(Class.class.cast(object)) + Constants.Suffix.CLASS_FILE_SUFFIX;
             return "";
         }
 
         return null;
+    }
+
+    private boolean isObjectValue(Object object) {
+        return object != null && !(object instanceof String) && object.toString().isEmpty();
     }
 
     private List<Object> getArrayValues(Object object) {

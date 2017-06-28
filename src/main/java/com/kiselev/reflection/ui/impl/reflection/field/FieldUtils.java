@@ -58,7 +58,7 @@ public class FieldUtils {
                 }
             } catch (IllegalAccessException exception) {
                 throw new RuntimeException(exception);
-            } catch (NoClassDefFoundError | ExceptionInInitializerError error) {
+            } catch (Error error) {
                 //TODO : Think up about this case
             }
         }
