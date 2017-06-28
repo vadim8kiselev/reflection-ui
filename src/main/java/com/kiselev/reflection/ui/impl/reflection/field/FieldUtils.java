@@ -55,8 +55,6 @@ public class FieldUtils {
                 String fieldValue = new ValueUtils().getValue(field.get(null));
                 if (!"".equals(fieldValue)) {
                     return " = " + fieldValue;
-                } else {
-                    return "";
                 }
             } catch (IllegalAccessException exception) {
                 throw new RuntimeException(exception);

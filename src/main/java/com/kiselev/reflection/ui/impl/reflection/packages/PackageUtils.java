@@ -18,4 +18,8 @@ public class PackageUtils {
 
         return packageName;
     }
+
+    public String getPackageName(Class<?> clazz) {
+        return clazz.getPackage() != null ? clazz.getPackage().getName() : "";
+    }
 }

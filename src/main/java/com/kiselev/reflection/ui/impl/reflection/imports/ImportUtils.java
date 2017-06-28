@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.imports;
 
 import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
+import com.kiselev.reflection.ui.impl.reflection.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.util.Collections;
@@ -31,9 +32,8 @@ public class ImportUtils {
             return false;
         } else {
             classesForImport.add(classForImport);
+            return true;
         }
-
-        return true;
     }
 
     public String getImports() {
@@ -68,7 +68,7 @@ public class ImportUtils {
 
     private boolean isAppendToImports(Class<?> clazz) {
         return !clazz.isPrimitive()
-                && !"java.lang".equals(getPackageName(clazz))
+                && !"java.lang".equals(new PackageUtils().getPackageName(clazz))
                 && StateManager.getParsedClass().getPackage() != clazz.getPackage();
     }
 
@@ -99,9 +99,5 @@ public class ImportUtils {
 
     private Class<?> resolveMemberClass(Class<?> clazz) {
         return clazz.isMemberClass() ? resolveMemberClass(clazz.getEnclosingClass()) : clazz;
-    }
-
-    private String getPackageName(Class<?> clazz) {
-        return clazz.getPackage() != null ? clazz.getPackage().getName() : "";
     }
 }

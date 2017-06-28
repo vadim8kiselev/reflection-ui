@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.impl.reflection.generic;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
+import com.kiselev.reflection.ui.impl.reflection.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
 
@@ -42,7 +43,7 @@ public class GenericsUtils {
     public String resolveType(Type type, AnnotatedType annotatedType) {
         String annotations = "";
         String boundType = "";
-        if (annotatedType != null && !(type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType)) {
+        if (annotatedType != null && isNotArray(type)) {
             annotations = new AnnotationUtils().getInlineAnnotations(getAnnotatedType(annotatedType));
         }
 
@@ -56,15 +57,15 @@ public class GenericsUtils {
             } else {
                 if (isNeedNameForInnerClass(clazz)) {
                     String typeName = resolveType(clazz.getDeclaringClass(), null);
-                    boundType = typeName.isEmpty() ? "" : typeName + Constants.Symbols.DOT + getCorrectAnnotations(annotations);
+                    boundType = !typeName.isEmpty() ? typeName + Constants.Symbols.DOT + getCorrectAnnotations(annotations) : "";
                     annotations = "";
                 }
 
                 boundType += new NameUtils().getTypeName(clazz);
 
                 if (!clazz.isMemberClass() && boundType.contains(Constants.Symbols.DOT) && !annotations.isEmpty()) {
-                    Package pack = clazz.getPackage();
-                    String packageName = pack != null ? pack.getName() : "";
+
+                    String packageName = new PackageUtils().getPackageName(clazz);
                     String simpleName = new NameUtils().getSimpleName(clazz);
                     boundType = packageName + Constants.Symbols.DOT + annotations + " " + simpleName;
                     annotations = "";
@@ -90,8 +91,7 @@ public class GenericsUtils {
 
             String parametrizedRawTypeName = new NameUtils().getTypeName(Class.class.cast(parameterizedType.getRawType()));
 
-            List<String> innerGenericTypes = getGenericArguments(parameterizedType,
-                    AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType)));
+            List<String> innerGenericTypes = getGenericArguments(parameterizedType, AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType)));
 
             if (!innerGenericTypes.isEmpty()) {
                 genericArguments = "<" + String.join(", ", innerGenericTypes) + ">";
@@ -172,23 +172,20 @@ public class GenericsUtils {
         List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        AnnotatedType[] annotatedActualTypeArguments = annotatedParameterizedType != null
-                ? annotatedParameterizedType.getAnnotatedActualTypeArguments() : null;
+        AnnotatedType[] annotatedActualTypeArguments = ifNull(annotatedParameterizedType);
 
-        for (int i = 0; i < actualTypeArguments.length; i++) {
-            if (actualTypeArguments[i] instanceof WildcardType) {
-                WildcardType wildcardType = WildcardType.class.cast(actualTypeArguments[i]);
-                AnnotatedWildcardType annotatedWildcardType = AnnotatedWildcardType.class.cast(annotatedActualTypeArguments != null ? annotatedActualTypeArguments[i] : null);
+        for (int index = 0; index < actualTypeArguments.length; index++) {
+            if (actualTypeArguments[index] instanceof WildcardType) {
+                WildcardType wildcardType = WildcardType.class.cast(actualTypeArguments[index]);
+                AnnotatedWildcardType annotatedWildcardType = AnnotatedWildcardType.class.cast(ifEmpty(annotatedActualTypeArguments, index));
                 String wildcard = getCorrectAnnotations(new AnnotationUtils().getInlineAnnotations(annotatedWildcardType)) + "?";
 
-                wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends",
-                        annotatedWildcardType != null ? annotatedWildcardType.getAnnotatedUpperBounds() : null);
-                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super",
-                        annotatedWildcardType != null ? annotatedWildcardType.getAnnotatedUpperBounds() : null);
+                wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends", ifNullUpper(annotatedWildcardType));
+                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super", ifNullLover(annotatedWildcardType));
                 genericArguments.add(wildcard);
             } else {
-                genericArguments.add(resolveType(actualTypeArguments[i],
-                        annotatedActualTypeArguments != null ? annotatedActualTypeArguments[i] : null));
+                genericArguments.add(resolveType(actualTypeArguments[index], ifEmpty(annotatedActualTypeArguments, index)));
+
             }
         }
 
@@ -200,8 +197,8 @@ public class GenericsUtils {
         if (types.length != 0) {
             wildcard = " " + boundCase + " ";
             List<String> bounds = new ArrayList<>();
-            for (int i = 0; i < types.length; i++) {
-                bounds.add(resolveType(types[i], (annotatedTypes == null || annotatedTypes.length == 0 ? null : annotatedTypes[i])));
+            for (int index = 0; index < types.length; index++) {
+                bounds.add(resolveType(types[index], ifEmpty(annotatedTypes, index)));
             }
             wildcard += String.join(" & ", bounds);
         }
@@ -234,5 +231,25 @@ public class GenericsUtils {
 
     private String getCorrectAnnotations(String annotations) {
         return !annotations.isEmpty() ? annotations + " " : "";
+    }
+
+    private boolean isNotArray(Type type) {
+        return !(type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType);
+    }
+
+    private AnnotatedType[] ifNull(AnnotatedParameterizedType type) {
+        return type != null ? type.getAnnotatedActualTypeArguments() : null;
+    }
+
+    private AnnotatedType ifEmpty(AnnotatedType[] annotatedTypes, int index) {
+        return annotatedTypes == null || annotatedTypes.length == 0 ? null : annotatedTypes[index];
+    }
+
+    private AnnotatedType[] ifNullUpper(AnnotatedWildcardType type) {
+        return type != null ? type.getAnnotatedUpperBounds() : null;
+    }
+
+    private AnnotatedType[] ifNullLover(AnnotatedWildcardType type) {
+        return type != null ? type.getAnnotatedLowerBounds() : null;
     }
 }

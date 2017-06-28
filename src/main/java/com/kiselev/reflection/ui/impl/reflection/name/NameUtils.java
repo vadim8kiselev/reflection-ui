@@ -10,7 +10,7 @@ public class NameUtils {
 
     public String getTypeName(Class<?> clazz) {
         ImportUtils importUtils = StateManager.getImportUtils();
-        return importUtils.addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
+        return importUtils.addImport(clazz) ? getSimpleName(clazz) : clazz.getName();
     }
 
     public String getSimpleName(Class<?> clazz) {
@@ -19,16 +19,6 @@ public class NameUtils {
             typeName = clazz.getName().substring(clazz.getName().lastIndexOf(Constants.Symbols.DOT) + 1);
         }
         return typeName;
-    }
-
-    public String getName(Class<?> clazz) {
-        String className = "";
-
-        if (clazz.getPackage() == null) {
-            className += "root.";
-        }
-
-        return className + clazz.getName();
     }
 
     public String getMemberName(Member member) {
