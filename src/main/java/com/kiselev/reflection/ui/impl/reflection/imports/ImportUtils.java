@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.imports;
 
 import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,11 +16,8 @@ public class ImportUtils {
 
     private Set<Class<?>> classesForImport;
 
-    private Set<Class<?>> allClasses;
-
-    ImportUtils() {
+    public ImportUtils() {
         this.classesForImport = new HashSet<>();
-        this.allClasses = new HashSet<>();
     }
 
     public boolean addImport(Class<?> classForImport) {
@@ -27,25 +25,14 @@ public class ImportUtils {
             return false;
         }
 
-        if (classForImport.isMemberClass()) {
-            classForImport = resolveMemberClass(classForImport);
-        }
-
-        if (classForImport.isArray()) {
-            classForImport = resolveArray(classForImport);
-        }
+        classForImport = resolveClass(classForImport);
 
         if (isNeedFullName(classForImport)) {
             return false;
-        } else if (!classesForImport.contains(classForImport)
-                && !classForImport.isPrimitive()
-                && !"java.lang".equals(getPackageName(classForImport))
-                && StateManager.getParsedClass().getPackage() != classForImport.getPackage()) {
-
+        } else {
             classesForImport.add(classForImport);
         }
 
-        allClasses.add(classForImport);
         return true;
     }
 
@@ -53,7 +40,9 @@ public class ImportUtils {
         List<String> imports = new ArrayList<>();
 
         for (Class<?> className : classesForImport) {
-            imports.add("import " + className.getName() + ";\n");
+            if (isAppendToImports(className)) {
+                imports.add("import " + className.getName() + ";\n");
+            }
         }
 
         Collections.sort(imports); // TODO : Code style
@@ -68,17 +57,19 @@ public class ImportUtils {
     }
 
     private boolean isNeedFullName(Class<?> classForImport) {
-        return isAllContainsBySimpleName(allClasses, classForImport) && !allClasses.contains(classForImport);
-    }
-
-    private boolean isAllContainsBySimpleName(Set<Class<?>> classes, Class<?> classForImport) {
-        for (Class<?> clazz : classes) {
+        for (Class<?> clazz : classesForImport) {
             if (areEqualBySimpleName(clazz, classForImport) && !areEqualByName(clazz, classForImport)) {
-                return true;
+                return !classesForImport.contains(classForImport);
             }
         }
 
         return false;
+    }
+
+    private boolean isAppendToImports(Class<?> clazz) {
+        return !clazz.isPrimitive()
+                && !"java.lang".equals(getPackageName(clazz))
+                && StateManager.getParsedClass().getPackage() != clazz.getPackage();
     }
 
     private boolean areEqualByName(Class<?> source, Class<?> target) {
@@ -90,27 +81,27 @@ public class ImportUtils {
         return nameUtils.getSimpleName(source).equals(nameUtils.getSimpleName(target));
     }
 
-    private Class<?> resolveArray(Class<?> clazz) {
+    private Class<?> resolveClass(Class<?> clazz) {
         if (clazz.isArray()) {
-            return resolveArray(clazz.getComponentType());
-        } else {
-            return clazz;
+            clazz = resolveArray(clazz);
         }
+
+        if (clazz.isMemberClass()) {
+            clazz = resolveMemberClass(clazz);
+        }
+
+        return clazz;
+    }
+
+    private Class<?> resolveArray(Class<?> clazz) {
+        return clazz.isArray() ? resolveArray(clazz.getComponentType()) : clazz;
     }
 
     private Class<?> resolveMemberClass(Class<?> clazz) {
-        if (clazz.isMemberClass()) {
-            return resolveMemberClass(clazz.getEnclosingClass());
-        } else {
-            return clazz;
-        }
+        return clazz.isMemberClass() ? resolveMemberClass(clazz.getEnclosingClass()) : clazz;
     }
 
     private String getPackageName(Class<?> clazz) {
         return clazz.getPackage() != null ? clazz.getPackage().getName() : "";
-    }
-
-    public boolean isCleared() {
-        return StateManager.getParsedClass() == null;
     }
 }
