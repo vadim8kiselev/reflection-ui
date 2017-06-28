@@ -15,8 +15,11 @@ public class ImportUtils {
 
     private Set<Class<?>> classesForImport;
 
+    private Set<Class<?>> allClasses;
+
     ImportUtils() {
         this.classesForImport = new HashSet<>();
+        this.allClasses = new HashSet<>();
     }
 
     public boolean addImport(Class<?> classForImport) {
@@ -32,7 +35,7 @@ public class ImportUtils {
             classForImport = resolveArray(classForImport);
         }
 
-        if (isContainedImport(classForImport)) {
+        if (isNeedFullName(classForImport)) {
             return false;
         } else if (!classesForImport.contains(classForImport)
                 && !classForImport.isPrimitive()
@@ -41,6 +44,8 @@ public class ImportUtils {
 
             classesForImport.add(classForImport);
         }
+
+        allClasses.add(classForImport);
         return true;
     }
 
@@ -62,10 +67,13 @@ public class ImportUtils {
         this.classesForImport = new HashSet<>();
     }
 
-    private boolean isContainedImport(Class<?> classForImport) {
-        for (Class<?> clazz : classesForImport) {
-            if (!areEqualByName(clazz, classForImport)
-                    && areEqualBySimpleName(clazz, classForImport)) {
+    private boolean isNeedFullName(Class<?> classForImport) {
+        return isAllContainsBySimpleName(allClasses, classForImport) && !allClasses.contains(classForImport);
+    }
+
+    private boolean isAllContainsBySimpleName(Set<Class<?>> classes, Class<?> classForImport) {
+        for (Class<?> clazz : classes) {
+            if (areEqualBySimpleName(clazz, classForImport) && !areEqualByName(clazz, classForImport)) {
                 return true;
             }
         }
@@ -89,6 +97,7 @@ public class ImportUtils {
             return clazz;
         }
     }
+
     private Class<?> resolveMemberClass(Class<?> clazz) {
         if (clazz.isMemberClass()) {
             return resolveMemberClass(clazz.getEnclosingClass());
