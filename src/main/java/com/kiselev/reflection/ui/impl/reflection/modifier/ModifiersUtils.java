@@ -8,9 +8,9 @@ public class ModifiersUtils {
 
     private static final int MANDATED = 0x00008000;
 
-    private final int SYNTHETIC = 0x00001000;
+    private static final int SYNTHETIC = 0x00001000;
 
-    private final int IMPLICIT = 0x8000;
+    private static final int IMPLICIT = 0x8000;
 
     public String getModifiers(int modifierIndex) {
         String modifiers = "";
