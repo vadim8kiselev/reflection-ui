@@ -4,6 +4,7 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.configuration.Configuration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.DecompilerConfiguration;
+import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.LogLevel;
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
@@ -76,6 +77,30 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
     private Map<String, Object> getDefaultConfiguration() {
         return DecompilerConfiguration
                 .getBuilderConfiguration()
+                .showBridgeMethods(true)
+                .showMemberSyntheticClasses(true)
+                .decompileInnerClasses(true)
+                .collapseClassReferences(true)
+                .decompileAssertions(true)
+                .showEmptySuperInvocation(true)
+                .showEmptyDefaultConstructor(true)
+                .decompileGenericSignatures(true)
+                .assumeReturnNotThrowingExceptions(true)
+                .decompileEnumerations(true)
+                .removeGetClassInvocation(false)
+                .showOutputNumericLiterals(false)
+                .encodeNonASCIICharacters(true)
+                .interpretInt1AsBooleanTrue(false)
+                .allowForSetSyntheticAttribute(true)
+                .considerNamelessTypes(false)
+                .reconstructVariableNamesFromDebugInformation(true)
+                .removeEmptyExceptionRanges(false)
+                .setUpperLimitForDecompilation(0)
+                .renameAmbiguousClassesAndClassElements(false)
+                .checkNonNullAnnotation(true)
+                .decompileLambdaExpressionsToAnonymousClasses(false)
+                .setCountIndentSpaces(4)
+                .setLogLevel(LogLevel.ERROR)
                 .getConfiguration();
     }
 

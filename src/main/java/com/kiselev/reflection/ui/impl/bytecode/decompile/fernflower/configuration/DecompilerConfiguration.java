@@ -22,34 +22,6 @@ public class DecompilerConfiguration {
 
         private Map<String, Object> configuration = new HashMap<>();
 
-        {
-            configuration.put("rbr", ZERO);     //show bridge methods
-            configuration.put("rsy", ZERO);     //show synthetic class members
-            configuration.put("din", ONE);      //decompile inner classes
-            configuration.put("dc4", ZERO);     //collapse class references
-            configuration.put("das", ONE);      //decompile assertions
-            configuration.put("hes", ZERO);     //show empty super invocation
-            configuration.put("hdc", ZERO);     //show empty default constructor
-            configuration.put("dgs", ONE);      //decompile generic signatures
-            configuration.put("ner", ZERO);     //assume return not throwing exceptions
-            configuration.put("den", ONE);      //decompile enumerations
-            configuration.put("rgn", ZERO);     //show getClass() invocation, when it is part of a qualified new statement
-            configuration.put("lit", ONE);      //show output numeric literals "as-is"
-            configuration.put("asc", ZERO);     //for encode non-ASCII characters
-            configuration.put("bto", ZERO);     //don't interpret int 1 as boolean true
-            configuration.put("nns", ZERO);     //allow for set synthetic attribute
-            configuration.put("uto", ONE);      //consider nameless types as java.lang.Object
-            configuration.put("udv", ONE);      //reconstruct variable names from debug information, if present
-            configuration.put("rer", ZERO);     //don't remove empty exception ranges
-            configuration.put("fdi", ONE);      //de-inline finally structures
-            configuration.put("mpm", ZERO);     //don't upper limit for decompilation
-            configuration.put("ren", ZERO);     //don't rename ambiguous classes and class elements
-            configuration.put("inn", ZERO);     //don't check for IntelliJ IDEA-specific @NotNull annotation
-            configuration.put("lac", ZERO);     //don't decompile lambda expressions to anonymous classes
-            configuration.put("ind", "    ");   //indent spaces
-            configuration.put("log", "ERROR");  //log lever
-        }
-
         public Map<String, Object> getConfiguration() {
             return configuration;
         }
