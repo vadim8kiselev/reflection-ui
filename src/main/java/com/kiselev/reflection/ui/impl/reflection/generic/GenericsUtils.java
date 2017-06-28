@@ -2,7 +2,7 @@ package com.kiselev.reflection.ui.impl.reflection.generic;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
-import com.kiselev.reflection.ui.impl.reflection.imports.StateManager;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
 
 import java.lang.reflect.AnnotatedArrayType;

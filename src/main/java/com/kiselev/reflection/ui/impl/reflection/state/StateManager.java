@@ -1,4 +1,6 @@
-package com.kiselev.reflection.ui.impl.reflection.imports;
+package com.kiselev.reflection.ui.impl.reflection.state;
+
+import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
 
 /**
  * Created by Aleksei Makarov on 06/18/2017.
@@ -14,7 +16,7 @@ public class StateManager {
     public static void registerImportUtils(Class<?> clazz) {
         ImportUtils importUtils = importUtilsMap.get();
 
-        if (!clazz.isMemberClass() || importUtils == null || importUtils.isCleared()) {
+        if (!clazz.isMemberClass() || importUtils == null || currentClass.get() == null) {
             parsedClass.set(clazz);
             currentClass.set(clazz);
             importUtilsMap.set(new ImportUtils());
@@ -29,7 +31,7 @@ public class StateManager {
         return importUtilsMap.get();
     }
 
-    static void clearState() {
+    public static void clearState() {
         parsedClass.set(null);
         currentClass.set(null);
         importUtilsMap.set(null);

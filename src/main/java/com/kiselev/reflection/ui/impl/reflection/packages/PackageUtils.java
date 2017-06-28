@@ -1,7 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.packages;
 
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
-import com.kiselev.reflection.ui.impl.reflection.imports.StateManager;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 public class PackageUtils {
 

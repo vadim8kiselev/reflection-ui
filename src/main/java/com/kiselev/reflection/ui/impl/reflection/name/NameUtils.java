@@ -2,7 +2,7 @@ package com.kiselev.reflection.ui.impl.reflection.name;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
-import com.kiselev.reflection.ui.impl.reflection.imports.StateManager;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.lang.reflect.Member;
 

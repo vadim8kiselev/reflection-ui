@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.impl.reflection.indent;
 
-import com.kiselev.reflection.ui.impl.reflection.imports.StateManager;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.lang.reflect.Member;
 
