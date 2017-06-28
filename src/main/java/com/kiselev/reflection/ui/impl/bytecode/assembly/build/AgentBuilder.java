@@ -1,17 +1,10 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly.build;
 
-import com.kiselev.reflection.ui.impl.bytecode.agent.Agent;
-import com.kiselev.reflection.ui.impl.bytecode.agent.Transformer;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -103,6 +96,7 @@ public final class AgentBuilder {
             String manifest = Constants.Folders.MANIFEST_HOME + Constants.Symbols.SLASH + manifestName;
             try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(manifest)) {
                 if (stream == null) {
+                    //TODO : generate manifest file
                     throw new RuntimeException("Manifest file cannot be null");
                 }
                 return new Manifest(stream);

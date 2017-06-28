@@ -17,7 +17,10 @@ import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.jar.Manifest;
 
 /**
@@ -71,7 +74,9 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
     }
 
     private Map<String, Object> getDefaultConfiguration() {
-        return DecompilerConfiguration.getBuilderConfiguration().getConfiguration();
+        return DecompilerConfiguration
+                .getBuilderConfiguration()
+                .getConfiguration();
     }
 
     private void dirtyHack(BaseDecompiler decompiler, byte[] byteCode) {
@@ -85,7 +90,7 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
 
             Map<String, ContextUnit> units = getContextUnit(structContext);
 
-            ContextUnit unit = getFalseContextUnit(fernflower);
+            ContextUnit unit = createFalseContextUnit(fernflower);
             unit.addClass(structClass, structClass.qualifiedName + Constants.Suffix.CLASS_FILE_SUFFIX);
             units.put(structClass.qualifiedName, unit);
         } catch (Exception exception) {
@@ -115,12 +120,12 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
         return (Map<String, ContextUnit>) fieldUnits.get(context);
     }
 
-    private ContextUnit getFalseContextUnit(Fernflower fernflower) {
+    private ContextUnit createFalseContextUnit(Fernflower fernflower) {
         return new ContextUnit(0, null, "", true, this, fernflower);
     }
 
     @Override
-    public void saveClassFile(String s, String s1, String s2, String source, int[] ints) {
+    public void saveClassFile(String dummy, String dummyTwo, String dummyThree, String source, int[] dummyFour) {
         this.source = source;
     }
 

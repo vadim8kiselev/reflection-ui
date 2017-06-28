@@ -5,9 +5,6 @@ import com.kiselev.reflection.ui.impl.bytecode.agent.Transformer;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.attach.AgentAttacher;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.AgentBuilder;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 /**
  * Created by Vadim Kiselev on 6/13/2017.
  */
