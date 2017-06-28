@@ -14,6 +14,10 @@ public class BytecodeParser implements ReflectionUI {
             throw new RuntimeException("Primitive types can not be decompiled");
         }
 
+        if (clazz.isArray()) {
+            throw new RuntimeException("Array type can not be decompiled");
+        }
+
         String decompiledByteCode = ByteCodeHolder.getDecompiledByteCode(clazz);
         return decompiledByteCode;
     }
