@@ -33,7 +33,7 @@ public class InheritancesUtils {
     private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
         List<String> multipleParentTypes = new ArrayList<>();
         for (int index = 0; index < parentTypes.length; index++) {
-            multipleParentTypes.add(getSingleParentType(parentTypes[index], annotatedTypes[index]));
+            multipleParentTypes.add(getSingleParentType(parentTypes[index], annotatedTypes.length != 0 ? annotatedTypes[index] : null));
         }
         return multipleParentTypes;
     }
