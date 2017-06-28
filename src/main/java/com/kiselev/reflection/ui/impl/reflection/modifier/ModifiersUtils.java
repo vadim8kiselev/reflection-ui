@@ -56,7 +56,7 @@ public class ModifiersUtils {
     }
 
     private boolean isBridge(int modifierIndex) {
-        return (modifierIndex & BRIDGE) != 0;
+        return (modifierIndex & BRIDGE) != 0 && !Modifier.isVolatile(modifierIndex);
     }
 }
 
