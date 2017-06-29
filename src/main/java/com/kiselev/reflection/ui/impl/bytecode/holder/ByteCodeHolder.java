@@ -47,7 +47,7 @@ public class ByteCodeHolder {
         String classFileName = getClassFileName(clazz);
         String javaBasedClassName = getJavaBasedClassName(clazz);
         byte[] byteCode = byteCodeMap.get(javaBasedClassName);
-        writeByteCodeToFile(classFileName, byteCode);
+        //writeByteCodeToFile(classFileName, byteCode);
 
         Decompiler decompiler = new FernflowerDecompiler();
         appendInnerClassesToDecompiler(clazz, decompiler);
@@ -76,6 +76,8 @@ public class ByteCodeHolder {
             }
         } catch (UnmodifiableClassException exception) {
             throw new RuntimeException(exception);
+        } catch (Error error) {
+            //skip
         }
     }
 
