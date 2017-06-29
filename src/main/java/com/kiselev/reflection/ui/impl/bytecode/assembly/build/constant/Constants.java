@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant;
 
+import java.util.jar.Attributes;
+
 /**
  * Created by Vadim Kiselev on 06/14/2017.
  */
@@ -13,6 +15,15 @@ public interface Constants {
     interface Properties {
 
         String HOME_DIR = "user.dir";
+    }
+
+    interface Manifest {
+
+        Attributes.Name RETRANSFORM = new Attributes.Name("Can-Retransform-Classes");
+
+        Attributes.Name REDEFINE = new Attributes.Name("Can-Redefine-Classes");
+
+        Attributes.Name AGENT_CLASS = new Attributes.Name("Agent-Class");
     }
 
     interface Suffix {

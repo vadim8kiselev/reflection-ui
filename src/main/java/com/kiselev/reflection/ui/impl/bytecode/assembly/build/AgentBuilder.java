@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -93,12 +94,18 @@ public final class AgentBuilder {
         }
 
         private Manifest getManifest() {
-            String manifest = Constants.Folders.MANIFEST_HOME + Constants.Symbols.SLASH + manifestName;
-            try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(manifest)) {
+            String manifestName = Constants.Folders.MANIFEST_HOME + Constants.Symbols.SLASH + this.manifestName;
+            try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(manifestName)) {
                 if (stream == null) {
-                    //TODO : generate manifest file
-                    throw new RuntimeException("Manifest file cannot be null");
+                    Manifest manifest = new Manifest();
+                    manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+                    manifest.getMainAttributes().put(Constants.Manifest.RETRANSFORM, "true");
+                    manifest.getMainAttributes().put(Constants.Manifest.REDEFINE, "true");
+                    manifest.getMainAttributes().put(Constants.Manifest.AGENT_CLASS, agentClass.getName());
+
+                    return manifest;
                 }
+
                 return new Manifest(stream);
             } catch (IOException exception) {
                 throw new RuntimeException(exception);

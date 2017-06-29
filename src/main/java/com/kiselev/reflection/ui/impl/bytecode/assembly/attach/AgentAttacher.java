@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly.attach;
 
+import com.ea.agentloader.AgentLoader;
 import com.sun.tools.attach.VirtualMachine;
 
 import java.lang.management.ManagementFactory;
@@ -10,14 +11,6 @@ import java.lang.management.ManagementFactory;
 public final class AgentAttacher {
 
     public static void attach(String agentPath) throws Exception {
-        String virtualMachineProcessId = getVirtualMachineProcessId();
-        VirtualMachine virtualMachine = VirtualMachine.attach(virtualMachineProcessId);
-        virtualMachine.loadAgent(agentPath, "");
-        virtualMachine.detach();
-    }
-
-    private static String getVirtualMachineProcessId() {
-        String virtualMachineName = ManagementFactory.getRuntimeMXBean().getName();
-        return virtualMachineName.substring(0, virtualMachineName.indexOf('@'));
+        AgentLoader.loadAgent(agentPath, "");
     }
 }

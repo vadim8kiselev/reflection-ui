@@ -16,20 +16,18 @@
     </repositories>
 
     <dependencies>
-        <!-- Tools -->
-        <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <version>1.8</version>
-            <scope>system</scope>
-            <systemPath>${java.home}\..\lib\tools.jar</systemPath>
-        </dependency>
-
         <!-- FernFlower Decompiler -->
         <dependency>
             <groupId>com.github.fesh0r</groupId>
             <artifactId>fernflower</artifactId>
             <version>adbf29f8ce</version>
+        </dependency>
+
+        <!-- Agent loader -->
+        <dependency>
+            <groupId>com.github.electronicarts</groupId>
+            <artifactId>ea-agent-loader</artifactId>
+            <version>v1.0.3</version>
         </dependency>
     </dependencies>
 
