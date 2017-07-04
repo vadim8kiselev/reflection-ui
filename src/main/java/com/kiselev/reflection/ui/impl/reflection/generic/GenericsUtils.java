@@ -43,7 +43,7 @@ public class GenericsUtils {
     public String resolveType(Type type, AnnotatedType annotatedType) {
         String annotations = "";
         String boundType = "";
-        if (annotatedType != null && isNotArray(type)) {
+        if (annotatedType != null && !isArray(type)) {
             annotations = new AnnotationUtils().getInlineAnnotations(getAnnotatedType(annotatedType));
         }
 
@@ -185,7 +185,6 @@ public class GenericsUtils {
                 genericArguments.add(wildcard);
             } else {
                 genericArguments.add(resolveType(actualTypeArguments[index], ifEmpty(annotatedActualTypeArguments, index)));
-
             }
         }
 
@@ -233,8 +232,8 @@ public class GenericsUtils {
         return !annotations.isEmpty() ? annotations + " " : "";
     }
 
-    private boolean isNotArray(Type type) {
-        return !(type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType);
+    private boolean isArray(Type type) {
+        return type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType;
     }
 
     private AnnotatedType[] ifNull(AnnotatedParameterizedType type) {

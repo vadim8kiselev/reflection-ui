@@ -40,7 +40,7 @@ public class MethodUtils {
 
         String isDefault = method.isDefault() ? "default " : "";
 
-        String modifiers = isDefault + new ModifiersUtils().getModifiers(method.getModifiers());
+        String modifiers = isDefault + getModifiers(method);
 
         String generics = new GenericsUtils().getGenerics(method);
 
@@ -78,5 +78,11 @@ public class MethodUtils {
 
     private boolean isMethodRealization(Method method) {
         return !Modifier.isAbstract(method.getModifiers()) && !Modifier.isNative(method.getModifiers());
+    }
+
+    private String getModifiers(Method method) {
+        return new ModifiersUtils().getModifiers(method.getModifiers())
+                .replace("volatile", "bridge")
+                .replace("transient ", "");
     }
 }
