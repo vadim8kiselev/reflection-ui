@@ -86,7 +86,9 @@ public class AnnotationUtils {
             for (Method method : methods) {
                 method.setAccessible(true);
                 Object value = method.invoke(annotation);
-                map.put(method.getName(), new ValueUtils().getValue(value));
+                if (!isDefaultValue(value, method.getDefaultValue())) {
+                    map.put(method.getName(), new ValueUtils().getValue(value));
+                }
             }
         } catch (Exception exception) {
             throw new RuntimeException(exception);
@@ -149,5 +151,13 @@ public class AnnotationUtils {
         }
 
         return annotations;
+    }
+
+    private boolean isDefaultValue(Object value, Object defaultValue) {
+        if (!value.getClass().isArray()) {
+            return value.equals(defaultValue);
+        } else {
+            return Arrays.equals((Object[])value, (Object[])defaultValue);
+        }
     }
 }

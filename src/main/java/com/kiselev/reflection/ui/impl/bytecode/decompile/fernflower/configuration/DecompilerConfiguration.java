@@ -149,7 +149,7 @@ public class DecompilerConfiguration {
         public FernflowerConfiguration defineNewLineCharacter(String character) {
             if (character.equals("\n")) {
                 configuration.put("nls", ONE);
-            } else if (character.contains("\r\n")) {
+            } else if (character.equals("\r\n")) {
                 configuration.put("nls", ZERO);
             }
 

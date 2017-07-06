@@ -47,7 +47,7 @@ public class ByteCodeHolder {
         String classFileName = getClassFileName(clazz);
         String javaBasedClassName = getJavaBasedClassName(clazz);
         byte[] byteCode = byteCodeMap.get(javaBasedClassName);
-        //writeByteCodeToFile(classFileName, byteCode);
+        writeByteCodeToFile(classFileName, byteCode);
 
         Decompiler decompiler = new FernflowerDecompiler();
         appendInnerClassesToDecompiler(clazz, decompiler);

@@ -126,11 +126,12 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
     private Fernflower getFernflower(BaseDecompiler decompiler) throws NoSuchFieldException, IllegalAccessException {
         Field fieldFernflower = decompiler.getClass().getDeclaredField("fernflower");
         fieldFernflower.setAccessible(true);
+
         return Fernflower.class.cast(fieldFernflower.get(decompiler));
     }
 
     private StructClass createClassStruct(byte[] byteCode) throws IOException {
-        LazyLoader lazyLoader = new LazyLoader((s, s1) -> byteCode);
+        LazyLoader lazyLoader = new LazyLoader((dummy, dummyTwo) -> byteCode);
         StructClass structClass = new StructClass(byteCode, true, lazyLoader);
         LazyLoader.Link link = new LazyLoader.Link(1, structClass.qualifiedName, null);
         lazyLoader.addClassLink(structClass.qualifiedName, link);
@@ -142,6 +143,7 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
     private Map<String, ContextUnit> getContextUnit(StructContext context) throws NoSuchFieldException, IllegalAccessException {
         Field fieldUnits = StructContext.class.getDeclaredField("units");
         fieldUnits.setAccessible(true);
+
         return (Map<String, ContextUnit>) fieldUnits.get(context);
     }
 
