@@ -1,8 +1,17 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly.build;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
+import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
+import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollector;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -52,7 +61,10 @@ public final class AgentBuilder {
         }
 
         public AgentJarBuilder addAgentClass(Class<?> agentClass) {
-            this.agentClass = agentClass;
+            if (isAgentClass(agentClass)) {
+                this.agentClass = agentClass;
+            }
+
             return this;
         }
 
@@ -60,17 +72,57 @@ public final class AgentBuilder {
             return createAgentJar();
         }
 
+        private void findAgentClass() {
+            if (agentClass == null) {
+                for (Class<?> attachedClass : attachedClasses) {
+                    if (isAgentClass(attachedClass)) {
+                        this.agentClass = attachedClass;
+                        return;
+                    }
+                }
+            }
+        }
+
+        private boolean isAgentClass(Class<?> clazz) {
+            if (clazz != null) {
+                Method agentmain = getAgentMethod(clazz, "agentmain");
+                Method premain = getAgentMethod(clazz, "premain");
+
+                if (agentmain == null && premain == null) {
+                    return false;
+                }
+
+                Method agentMethod = agentmain != null ? agentmain : premain;
+
+                int modifiers = agentMethod.getModifiers();
+                return Modifier.isStatic(modifiers) && agentMethod.getReturnType().equals(void.class);
+            }
+
+            return false;
+        }
+
+        private Method getAgentMethod(Class<?> clazz, String methodName) {
+            try {
+               return clazz.getDeclaredMethod(methodName, String.class, Instrumentation.class);
+            } catch (NoSuchMethodException exception) {
+                return null;
+            }
+        }
+
         private String appendSuffixIfNeeded(String value, String suffix) {
             if (!value.endsWith(suffix)) {
                 return value + suffix;
             }
+
             return value;
         }
 
         private String createAgentJar() {
+            findAgentClass();
             if (agentClass == null) {
                 throw new RuntimeException("Agent class cannot be null");
             }
+
             if (agentName == null) {
                 agentName = "agent.jar";
             }
@@ -79,11 +131,21 @@ public final class AgentBuilder {
 
             attachedClasses.add(agentClass);
             try (JarOutputStream jarStream = new JarOutputStream(new FileOutputStream(agentPath), getManifest())) {
+                ByteCodeCollector reader = new ClassFileByteCodeCollector();
+
                 for (Class<?> attachedClass : attachedClasses) {
-                    jarStream.putNextEntry(new JarEntry(getClassFileName(attachedClass)));
-                    jarStream.write(getClassBytes(attachedClass));
-                    jarStream.flush();
-                    jarStream.closeEntry();
+                    if (attachedClass != null) {
+                        jarStream.putNextEntry(new JarEntry(ClassNameResolver.resolveClassFileName(attachedClass)));
+
+                        byte[] byteCode = reader.getByteCode(attachedClass);
+                        if (byteCode == null) {
+                            throw new RuntimeException("Class is not found!");
+                        }
+
+                        jarStream.write(byteCode);
+                        jarStream.flush();
+                        jarStream.closeEntry();
+                    }
                 }
                 jarStream.finish();
             } catch (IOException exception) {
@@ -98,10 +160,12 @@ public final class AgentBuilder {
             try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(manifestName)) {
                 if (stream == null) {
                     Manifest manifest = new Manifest();
-                    manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-                    manifest.getMainAttributes().put(Constants.Manifest.RETRANSFORM, "true");
-                    manifest.getMainAttributes().put(Constants.Manifest.REDEFINE, "true");
-                    manifest.getMainAttributes().put(Constants.Manifest.AGENT_CLASS, agentClass.getName());
+                    Attributes attributes = manifest.getMainAttributes();
+
+                    attributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
+                    attributes.put(Constants.Manifest.RETRANSFORM, "true");
+                    attributes.put(Constants.Manifest.REDEFINE, "true");
+                    attributes.put(Constants.Manifest.AGENT_CLASS, agentClass.getName());
 
                     return manifest;
                 }
@@ -110,28 +174,6 @@ public final class AgentBuilder {
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
-        }
-
-        private byte[] getClassBytes(Class<?> clazz) {
-            String classFileName = getClassFileName(clazz);
-            try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(classFileName);
-                 ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
-                int reads = stream.read();
-
-                while (reads != -1) {
-                    byteStream.write(reads);
-                    reads = stream.read();
-                }
-
-                return byteStream.toByteArray();
-            } catch (IOException exception) {
-                throw new RuntimeException(exception);
-            }
-        }
-
-        private String getClassFileName(Class<?> clazz) {
-            return clazz.getName().replace(Constants.Symbols.DOT, Constants.Symbols.SLASH)
-                    + Constants.Suffix.CLASS_FILE_SUFFIX;
         }
     }
 }

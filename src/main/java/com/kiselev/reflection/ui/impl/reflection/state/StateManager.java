@@ -14,9 +14,7 @@ public class StateManager {
     private static ThreadLocal<Class<?>> currentClass = new ThreadLocal<>();
 
     public static void registerImportUtils(Class<?> clazz) {
-        ImportUtils importUtils = importUtilsMap.get();
-
-        if (!clazz.isMemberClass() || importUtils == null || currentClass.get() == null) {
+        if (!clazz.isMemberClass() || importUtilsMap.get() == null || currentClass.get() == null) {
             parsedClass.set(clazz);
             currentClass.set(clazz);
             importUtilsMap.set(new ImportUtils());
@@ -24,11 +22,12 @@ public class StateManager {
     }
 
     public static ImportUtils getImportUtils() {
-        if (importUtilsMap.get() == null) {
+        ImportUtils importUtils = importUtilsMap.get();
+        if (importUtils == null) {
             throw new RuntimeException("Import utils for current thread is not register");
         }
 
-        return importUtilsMap.get();
+        return importUtils;
     }
 
     public static void clearState() {

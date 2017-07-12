@@ -4,8 +4,6 @@ import java.lang.reflect.Modifier;
 
 public class ModifiersUtils {
 
-    private static final int BRIDGE = 0x00000040;
-
     private static final int SYNTHETIC = 0x00001000;
 
     private static final int IMPLICIT = 0x8000;
@@ -43,10 +41,6 @@ public class ModifiersUtils {
 
     private boolean isImplicit(int modifierIndex) {
         return (modifierIndex & IMPLICIT) != 0;
-    }
-
-    private boolean isBridge(int modifierIndex) {
-        return (modifierIndex & BRIDGE) != 0 && !Modifier.isVolatile(modifierIndex);
     }
 }
 

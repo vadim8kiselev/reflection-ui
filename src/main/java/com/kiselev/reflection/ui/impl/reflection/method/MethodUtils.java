@@ -81,8 +81,11 @@ public class MethodUtils {
     }
 
     private String getModifiers(Method method) {
-        return new ModifiersUtils().getModifiers(method.getModifiers())
-                .replace("volatile", "bridge")
-                .replace("transient ", "");
+        String modifiers = new ModifiersUtils().getModifiers(method.getModifiers()).replace("transient ", "");
+        if (modifiers.contains("volatile")) {
+            modifiers = "bridge " + modifiers.replace("volatile ", "");
+        }
+
+        return modifiers;
     }
 }

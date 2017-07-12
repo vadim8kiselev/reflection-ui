@@ -57,17 +57,17 @@ public class GenericsUtils {
             } else {
                 if (isNeedNameForInnerClass(clazz)) {
                     String typeName = resolveType(clazz.getDeclaringClass(), null);
-                    boundType = !typeName.isEmpty() ? typeName + Constants.Symbols.DOT + getCorrectAnnotations(annotations) : "";
+                    boundType = !typeName.isEmpty() ? typeName + "." + getCorrectAnnotations(annotations) : "";
                     annotations = "";
                 }
 
                 boundType += new NameUtils().getTypeName(clazz);
 
-                if (!clazz.isMemberClass() && boundType.contains(Constants.Symbols.DOT) && !annotations.isEmpty()) {
+                if (!clazz.isMemberClass() && boundType.contains(".") && !annotations.isEmpty()) {
 
                     String packageName = new PackageUtils().getPackageName(clazz);
                     String simpleName = new NameUtils().getSimpleName(clazz);
-                    boundType = packageName + Constants.Symbols.DOT + annotations + " " + simpleName;
+                    boundType = packageName + "." + annotations + " " + simpleName;
                     annotations = "";
                 }
             }
@@ -83,7 +83,7 @@ public class GenericsUtils {
                 // Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
                 AnnotatedParameterizedType annotatedOwnerParametrizedType = null;
                 boundType = resolveType(parameterizedType.getOwnerType(),
-                        annotatedOwnerParametrizedType) + Constants.Symbols.DOT + getCorrectAnnotations(annotations);
+                        annotatedOwnerParametrizedType) + "." + getCorrectAnnotations(annotations);
                 annotations = "";
             }
 
