@@ -2,7 +2,7 @@ package com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
-import com.kiselev.reflection.ui.impl.bytecode.decompile.configuration.Configuration;
+import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.DecompilerConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.LogLevel;
 import com.kiselev.reflection.ui.impl.exception.DecompilationException;

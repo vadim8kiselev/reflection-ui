@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.configuration.reflection;
 
-import com.kiselev.reflection.ui.impl.bytecode.decompile.configuration.Configuration;
+import com.kiselev.reflection.ui.configuration.Configuration;
 
 /**
  * Created by Алексей on 07/14/2017.

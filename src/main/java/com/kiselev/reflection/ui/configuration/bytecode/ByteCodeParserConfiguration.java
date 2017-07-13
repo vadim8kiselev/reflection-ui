@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.configuration.bytecode;
 
-import com.kiselev.reflection.ui.impl.bytecode.decompile.configuration.Configuration;
+import com.kiselev.reflection.ui.configuration.Configuration;
 
 import java.util.Map;
 

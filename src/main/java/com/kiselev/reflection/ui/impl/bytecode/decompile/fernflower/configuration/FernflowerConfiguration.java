@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration;
 
-import com.kiselev.reflection.ui.impl.bytecode.decompile.configuration.Configuration;
+import com.kiselev.reflection.ui.configuration.Configuration;
 import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 
 import java.util.Map;
