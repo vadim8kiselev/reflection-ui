@@ -6,7 +6,6 @@ import com.kiselev.reflection.ui.impl.exception.agent.InvalidRetransformClass;
 
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +45,8 @@ public class ByteCodeHolder {
                 instrumentation.retransformClasses(clazz);
             }
         } catch (UnmodifiableClassException exception) {
-            throw new InvalidRetransformClass("Class: " + clazz.getName() + " is can't retransform", exception);
+            String message = "Class: " + clazz.getName() + " is can't retransform";
+            throw new InvalidRetransformClass(message, exception);
         }
     }
 }

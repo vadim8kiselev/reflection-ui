@@ -23,14 +23,10 @@ public class ByteCodeSaver {
     }
 
     private static void writeByteCodeToFile(String fileName, byte[] byteCode) {
-        if (fileName != null && byteCode != null) {
-            try (FileOutputStream stream = new FileOutputStream(fileName.replace(Constants.Symbols.DOLLAR, ""))) {
-                stream.write(byteCode);
-            } catch (IOException exception) {
-                throw new CreateFileException("Can't create file by path: " + fileName, exception);
-            }
-        } else {
-            throw new NullPointerException("Empty file name or byte code");
+        try (FileOutputStream stream = new FileOutputStream(fileName)) {
+            stream.write(byteCode);
+        } catch (IOException exception) {
+            throw new CreateFileException("Can't create file by path: " + fileName, exception);
         }
     }
 
@@ -38,7 +34,7 @@ public class ByteCodeSaver {
         String classFileName = "classes" + File.separator + ClassNameUtils.resolveJavaBasedClassName(clazz)
                 .replace(Constants.Symbols.DOT, File.separator);
         createClassFileNameDirectory(classFileName);
-        return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
+        return classFileName.replace(Constants.Symbols.DOLLAR, "") + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
     private static void createClassFileNameDirectory(String classFileName) {

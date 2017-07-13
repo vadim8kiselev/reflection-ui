@@ -60,8 +60,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
         String className = ClassFileUtils.getClassNameFromArchivePath(path);
 
         try {
-            URL urlJarFile = new URL(archiveName);
-            JarFile file = new JarFile(urlJarFile.getFile());
+            JarFile file = new JarFile(archiveName);
             JarEntry jarEntry = file.getJarEntry(className);
             try (InputStream fileStream = file.getInputStream(jarEntry)) {
                 return readByteFromStream(fileStream);

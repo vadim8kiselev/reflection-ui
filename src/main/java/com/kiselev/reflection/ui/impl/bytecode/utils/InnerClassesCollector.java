@@ -78,7 +78,7 @@ public class InnerClassesCollector {
             if (ClassFileUtils.isArchive(path)) {
                 File file = new File(ClassFileUtils.getArchivePath(path));
                 try {
-                    JarFile jarFile = new JarFile(new URL(file.getPath()).getFile());
+                    JarFile jarFile = new JarFile(file.getPath());
                     Enumeration<JarEntry> entries = jarFile.entries();
                     while (entries.hasMoreElements()) {
                         JarEntry entry = entries.nextElement();
@@ -98,27 +98,24 @@ public class InnerClassesCollector {
                 }
             } else {
                 File file = new File(ClassFileUtils.getClassPackagePath(clazz));
+                File[] classes = file.listFiles();
 
-                if (file.isDirectory()) {
-                    File[] classes = file.listFiles();
-                    if (classes != null) {
-                        for (File classFile : classes) {
-                            String fileName = classFile.getName();
-                            if (fileName.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX) && isLocalClass(clazz, fileName)) {
-                                String className = ClassNameUtils.getPackageName(clazz) + Constants.Symbols.DOT
-                                        + fileName.substring(0, fileName.lastIndexOf(Constants.Symbols.DOT));
-                                try {
-                                    Class<?> localClass = Class.forName(className);
-                                    localClasses.add(localClass);
-                                } catch (ClassNotFoundException exception) {
-                                    throw new ByteCodeParserException("Can't load local class: " + fileName, exception);
-                                }
+                if (classes != null) {
+                    for (File classFile : classes) {
+                        String fileName = classFile.getName();
+                        if (fileName.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX) && isLocalClass(clazz, fileName)) {
+                            String className = ClassNameUtils.getPackageName(clazz) + Constants.Symbols.DOT
+                                    + fileName.substring(0, fileName.lastIndexOf(Constants.Symbols.DOT));
+                            try {
+                                Class<?> localClass = Class.forName(className);
+                                localClasses.add(localClass);
+                            } catch (ClassNotFoundException exception) {
+                                throw new ByteCodeParserException("Can't load local class: " + fileName, exception);
                             }
                         }
                     }
                 }
             }
-
         }
 
         return localClasses;

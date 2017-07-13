@@ -1,8 +1,10 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
+import com.kiselev.reflection.ui.impl.exception.ByteCodeParserException;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -50,8 +52,14 @@ public class ClassFileUtils {
 
     public static String getArchivePath(String arFilePath) {
         if (arFilePath!= null && isArchive(arFilePath)) {
-            return arFilePath.substring(0, getSeparatorPosition(arFilePath))
+            String path = arFilePath.substring(0, getSeparatorPosition(arFilePath))
                     .replace(Constants.Symbols.SLASH, "\\").replace("%20", " ");
+            try {
+                URL urlPath = new URL(path);
+                return urlPath.getFile();
+            } catch (MalformedURLException exception) {
+                throw new ByteCodeParserException("Jar path: " + path + " is undefined");
+            }
         }
 
         return "";
@@ -70,7 +78,7 @@ public class ClassFileUtils {
         return jarFilePath.lastIndexOf(Constants.Symbols.DOT + archiveType + "!") + archiveType.length() + 1;
     }
 
-    public static String getArchiveType(String path) {
+    private static String getArchiveType(String path) {
         if (path.contains(".jar!")) return "jar";
         if (path.contains(".war!")) return "war";
         if (path.contains(".ear!")) return "ear";

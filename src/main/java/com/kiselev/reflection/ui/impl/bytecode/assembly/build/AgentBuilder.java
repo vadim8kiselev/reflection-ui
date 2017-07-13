@@ -174,7 +174,8 @@ public final class AgentBuilder {
 
                 return new Manifest(stream);
             } catch (IOException exception) {
-                throw new CreateFileException("Manifest with name: \"" + manifestName + "\" is can't created", exception);
+                String message = "Manifest with name: \"" + manifestName + "\" is can't created";
+                throw new CreateFileException(message, exception);
             }
         }
     }

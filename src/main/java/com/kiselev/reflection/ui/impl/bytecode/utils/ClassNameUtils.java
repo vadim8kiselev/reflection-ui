@@ -23,7 +23,7 @@ public class ClassNameUtils {
 
     public static String getSimpleName(Class<?> clazz) {
         String typeName = resolveJavaBasedClassName(clazz);
-        return typeName.substring(typeName.lastIndexOf(".") + 1);
+        return typeName.substring(typeName.lastIndexOf(Constants.Symbols.DOT) + 1);
     }
 
     public static String getPackageName(Class<?> clazz) {

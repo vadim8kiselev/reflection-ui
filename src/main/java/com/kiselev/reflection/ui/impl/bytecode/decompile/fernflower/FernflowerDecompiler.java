@@ -19,10 +19,10 @@ import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.jar.Manifest;
 
 /**
@@ -141,7 +141,8 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, ContextUnit> getContextUnit(StructContext context) throws NoSuchFieldException, IllegalAccessException {
+    private Map<String, ContextUnit> getContextUnit(StructContext context)
+            throws NoSuchFieldException, IllegalAccessException {
         Field fieldUnits = StructContext.class.getDeclaredField("units");
         fieldUnits.setAccessible(true);
 
