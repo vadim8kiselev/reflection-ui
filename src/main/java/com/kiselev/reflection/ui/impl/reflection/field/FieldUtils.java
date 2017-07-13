@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.reflection.field;
 
+import com.kiselev.reflection.ui.impl.exception.ReflectionParserException;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
@@ -57,9 +58,7 @@ public class FieldUtils {
                     return " = " + fieldValue;
                 }
             } catch (IllegalAccessException exception) {
-                throw new RuntimeException(exception);
-            } catch (Error error) {
-                //TODO : Think up about this case
+                throw new ReflectionParserException("Can't get value of field: " + field.getName(), exception);
             }
         }
 

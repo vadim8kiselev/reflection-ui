@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.impl.bytecode.holder;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.AgentAssembler;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
+import com.kiselev.reflection.ui.impl.exception.agent.InvalidRetransformClass;
 
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
@@ -46,9 +47,7 @@ public class ByteCodeHolder {
                 instrumentation.retransformClasses(clazz);
             }
         } catch (UnmodifiableClassException exception) {
-            throw new RuntimeException(exception);
-        } catch (Error error) {
-            //skip
+            throw new InvalidRetransformClass("Class: " + clazz.getName() + " is can't retransform", exception);
         }
     }
 }

@@ -10,11 +10,7 @@ import java.lang.instrument.Instrumentation;
 public final class Agent {
 
     public static void agentmain(String args, Instrumentation instrumentation) {
-        try {
-            instrumentation.addTransformer(new Transformer(), true);
-            ByteCodeHolder.registerInstrumentation(instrumentation);
-        } catch (Exception exception) {
-            throw new RuntimeException(exception);
-        }
+        instrumentation.addTransformer(new Transformer(), true);
+        ByteCodeHolder.registerInstrumentation(instrumentation);
     }
 }

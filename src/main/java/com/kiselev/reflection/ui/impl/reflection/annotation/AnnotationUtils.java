@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.reflection.annotation;
 
+import com.kiselev.reflection.ui.impl.exception.ReflectionParserException;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.reflection.value.ValueUtils;
@@ -91,7 +92,7 @@ public class AnnotationUtils {
                 }
             }
         } catch (Exception exception) {
-            throw new RuntimeException(exception);
+            throw new ReflectionParserException("Can't get default annotation value", exception);
         }
 
         return map;
@@ -147,7 +148,7 @@ public class AnnotationUtils {
                 annotations.addAll(Arrays.asList(retrievedAnnotations));
             }
         } catch (ReflectiveOperationException exception) {
-            throw new RuntimeException(exception);
+            throw new ReflectionParserException("Can't get annotation value", exception);
         }
 
         return annotations;

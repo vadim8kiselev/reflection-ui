@@ -4,6 +4,8 @@ import com.kiselev.reflection.ui.impl.bytecode.agent.Agent;
 import com.kiselev.reflection.ui.impl.bytecode.agent.Transformer;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.attach.AgentAttacher;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.AgentBuilder;
+import com.kiselev.reflection.ui.impl.exception.agent.AgentAttachException;
+import com.kiselev.reflection.ui.impl.exception.file.CreateFileException;
 
 /**
  * Created by Vadim Kiselev on 6/13/2017.
@@ -29,7 +31,7 @@ public class AgentAssembler {
                 assembled = true;
             }
         } catch (Exception exception) {
-            throw new RuntimeException(exception);
+            throw new AgentAttachException("Failed agent jar creating", exception);
         }
     }
 

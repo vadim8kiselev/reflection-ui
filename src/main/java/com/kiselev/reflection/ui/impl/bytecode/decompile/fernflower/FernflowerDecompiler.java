@@ -5,6 +5,7 @@ import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.configuration.Configuration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.DecompilerConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.LogLevel;
+import com.kiselev.reflection.ui.impl.exception.DecompilationException;
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
@@ -119,7 +120,7 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
             unit.addClass(structClass, structClass.qualifiedName + Constants.Suffix.CLASS_FILE_SUFFIX);
             units.put(structClass.qualifiedName, unit);
         } catch (Exception exception) {
-            throw new RuntimeException(exception);
+            throw new DecompilationException("Something wrong with fernflower", exception);
         }
     }
 

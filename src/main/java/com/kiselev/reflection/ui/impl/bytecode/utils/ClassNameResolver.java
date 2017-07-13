@@ -17,7 +17,7 @@ public class ClassNameResolver {
     }
 
     public static String resolveClassFileName(Class<?> clazz) {
-        return clazz.getName().replace(Constants.Symbols.DOT, Constants.Symbols.SLASH)
+        return resolveJavaBasedClassName(clazz).replace(Constants.Symbols.DOT, Constants.Symbols.SLASH)
                 + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 }

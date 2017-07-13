@@ -4,6 +4,8 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
+import com.kiselev.reflection.ui.impl.exception.agent.InvalidAgentClassException;
+import com.kiselev.reflection.ui.impl.exception.file.CreateFileException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,10 +63,10 @@ public final class AgentBuilder {
         }
 
         public AgentJarBuilder addAgentClass(Class<?> agentClass) {
-            if (isAgentClass(agentClass)) {
-                this.agentClass = agentClass;
+            if (!isAgentClass(agentClass)) {
+                throw new InvalidAgentClassException("Class " + agentClass.getName() + " is can't be a agent class");
             }
-
+            this.agentClass = agentClass;
             return this;
         }
 
@@ -120,7 +122,7 @@ public final class AgentBuilder {
         private String createAgentJar() {
             findAgentClass();
             if (agentClass == null) {
-                throw new RuntimeException("Agent class cannot be null");
+                throw new NullPointerException("Agent class can't be null");
             }
 
             if (agentName == null) {
@@ -149,7 +151,7 @@ public final class AgentBuilder {
                 }
                 jarStream.finish();
             } catch (IOException exception) {
-                throw new RuntimeException(exception);
+                throw new CreateFileException("Agent jar is can't created", exception);
             }
 
             return agentPath;
@@ -172,7 +174,7 @@ public final class AgentBuilder {
 
                 return new Manifest(stream);
             } catch (IOException exception) {
-                throw new RuntimeException(exception);
+                throw new CreateFileException("Manifest with name: \"" + manifestName + "\" is can't created", exception);
             }
         }
     }

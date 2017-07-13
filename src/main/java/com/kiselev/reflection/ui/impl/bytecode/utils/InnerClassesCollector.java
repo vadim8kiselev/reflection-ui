@@ -39,8 +39,6 @@ public class InnerClassesCollector {
                 anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
             } catch (Exception exception) {
                 break;
-            } catch (Error error) {
-                //skip
             }
         }
 

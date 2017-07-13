@@ -3,6 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.collector;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
 import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
+import com.kiselev.reflection.ui.impl.exception.file.ReadFileException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -51,7 +52,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
         try (FileInputStream stream = new FileInputStream(path)) {
             return readByteFromStream(stream);
         } catch (IOException exception) {
-            throw new RuntimeException(exception);
+            throw new ReadFileException("Can't read file by path: " + path, exception);
         }
     }
 
@@ -71,7 +72,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
                 return readByteFromStream(fileStream);
             }
         } catch (Exception exception) {
-            throw new RuntimeException(exception);
+            throw new ReadFileException("Can't read file by path: " + path, exception);
         }
     }
 
@@ -86,7 +87,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
 
             return byteStream.toByteArray();
         } catch (IOException exception) {
-            throw new RuntimeException(exception);
+            throw new ReadFileException("Can't read file from stream: " + stream, exception);
         }
     }
 

@@ -6,6 +6,8 @@ import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollec
 import com.kiselev.reflection.ui.impl.bytecode.collector.RetransformClassByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler;
+import com.kiselev.reflection.ui.impl.exception.ByteCodeParserException;
+import com.kiselev.reflection.ui.impl.exception.agent.InvalidRetransformClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +27,15 @@ public class BytecodeParser implements ReflectionUI {
     @Override
     public String parseClass(Class<?> clazz) {
         if (clazz.isPrimitive()) {
-            throw new RuntimeException("Primitive types can not be decompiled");
+            throw new InvalidRetransformClass("Primitive types can not be decompiled");
         }
 
         if (clazz.isArray()) {
-            throw new RuntimeException("Array type can not be decompiled");
+            throw new InvalidRetransformClass("Array type can not be decompiled");
         }
         byte[] byteCode = null;
 
         Decompiler decompiler = new FernflowerDecompiler();
-
         for (ByteCodeCollector collector : collectors) {
             byteCode = collector.getByteCode(clazz);
             if (byteCode != null) {
@@ -42,6 +43,12 @@ public class BytecodeParser implements ReflectionUI {
                 break;
             }
         }
+
+        if (byteCode == null) {
+            //I don't know what has could happen, because of which throw this exception
+            throw new ByteCodeParserException("Byte code is not found o_O");
+        }
+
         return decompiler.decompile(byteCode);
 
     }
