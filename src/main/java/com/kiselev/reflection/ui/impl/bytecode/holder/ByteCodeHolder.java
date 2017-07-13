@@ -31,7 +31,6 @@ public class ByteCodeHolder {
         }
 
         retransformClass(clazz);
-
         String javaBasedClassName = ClassNameResolver.resolveJavaBasedClassName(clazz);
 
         return byteCodeMap.get(javaBasedClassName);

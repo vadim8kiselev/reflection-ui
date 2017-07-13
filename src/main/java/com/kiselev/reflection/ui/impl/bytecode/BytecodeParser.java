@@ -50,6 +50,5 @@ public class BytecodeParser implements ReflectionUI {
         }
 
         return decompiler.decompile(byteCode);
-
     }
 }

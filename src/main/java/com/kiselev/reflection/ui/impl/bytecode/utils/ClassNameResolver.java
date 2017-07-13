@@ -3,7 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 
 /**
- * Created by Aleksei Makarov on 12.07.2017.
+ * Created by Aleksei Makarov on 07/12/2017.
  */
 public class ClassNameResolver {
 

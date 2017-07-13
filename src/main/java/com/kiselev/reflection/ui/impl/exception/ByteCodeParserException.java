@@ -1,7 +1,7 @@
 package com.kiselev.reflection.ui.impl.exception;
 
 /**
- * Created by Aleksei Makarov on 13.07.2017.
+ * Created by Aleksei Makarov on 07/13/2017.
  */
 public class ByteCodeParserException  extends RuntimeException {
 

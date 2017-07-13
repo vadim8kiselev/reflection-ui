@@ -191,7 +191,7 @@ public interface FernflowerConfiguration extends Configuration {
      * '\r\n' (Windows),
      * '\n' (Unix), default is OS-dependent
      * <p>
-     * Default value: Windows
+     * Default value: selected by OS
      */
     FernflowerConfiguration defineNewLineCharacter(String character);
 
