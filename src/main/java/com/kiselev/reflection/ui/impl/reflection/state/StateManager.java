@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.state;
 
+import com.kiselev.reflection.ui.configuration.reflection.ReflectionConfiguration;
+import com.kiselev.reflection.ui.configuration.reflection.ReflectionParserConfiguration;
 import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
 
 /**
@@ -13,11 +15,16 @@ public class StateManager {
 
     private static ThreadLocal<Class<?>> currentClass = new ThreadLocal<>();
 
+    private static ThreadLocal<ReflectionConfiguration> configuration = new ThreadLocal<>();
+
     public static void registerImportUtils(Class<?> clazz) {
         if (!clazz.isMemberClass() || importUtilsMap.get() == null || currentClass.get() == null) {
             parsedClass.set(clazz);
             currentClass.set(clazz);
             importUtilsMap.set(new ImportUtils());
+            if (configuration.get() == null) {
+                configuration.set(new ReflectionParserConfiguration());
+            }
         }
     }
 
@@ -52,5 +59,9 @@ public class StateManager {
         if (currentClass != null && currentClass.get() != null) {
             currentClass.set(currentClass.get().getDeclaringClass());
         }
+    }
+
+    public static void setConfiguration(ReflectionConfiguration configuration) {
+        StateManager.configuration.set(configuration);
     }
 }
