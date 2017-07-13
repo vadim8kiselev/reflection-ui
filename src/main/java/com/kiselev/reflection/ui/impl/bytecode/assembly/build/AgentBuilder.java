@@ -137,7 +137,7 @@ public final class AgentBuilder {
 
                 for (Class<?> attachedClass : attachedClasses) {
                     if (attachedClass != null) {
-                        jarStream.putNextEntry(new JarEntry(ClassNameUtils.resolveClassFileName(attachedClass)));
+                        jarStream.putNextEntry(new JarEntry(ClassNameUtils.getClassToFileName(attachedClass)));
 
                         byte[] byteCode = reader.getByteCode(attachedClass);
                         if (byteCode == null) {

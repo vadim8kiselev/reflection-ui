@@ -5,7 +5,6 @@ import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler;
-import com.kiselev.reflection.ui.impl.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.impl.exception.agent.InvalidRetransformClass;
 
 /**
@@ -28,11 +27,6 @@ public class BytecodeParser implements ReflectionUI {
 
         Decompiler decompiler = new FernflowerDecompiler();
         decompiler.appendAdditionalClasses(collector.getByteCodeOfInnerClasses(clazz));
-
-        if (byteCode == null) {
-            //I don't know what has could happen, because of which throw this exception
-            throw new ByteCodeParserException("Byte code is not found o_O");
-        }
 
         return decompiler.decompile(byteCode);
     }

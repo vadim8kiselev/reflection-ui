@@ -3,7 +3,6 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.exception.ByteCodeParserException;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,7 +22,7 @@ public class ClassFileUtils {
         }
 
         if (loader != null) {
-            URL resource = loader.getResource(ClassNameUtils.resolveClassFileName(clazz));
+            URL resource = loader.getResource(ClassNameUtils.getClassToFileName(clazz));
             if (resource != null) {
                 return resource.getFile();
             }

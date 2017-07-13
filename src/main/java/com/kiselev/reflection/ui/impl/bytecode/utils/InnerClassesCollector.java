@@ -7,8 +7,11 @@ import com.kiselev.reflection.ui.impl.exception.file.ReadFileException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -65,60 +68,87 @@ public class InnerClassesCollector {
         Collection<Class<?>> localClasses = new ArrayList<>();
 
         if (ClassFileUtils.isDynamicCreateClass(clazz)) {
-            ClassLoader classLoader = clazz.getClassLoader();
-            Collection<Class<?>> classes = getLoadedClasses(classLoader);
-            for (Class<?> loadedClass : classes) {
-                String className = ClassNameUtils.getSimpleName(loadedClass);
-                if (isLocalClass(clazz, className)) {
-                    localClasses.add(loadedClass);
+            localClasses.addAll(collectLocalDynamicClass(clazz));
+        } else {
+            if (ClassFileUtils.isArchive(ClassFileUtils.getFilePath(clazz))) {
+                localClasses.addAll(collectLocalClassesFromArchive(clazz));
+            } else {
+                localClasses.addAll(collectLocalClassesFromDirectory(clazz));
+            }
+        }
+
+        return localClasses;
+    }
+
+    private static Collection<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
+        Collection<Class<?>> localClasses = new ArrayList<>();
+
+        ClassLoader classLoader = clazz.getClassLoader();
+        Collection<Class<?>> classes = getLoadedClasses(classLoader);
+        for (Class<?> loadedClass : classes) {
+            String className = ClassNameUtils.getSimpleName(loadedClass);
+            if (isLocalClass(clazz, className)) {
+                localClasses.add(loadedClass);
+            }
+        }
+
+        return localClasses;
+    }
+
+    private static Collection<Class<?>> collectLocalClassesFromArchive(Class<?> clazz) {
+        Collection<Class<?>> localClasses = new ArrayList<>();
+
+        String path = ClassFileUtils.getFilePath(clazz);
+        File file = new File(ClassFileUtils.getArchivePath(path));
+        try {
+            JarFile jarFile = new JarFile(file.getPath());
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                Class<?> localClass = collectLocalStaticClass(clazz, entry.getName());
+                if (localClass != null) {
+                    localClasses.add(localClass);
                 }
             }
-        } else {
-            String path = ClassFileUtils.getFilePath(clazz);
-            if (ClassFileUtils.isArchive(path)) {
-                File file = new File(ClassFileUtils.getArchivePath(path));
-                try {
-                    JarFile jarFile = new JarFile(file.getPath());
-                    Enumeration<JarEntry> entries = jarFile.entries();
-                    while (entries.hasMoreElements()) {
-                        JarEntry entry = entries.nextElement();
-                        String name = entry.getName();
-                        if (name.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX)) {
-                            name = name.substring(0, name.lastIndexOf(Constants.Symbols.DOT));
-                            if (isLocalClass(clazz, name.substring(name.lastIndexOf(Constants.Symbols.SLASH, name.length()) + 1))) {
-                                Class<?> localClass = Class.forName(name.replace(Constants.Symbols.SLASH, Constants.Symbols.DOT));
-                                localClasses.add(localClass);
-                            }
-                        }
-                    }
-                } catch (IOException exception) {
-                    throw new ReadFileException("Can't read jar file: " + file.getPath(), exception);
-                } catch (ClassNotFoundException exception) {
-                    throw new ByteCodeParserException("Can't load local class", exception);
-                }
-            } else {
-                File file = new File(ClassFileUtils.getClassPackagePath(clazz));
-                File[] classes = file.listFiles();
+        } catch (IOException exception) {
+            throw new ReadFileException("Can't read jar file: " + file.getPath(), exception);
+        }
 
-                if (classes != null) {
-                    for (File classFile : classes) {
-                        String fileName = classFile.getName();
-                        if (fileName.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX) && isLocalClass(clazz, fileName)) {
-                            String className = ClassNameUtils.getPackageName(clazz) + Constants.Symbols.DOT
-                                    + fileName.substring(0, fileName.lastIndexOf(Constants.Symbols.DOT));
-                            try {
-                                Class<?> localClass = Class.forName(className);
-                                localClasses.add(localClass);
-                            } catch (ClassNotFoundException exception) {
-                                throw new ByteCodeParserException("Can't load local class: " + fileName, exception);
-                            }
-                        }
-                    }
+        return localClasses;
+    }
+
+    private static Collection<Class<?>> collectLocalClassesFromDirectory(Class<?> clazz) {
+        Collection<Class<?>> localClasses = new ArrayList<>();
+
+        File file = new File(ClassFileUtils.getClassPackagePath(clazz));
+        File[] classes = file.listFiles();
+
+        if (classes != null) {
+            for (File classFile : classes) {
+                String name = ClassNameUtils.getPackageName(clazz) + Constants.Symbols.DOT + classFile.getName();
+                Class<?> localClass = collectLocalStaticClass(clazz, name);
+                if (localClass != null) {
+                    localClasses.add(localClass);
                 }
             }
         }
 
         return localClasses;
+    }
+
+    private static Class<?> collectLocalStaticClass(Class<?> clazz, String name) {
+        String fullName = ClassNameUtils.normalizeFullName(name);
+        String simpleName = ClassNameUtils.normalizeSimpleName(name);
+
+        if (name.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX) && isLocalClass(clazz, simpleName)) {
+            try {
+                return Class.forName(fullName);
+            } catch (ClassNotFoundException exception) {
+                throw new ByteCodeParserException("Can't load local class: " + fullName, exception);
+            }
+        }
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")

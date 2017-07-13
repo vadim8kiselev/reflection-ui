@@ -31,7 +31,7 @@ public class ByteCodeSaver {
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = "classes" + File.separator + ClassNameUtils.resolveJavaBasedClassName(clazz)
+        String classFileName = "classes" + File.separator + ClassNameUtils.getJavaBasedClassName(clazz)
                 .replace(Constants.Symbols.DOT, File.separator);
         createClassFileNameDirectory(classFileName);
         return classFileName.replace(Constants.Symbols.DOLLAR, "") + Constants.Suffix.CLASS_FILE_SUFFIX;
