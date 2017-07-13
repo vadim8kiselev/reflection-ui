@@ -1,7 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.collector;
 
-import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassFileUtils;
 import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
 import com.kiselev.reflection.ui.impl.exception.file.ReadFileException;
 
@@ -21,16 +20,16 @@ import java.util.jar.JarFile;
 public class ClassFileByteCodeCollector implements ByteCodeCollector {
 
     public byte[] getByteCode(Class<?> clazz) {
-        String filePath = getFilePath(clazz);
+        String filePath = ClassFileUtils.getFilePath(clazz);
 
         if (filePath == null) {
             return null;
         }
 
-        if (getArchiveType(filePath).isEmpty()) {
-            return getByteCodeFromFile(filePath);
-        } else {
+        if (ClassFileUtils.isArchive(filePath)) {
             return getByteCodeFromJar(filePath);
+        } else {
+            return getByteCodeFromFile(filePath);
         }
     }
 
@@ -57,12 +56,8 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
     }
 
     private byte[] getByteCodeFromJar(String path) {
-        String archiveType = getArchiveType(path);
-        int dividePosition = path.lastIndexOf(Constants.Symbols.DOT + archiveType + "!")
-                + archiveType.length() + 1;
-        String archiveName = path.substring(0, dividePosition)
-                .replace(Constants.Symbols.SLASH, "\\").replace("%20", " ");
-        String className = path.substring(dividePosition + 2, path.length());
+        String archiveName = ClassFileUtils.getArchivePath(path);
+        String className = ClassFileUtils.getClassNameFromArchivePath(path);
 
         try {
             URL urlJarFile = new URL(archiveName);
@@ -89,34 +84,5 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
         } catch (IOException exception) {
             throw new ReadFileException("Can't read file from stream: " + stream, exception);
         }
-    }
-
-    private String getArchiveType(String path) {
-        if (path.contains(".jar!")) return "jar";
-        if (path.contains(".war!")) return "war";
-        if (path.contains(".ear!")) return "ear";
-        if (path.contains(".zip!")) return "zip";
-
-        return "";
-    }
-
-    private String getFilePath(Class<?> clazz) {
-        ClassLoader loader = clazz.getClassLoader();
-
-        if (loader == null) {
-            loader = ClassLoader.getSystemClassLoader();
-            while (loader != null && loader.getParent() != null) {
-                loader = loader.getParent();
-            }
-        }
-
-        if (loader != null) {
-            URL resource = loader.getResource(ClassNameResolver.resolveClassFileName(clazz));
-            if (resource != null) {
-                return resource.getFile();
-            }
-        }
-
-        return null;
     }
 }

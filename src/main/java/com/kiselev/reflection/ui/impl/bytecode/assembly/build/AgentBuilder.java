@@ -3,7 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.assembly.build;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollector;
-import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.reflection.ui.impl.exception.agent.InvalidAgentClassException;
 import com.kiselev.reflection.ui.impl.exception.file.CreateFileException;
 
@@ -137,7 +137,7 @@ public final class AgentBuilder {
 
                 for (Class<?> attachedClass : attachedClasses) {
                     if (attachedClass != null) {
-                        jarStream.putNextEntry(new JarEntry(ClassNameResolver.resolveClassFileName(attachedClass)));
+                        jarStream.putNextEntry(new JarEntry(ClassNameUtils.resolveClassFileName(attachedClass)));
 
                         byte[] byteCode = reader.getByteCode(attachedClass);
                         if (byteCode == null) {

@@ -185,7 +185,6 @@ public interface FernflowerConfiguration extends Configuration {
      */
     FernflowerConfiguration decompileLambdaExpressionsToAnonymousClasses(boolean flag);
 
-
     /**
      * define new line character to be used for output.
      * '\r\n' (Windows),

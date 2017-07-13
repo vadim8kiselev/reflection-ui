@@ -1,7 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.saver;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.reflection.ui.impl.exception.file.CreateFileException;
 
 import java.io.File;
@@ -35,7 +35,7 @@ public class ByteCodeSaver {
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = "classes" + File.separator + ClassNameResolver.resolveJavaBasedClassName(clazz)
+        String classFileName = "classes" + File.separator + ClassNameUtils.resolveJavaBasedClassName(clazz)
                 .replace(Constants.Symbols.DOT, File.separator);
         createClassFileNameDirectory(classFileName);
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;

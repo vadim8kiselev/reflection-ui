@@ -1,7 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.holder;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.AgentAssembler;
-import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameResolver;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.reflection.ui.impl.exception.agent.InvalidRetransformClass;
 
 import java.lang.instrument.Instrumentation;
@@ -31,7 +31,7 @@ public class ByteCodeHolder {
         }
 
         retransformClass(clazz);
-        String javaBasedClassName = ClassNameResolver.resolveJavaBasedClassName(clazz);
+        String javaBasedClassName = ClassNameUtils.resolveJavaBasedClassName(clazz);
 
         return byteCodeMap.get(javaBasedClassName);
     }

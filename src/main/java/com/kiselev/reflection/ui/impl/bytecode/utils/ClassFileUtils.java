@@ -1,0 +1,81 @@
+package com.kiselev.reflection.ui.impl.bytecode.utils;
+
+import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
+
+import java.io.File;
+import java.net.URL;
+
+/**
+ * Created by Aleksei Makarov on 13.07.2017.
+ */
+public class ClassFileUtils {
+
+    public static String getFilePath(Class<?> clazz) {
+        ClassLoader loader = clazz.getClassLoader();
+
+        if (loader == null) {
+            loader = ClassLoader.getSystemClassLoader();
+            while (loader != null && loader.getParent() != null) {
+                loader = loader.getParent();
+            }
+        }
+
+        if (loader != null) {
+            URL resource = loader.getResource(ClassNameUtils.resolveClassFileName(clazz));
+            if (resource != null) {
+                return resource.getFile();
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean isDynamicCreateClass(Class<?> clazz) {
+        return getFilePath(clazz) == null;
+    }
+
+    public static boolean isArchive(String path) {
+        return !getArchiveType(path).isEmpty();
+    }
+
+    public static String getClassPackagePath(Class<?> clazz) {
+        String path = getFilePath(clazz);
+
+        if (path!= null && !isArchive(path)) {
+            return path.substring(0, path.lastIndexOf(Constants.Symbols.SLASH));
+        }
+
+        return "";
+    }
+
+    public static String getArchivePath(String arFilePath) {
+        if (arFilePath!= null && isArchive(arFilePath)) {
+            return arFilePath.substring(0, getSeparatorPosition(arFilePath))
+                    .replace(Constants.Symbols.SLASH, "\\").replace("%20", " ");
+        }
+
+        return "";
+    }
+
+    public static String getClassNameFromArchivePath(String jarFilePath) {
+        if (jarFilePath!= null && isArchive(jarFilePath)) {
+            return jarFilePath.substring(getSeparatorPosition(jarFilePath) + 2, jarFilePath.length());
+        }
+
+        return "";
+    }
+
+    private static int getSeparatorPosition(String jarFilePath) {
+        String archiveType = ClassFileUtils.getArchiveType(jarFilePath);
+        return jarFilePath.lastIndexOf(Constants.Symbols.DOT + archiveType + "!") + archiveType.length() + 1;
+    }
+
+    public static String getArchiveType(String path) {
+        if (path.contains(".jar!")) return "jar";
+        if (path.contains(".war!")) return "war";
+        if (path.contains(".ear!")) return "ear";
+        if (path.contains(".zip!")) return "zip";
+
+        return "";
+    }
+}
