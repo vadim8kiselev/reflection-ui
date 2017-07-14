@@ -1,6 +1,8 @@
 package com.kiselev.reflection.ui.impl.reflection;
 
 import com.kiselev.reflection.ui.api.ReflectionUI;
+import com.kiselev.reflection.ui.configuration.Configuration;
+import com.kiselev.reflection.ui.configuration.reflection.ReflectionConfiguration;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.reflection.classes.ClassUtils;
 import com.kiselev.reflection.ui.impl.reflection.constructor.ConstructorUtils;
@@ -98,5 +100,12 @@ public class ReflectionParser implements ReflectionUI {
         }
 
         return String.join("\n", nonEmptyContents);
+    }
+
+    @Override
+    public void setConfiguration(Configuration configuration) {
+        if (configuration instanceof ReflectionConfiguration) {
+            StateManager.setConfiguration((ReflectionConfiguration)configuration);
+        }
     }
 }

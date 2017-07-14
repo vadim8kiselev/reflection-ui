@@ -23,32 +23,55 @@ public class ReflectionParserConfiguration {
 
         @Override
         public ReflectionConfiguration showAnnotationTypes(boolean flag) {
-            return null;
+            configuration.put("sat", flag);
+            return this;
         }
 
         @Override
         public ReflectionConfiguration showInnerClasses(boolean flag) {
-            return null;
+            configuration.put("sic", flag);
+            return this;
         }
 
         @Override
         public ReflectionConfiguration showNonJavaModifiers(boolean flag) {
-            return null;
+            configuration.put("njm", flag);
+            return this;
         }
 
         @Override
         public ReflectionConfiguration showDefaultValueInAnnotation(boolean flag) {
-            return null;
+            configuration.put("dva", flag);
+            return this;
         }
 
         @Override
-        public ReflectionConfiguration setCountIndentSpaces(int count) {
-            return null;
+        public ReflectionConfiguration showGenericSignatures(boolean flag) {
+            configuration.put("sgs", flag);
+            return this;
+        }
+
+        @Override
+        public ReflectionConfiguration setCountIndentSpaces(int indent) {
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < indent; i++) {
+                builder.append(" ");
+            }
+
+            configuration.put("cis", builder.toString());
+            return this;
         }
 
         @Override
         public ReflectionConfiguration defineNewLineCharacter(String character) {
-            return null;
+            if (character.equals("\n")) {
+                configuration.put("nlc", character);
+            } else if (character.equals("\r\n")) {
+                configuration.put("nlc", character);
+            }
+
+            return this;
         }
     }
 }

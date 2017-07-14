@@ -1,8 +1,8 @@
 package com.kiselev.reflection.ui.configuration.bytecode;
 
+import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
-import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,6 @@ public class ByteCodeParserConfiguration {
     public static ByteCodeConfiguration configure() {
         return new Builder();
     }
-
     private static class Builder implements ByteCodeConfiguration {
 
         private HashMap<String, Object> configuration = new HashMap<>();
@@ -61,7 +60,7 @@ public class ByteCodeParserConfiguration {
         }
 
         @Override
-        public ByteCodeConfiguration addCustomFernflowerConfiguration(Class<? extends FernflowerConfiguration> configuration) {
+        public ByteCodeConfiguration addCustomDecompilerConfiguration(Class<? extends Configuration> configuration) {
             return null;
         }
 

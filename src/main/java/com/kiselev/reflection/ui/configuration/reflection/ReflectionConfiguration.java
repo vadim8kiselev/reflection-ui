@@ -38,9 +38,16 @@ public interface ReflectionConfiguration extends Configuration {
     ReflectionConfiguration showDefaultValueInAnnotation(boolean flag);
 
     /**
+     * Show generic signatures
+     * <p>
+     * Default value: true
+     */
+    ReflectionConfiguration showGenericSignatures(boolean flag);
+
+    /**
      * Indentation string
      * <p>
-     * Default value: 3 spaces
+     * Default value: 4 spaces
      */
     ReflectionConfiguration setCountIndentSpaces(int count);
 

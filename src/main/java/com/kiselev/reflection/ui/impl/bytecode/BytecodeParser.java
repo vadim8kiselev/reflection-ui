@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode;
 
 import com.kiselev.reflection.ui.api.ReflectionUI;
+import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
@@ -33,5 +34,10 @@ public class BytecodeParser implements ReflectionUI {
         }
 
         return decompiler.decompile(byteCode);
+    }
+
+    @Override
+    public void setConfiguration(Configuration configuration) {
+
     }
 }

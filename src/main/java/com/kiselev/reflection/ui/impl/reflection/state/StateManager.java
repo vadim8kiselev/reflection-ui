@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.impl.reflection.state;
 
 import com.kiselev.reflection.ui.configuration.reflection.ReflectionConfiguration;
 import com.kiselev.reflection.ui.configuration.reflection.ReflectionParserConfiguration;
+import com.kiselev.reflection.ui.impl.reflection.configuration.ConfigurationManager;
 import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
 
 /**
@@ -15,7 +16,7 @@ public class StateManager {
 
     private static ThreadLocal<Class<?>> currentClass = new ThreadLocal<>();
 
-    private static ThreadLocal<ReflectionConfiguration> configuration = new ThreadLocal<>();
+    private static ThreadLocal<ConfigurationManager> configuration = new ThreadLocal<>();
 
     public static void registerImportUtils(Class<?> clazz) {
         if (!clazz.isMemberClass() || importUtilsMap.get() == null || currentClass.get() == null) {
@@ -23,7 +24,7 @@ public class StateManager {
             currentClass.set(clazz);
             importUtilsMap.set(new ImportUtils());
             if (configuration.get() == null) {
-                configuration.set(new ReflectionParserConfiguration());
+                configuration.set(new ConfigurationManager());
             }
         }
     }
@@ -61,7 +62,16 @@ public class StateManager {
         }
     }
 
+    public static ConfigurationManager getConfiguration() {
+        ConfigurationManager configurationManager = configuration.get();
+        if (configurationManager == null) {
+            configuration.set(new ConfigurationManager());
+        }
+
+        return configuration.get();
+    }
+
     public static void setConfiguration(ReflectionConfiguration configuration) {
-        StateManager.configuration.set(configuration);
+        StateManager.configuration.set(new ConfigurationManager(configuration.getConfiguration()));
     }
 }
