@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.configuration;
 
+import com.kiselev.reflection.ui.configuration.reflection.ReflectionParserConfiguration;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,20 +66,20 @@ public class ConfigurationManager {
     }
 
     private static Map<String, Object> getDefaultConfiguration() {
-        HashMap<String, Object> configuration = new HashMap<>();
-        configuration.put("sat", true);
-        configuration.put("sic", true);
-        configuration.put("njm", false);
-        configuration.put("dva", false);
-        configuration.put("sgs", true);
-        configuration.put("sva", true);
-        configuration.put("dvf", true);
-        configuration.put("dim", true);
-        configuration.put("cfn", false);
-        configuration.put("cis", "    ");
-        configuration.put("nlc", chooseSystemNewLineCharacter());
-
-        return configuration;
+        return ReflectionParserConfiguration
+                .configure()
+                .showAnnotationTypes(true)
+                .showInnerClasses(true)
+                .showNonJavaModifiers(false)
+                .showDefaultValueInAnnotation(false)
+                .displayValueForFields(true)
+                .showGenericSignatures(true)
+                .showVarArgs(true)
+                .displayImports(true)
+                .showClassFullName(false)
+                .setCountIndentSpaces(4)
+                .defineLineSeparator(chooseSystemNewLineCharacter())
+                .getConfiguration();
     }
 
     private static String chooseSystemNewLineCharacter() {
