@@ -91,7 +91,7 @@ public class ReflectionParserConfiguration {
         public ReflectionConfiguration defineLineSeparator(String character) {
             if (character.equals("\n")) {
                 configuration.put("nlc", character);
-            } else if (character.equals("\r\n")) {
+            } else if (character.equals("\n\r")) {
                 configuration.put("nlc", character);
             }
 
