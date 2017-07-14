@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.exception;
 
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Executable;
@@ -15,9 +16,14 @@ public class ExceptionUtils {
 
         List<String> exceptionTypes = new ArrayList<>();
         AnnotatedType[] annotatedExceptionTypes = executable.getAnnotatedExceptionTypes();
-        Type[] genericExceptionTypes = executable.getGenericExceptionTypes();
+        Type[] genericExceptionTypes = StateManager.getConfiguration().isShowGenericSignatures() ? executable.getGenericExceptionTypes() : executable.getExceptionTypes();
         for (int index = 0; index < genericExceptionTypes.length; index++) {
-            String exceptionType = new GenericsUtils().resolveType(genericExceptionTypes[index], annotatedExceptionTypes[index]);
+            String exceptionType;
+            if (StateManager.getConfiguration().isShowAnnotationTypes()) {
+                exceptionType = new GenericsUtils().resolveType(genericExceptionTypes[index], annotatedExceptionTypes[index]);
+            } else {
+                exceptionType = new GenericsUtils().resolveType(genericExceptionTypes[index], null);
+            }
             exceptionTypes.add(exceptionType);
         }
 

@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.modifier;
 
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
+
 import java.lang.reflect.Modifier;
 
 public class ModifiersUtils {
@@ -11,9 +13,11 @@ public class ModifiersUtils {
     public String getModifiers(int modifierIndex) {
         String modifiers = "";
 
-        if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
+        if (StateManager.getConfiguration().isShowNonJavaModifiers()) {
+            if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
 
-        if (isImplicit(modifierIndex)) modifiers += "implicit ";
+            if (isImplicit(modifierIndex)) modifiers += "implicit ";
+        }
 
         if (Modifier.isPublic(modifierIndex)) modifiers += "public ";
         if (Modifier.isProtected(modifierIndex)) modifiers += "protected ";

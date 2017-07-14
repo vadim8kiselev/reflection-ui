@@ -3,10 +3,12 @@ package com.kiselev.reflection.ui.impl.reflection.argument;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.modifier.ModifiersUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ArgumentUtils {
@@ -20,7 +22,11 @@ public class ArgumentUtils {
         Parameter[] parameters = executable.getParameters();
 
         for (int index = 0; index < parameters.length; index++) {
-            strings.add(getArgument(parameters[index], annotatedParameterTypes[index]));
+            if (StateManager.getConfiguration().isShowAnnotationTypes()) {
+                strings.add(getArgument(parameters[index], annotatedParameterTypes[index]));
+            } else {
+                strings.add(getArgument(parameters[index], null));
+            }
         }
 
         arguments += "(" + String.join(", ", strings) + ")";
@@ -33,7 +39,9 @@ public class ArgumentUtils {
 
         String annotations = getArgumentAnnotations(parameter);
 
-        String genericType = new GenericsUtils().resolveType(parameter.getParameterizedType(), annotatedType);
+        Type type = StateManager.getConfiguration().isShowGenericSignatures() ? parameter.getParameterizedType() : parameter.getType();
+
+        String genericType = new GenericsUtils().resolveType(type, annotatedType);
 
         genericType = parameter.isVarArgs() ? convertToVarArg(genericType) : genericType;
 
@@ -52,6 +60,10 @@ public class ArgumentUtils {
     }
 
     private String convertToVarArg(String type) {
-        return type.substring(0, type.length() - 2) + "...";
+        if (StateManager.getConfiguration().isShowVarArgs()) {
+            return type.substring(0, type.length() - 2) + "...";
+        } else {
+            return type;
+        }
     }
 }

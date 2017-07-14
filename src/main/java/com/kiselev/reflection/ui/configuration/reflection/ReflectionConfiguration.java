@@ -26,14 +26,14 @@ public interface ReflectionConfiguration extends Configuration {
      * Visible non java modifiers
      * synthetic, implicit and bridge
      * <p>
-     * Default value: true
+     * Default value: false
      */
     ReflectionConfiguration showNonJavaModifiers(boolean flag);
 
     /**
      * Show default value in annotations
      * <p>
-     * Default value: true
+     * Default value: false
      */
     ReflectionConfiguration showDefaultValueInAnnotation(boolean flag);
 
@@ -45,6 +45,34 @@ public interface ReflectionConfiguration extends Configuration {
     ReflectionConfiguration showGenericSignatures(boolean flag);
 
     /**
+     * Show variate arguments
+     * <p>
+     * Default value: true
+     */
+    ReflectionConfiguration showVarArgs(boolean flag);
+
+    /**
+     * Display value for fields
+     * <p>
+     * Default value: true
+     */
+    ReflectionConfiguration displayValueForFields(boolean flag);
+
+    /**
+     * Display imports
+     * <p>
+     * Default value: true
+     */
+    ReflectionConfiguration displayImports(boolean flag);
+
+    /**
+     * Show class full name
+     * <p>
+     * Default value: false
+     */
+    ReflectionConfiguration showClassFullName(boolean flag);
+
+    /**
      * Indentation string
      * <p>
      * Default value: 4 spaces
@@ -54,9 +82,9 @@ public interface ReflectionConfiguration extends Configuration {
     /**
      * define new line character to be used for output.
      * '\r\n' (Windows),
-     * '\n' (Unix), default is OS-dependent
+     * '\n' (Unix)
      * <p>
      * Default value: selected by OS
      */
-    ReflectionConfiguration defineNewLineCharacter(String character);
+    ReflectionConfiguration defineLineSeparator(String character);
 }

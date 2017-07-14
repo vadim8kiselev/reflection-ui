@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.inheritance;
 
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
@@ -20,12 +21,25 @@ public class InheritancesUtils {
     }
 
     private String getSuperClass(Class<?> clazz) {
-        String superClass = getSingleParentType(clazz.getGenericSuperclass(), clazz.getAnnotatedSuperclass());
+        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? clazz.getAnnotatedSuperclass() : null;
+
+        String superClass;
+        if (StateManager.getConfiguration().isShowGenericSignatures()) {
+            superClass = getSingleParentType(clazz.getGenericSuperclass(), annotatedType);
+        } else {
+            superClass = getSingleParentType(clazz.getSuperclass(), annotatedType);
+        }
         return (!superClass.isEmpty()) ? "extends " + superClass + " " : "";
     }
 
     private String getInterfaces(Class<?> clazz) {
-        String interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), clazz.getAnnotatedInterfaces()));
+        AnnotatedType[] annotatedTypes = StateManager.getConfiguration().isShowAnnotationTypes() ? clazz.getAnnotatedInterfaces() : null;
+        String interfaces;
+        if (StateManager.getConfiguration().isShowGenericSignatures()) {
+            interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), annotatedTypes));
+        } else {
+            interfaces = String.join(", ", getMultipleParentTypes(clazz.getInterfaces(), annotatedTypes));
+        }
         String relationship = clazz.isInterface() ? "extends " : "implements ";
         return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
     }

@@ -3,6 +3,7 @@ package com.kiselev.reflection.ui.impl.reflection.annotation;
 import com.kiselev.reflection.ui.exception.ReflectionParserException;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 import com.kiselev.reflection.ui.impl.reflection.value.ValueUtils;
 
 import java.lang.annotation.Annotation;
@@ -40,7 +41,7 @@ public class AnnotationUtils {
             String indent = new IndentUtils().getIndent(annotatedElement);
 
             for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
-                annotations.append(indent).append(getAnnotation(annotation)).append("\n");
+                annotations.append(indent).append(getAnnotation(annotation)).append(StateManager.getConfiguration().getLineSeparator());
             }
         }
 
@@ -155,6 +156,10 @@ public class AnnotationUtils {
     }
 
     private boolean isDefaultValue(Object value, Object defaultValue) {
+        if (StateManager.getConfiguration().isShowDefaultValueInAnnotation()) {
+            return false;
+        }
+
         if (!value.getClass().isArray()) {
             return value.equals(defaultValue);
         } else {

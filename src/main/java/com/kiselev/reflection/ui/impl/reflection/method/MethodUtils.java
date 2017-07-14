@@ -7,10 +7,13 @@ import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.reflection.modifier.ModifiersUtils;
 import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 import com.kiselev.reflection.ui.impl.reflection.value.ValueUtils;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +27,10 @@ public class MethodUtils {
             methodList.add(getMethod(method));
         }
 
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+
         if (!methodList.isEmpty()) {
-            methods += String.join("\n\n", methodList) + "\n";
+            methods += String.join(lineSeparator + lineSeparator, methodList) + lineSeparator;
         }
 
         return methods;
@@ -33,6 +38,7 @@ public class MethodUtils {
 
     private String getMethod(Method method) {
         String methodSignature = "";
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         String annotations = new AnnotationUtils().getAnnotations(method);
 
@@ -42,9 +48,13 @@ public class MethodUtils {
 
         String modifiers = isDefault + getModifiers(method);
 
-        String generics = new GenericsUtils().getGenerics(method);
+        String generics = StateManager.getConfiguration().isShowGenericSignatures() ? new GenericsUtils().getGenerics(method) : "";
 
-        String returnType = new GenericsUtils().resolveType(method.getGenericReturnType(), method.getAnnotatedReturnType());
+        Type type = StateManager.getConfiguration().isShowGenericSignatures() ? method.getGenericReturnType() : method.getReturnType();
+
+        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? method.getAnnotatedReturnType() : null;
+
+        String returnType = new GenericsUtils().resolveType(type, annotatedType);
 
         String methodName = new NameUtils().getMemberName(method);
 
@@ -54,9 +64,11 @@ public class MethodUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
-        String body = isMethodRealization(method) ? " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}" : ";";
+        String body = isMethodRealization(method) ? " {" + lineSeparator + indent +
+                StateManager.getConfiguration().getIndentSpaces() + "/* Compiled code */" + lineSeparator + indent + "}" : ";";
 
-        methodSignature += annotations + indent + modifiers + generics + returnType + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
+        methodSignature += annotations + indent + modifiers + generics + returnType
+                + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
 
         return methodSignature;
     }
@@ -83,7 +95,8 @@ public class MethodUtils {
     private String getModifiers(Method method) {
         String modifiers = new ModifiersUtils().getModifiers(method.getModifiers()).replace("transient ", "");
         if (modifiers.contains("volatile")) {
-            modifiers = "bridge " + modifiers.replace("volatile ", "");
+            String bridgeModifier = StateManager.getConfiguration().isShowNonJavaModifiers() ? "bridge " : "";
+            modifiers = bridgeModifier + modifiers.replace("volatile ", "");
         }
 
         return modifiers;

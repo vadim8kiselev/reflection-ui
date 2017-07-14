@@ -6,7 +6,9 @@ import com.kiselev.reflection.ui.impl.reflection.exception.ExceptionUtils;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.reflection.modifier.ModifiersUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +23,10 @@ public class ConstructorUtils {
             constructorList.add(getConstructor(constructor));
         }
 
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+
         if (!constructorList.isEmpty()) {
-            constructors += String.join("\n\n", constructorList) + "\n";
+            constructors += String.join(lineSeparator + lineSeparator, constructorList) + lineSeparator;
         }
 
         return constructors;
@@ -30,6 +34,7 @@ public class ConstructorUtils {
 
     private String getConstructor(Constructor constructor) {
         String constructorSignature = "";
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         String annotations = new AnnotationUtils().getAnnotations(constructor);
 
@@ -37,15 +42,17 @@ public class ConstructorUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(constructor.getModifiers());
 
-        String generics = new GenericsUtils().getGenerics(constructor);
+        String generics = StateManager.getConfiguration().isShowGenericSignatures() ? new GenericsUtils().getGenerics(constructor) : "";
 
-        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(), constructor.getAnnotatedReturnType());
+        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? constructor.getAnnotatedReturnType() : null;
+
+        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(), annotatedType);
 
         String arguments = new ArgumentUtils().getArguments(constructor);
 
         String exceptions = new ExceptionUtils().getExceptions(constructor);
 
-        String body = " {\n" + indent + "    /* Compiled code */" + "\n" + indent + "}";
+        String body = " {" + lineSeparator + indent + StateManager.getConfiguration().getIndentSpaces() + "/* Compiled code */" + lineSeparator + indent + "}";
 
         constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + body;
 

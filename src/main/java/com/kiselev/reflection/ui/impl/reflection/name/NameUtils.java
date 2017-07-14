@@ -9,7 +9,7 @@ public class NameUtils {
 
     public String getTypeName(Class<?> clazz) {
         ImportUtils importUtils = StateManager.getImportUtils();
-        return importUtils.addImport(clazz) ? getSimpleName(clazz) : clazz.getName();
+        return importUtils.addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
     }
 
     public String getSimpleName(Class<?> clazz) {
@@ -18,6 +18,14 @@ public class NameUtils {
             typeName = clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1);
         }
         return typeName;
+    }
+
+    public String getName(Class<?> clazz) {
+        if (clazz.isMemberClass()) {
+            return getSimpleName(clazz);
+        } else {
+            return clazz.getName();
+        }
     }
 
     public String getMemberName(Member member) {

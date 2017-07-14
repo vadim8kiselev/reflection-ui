@@ -11,9 +11,11 @@ public class PackageUtils {
         Package classPackage = clazz.getPackage();
         Class<?> parsedClass = StateManager.getParsedClass();
 
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+
         if (classPackage != null && clazz.equals(parsedClass)) {
             String packageAnnotations = new AnnotationUtils().getAnnotations(classPackage);
-            packageName += packageAnnotations + "package " + classPackage.getName() + ";\n\n";
+            packageName += packageAnnotations + "package " + classPackage.getName() + ";" + lineSeparator + lineSeparator;
         }
 
         return packageName;

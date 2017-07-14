@@ -26,6 +26,7 @@ public class ReflectionParser implements ReflectionUI {
     @Override
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         StateManager.registerImportUtils(clazz);
 
@@ -40,11 +41,11 @@ public class ReflectionParser implements ReflectionUI {
         String classContent = getClassContent(clazz);
 
         String imports = "";
-        if (clazz.equals(StateManager.getParsedClass())) {
+        if (clazz.equals(StateManager.getParsedClass()) && StateManager.getConfiguration().isDisplayImports()) {
             imports = StateManager.getImportUtils().getImports();
         }
 
-        parsedClass += packageName + imports + classSignature + "{\n\n" + classContent + indent + "}";
+        parsedClass += packageName + imports + classSignature + "{" + lineSeparator + lineSeparator + classContent + indent + "}";
 
         StateManager.popCurrentClass();
 
@@ -64,7 +65,7 @@ public class ReflectionParser implements ReflectionUI {
 
         String typeName = new NameUtils().getTypeName(clazz);
 
-        String generics = new GenericsUtils().getGenerics(clazz);
+        String generics = StateManager.getConfiguration().isShowGenericSignatures() ? new GenericsUtils().getGenerics(clazz) : " ";
 
         String inheritances = new InheritancesUtils().getInheritances(clazz);
 
@@ -82,7 +83,7 @@ public class ReflectionParser implements ReflectionUI {
 
         String methods = new MethodUtils().getMethods(clazz);
 
-        String classes = new ClassUtils().getClasses(clazz);
+        String classes = StateManager.getConfiguration().isShowInnerClasses() ? new ClassUtils().getClasses(clazz) : "";
 
         //fields + constructors + methods + classes;
         classContent += composeContent(Arrays.asList(fields, constructors, methods, classes));
@@ -99,13 +100,13 @@ public class ReflectionParser implements ReflectionUI {
             }
         }
 
-        return String.join("\n", nonEmptyContents);
+        return String.join(StateManager.getConfiguration().getLineSeparator(), nonEmptyContents);
     }
 
     @Override
     public void setConfiguration(Configuration configuration) {
         if (configuration instanceof ReflectionConfiguration) {
-            StateManager.setConfiguration((ReflectionConfiguration)configuration);
+            StateManager.setConfiguration((ReflectionConfiguration) configuration);
         }
     }
 }

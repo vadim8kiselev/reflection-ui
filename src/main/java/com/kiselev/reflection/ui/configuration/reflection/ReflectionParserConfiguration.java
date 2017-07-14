@@ -52,6 +52,30 @@ public class ReflectionParserConfiguration {
         }
 
         @Override
+        public ReflectionConfiguration showVarArgs(boolean flag) {
+            configuration.put("sva", flag);
+            return this;
+        }
+
+        @Override
+        public ReflectionConfiguration displayValueForFields(boolean flag) {
+            configuration.put("dvf", flag);
+            return this;
+        }
+
+        @Override
+        public ReflectionConfiguration displayImports(boolean flag) {
+            configuration.put("dim", flag);
+            return this;
+        }
+
+        @Override
+        public ReflectionConfiguration showClassFullName(boolean flag) {
+            configuration.put("cfn", flag);
+            return this;
+        }
+
+        @Override
         public ReflectionConfiguration setCountIndentSpaces(int indent) {
             StringBuilder builder = new StringBuilder();
 
@@ -64,7 +88,7 @@ public class ReflectionParserConfiguration {
         }
 
         @Override
-        public ReflectionConfiguration defineNewLineCharacter(String character) {
+        public ReflectionConfiguration defineLineSeparator(String character) {
             if (character.equals("\n")) {
                 configuration.put("nlc", character);
             } else if (character.equals("\r\n")) {

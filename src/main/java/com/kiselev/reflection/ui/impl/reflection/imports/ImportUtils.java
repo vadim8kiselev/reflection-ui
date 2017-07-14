@@ -28,7 +28,7 @@ public class ImportUtils {
 
         classForImport = resolveClass(classForImport);
 
-        if (isNeedFullName(classForImport)) {
+        if (isNeedFullName(classForImport) || StateManager.getConfiguration().isShowClassFullName()) {
             return false;
         } else {
             classesForImport.add(classForImport);
@@ -38,17 +38,18 @@ public class ImportUtils {
 
     public String getImports() {
         List<String> imports = new ArrayList<>();
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         for (Class<?> className : classesForImport) {
             if (isAppendToImports(className)) {
-                imports.add("import " + className.getName() + ";\n");
+                imports.add("import " + className.getName() + ";" + lineSeparator);
             }
         }
 
         Collections.sort(imports); // TODO : Code style
 
         clearState();
-        return !imports.isEmpty() ? String.join("", imports) + "\n" : "";
+        return !imports.isEmpty() ? String.join("", imports) + lineSeparator : "";
     }
 
     private void clearState() {

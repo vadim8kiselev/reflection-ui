@@ -6,10 +6,13 @@ import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.reflection.modifier.ModifiersUtils;
 import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 import com.kiselev.reflection.ui.impl.reflection.value.ValueUtils;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +25,11 @@ public class FieldUtils {
         for (Field field : clazz.getDeclaredFields()) {
             fieldList.add(getField(field));
         }
+
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+
         if (!fieldList.isEmpty()) {
-            fields += String.join("\n\n", fieldList) + "\n";
+            fields += String.join(lineSeparator + lineSeparator, fieldList) + lineSeparator;
         }
 
         return fields;
@@ -38,11 +44,15 @@ public class FieldUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(field.getModifiers());
 
-        String type = new GenericsUtils().resolveType(field.getGenericType(), field.getAnnotatedType());
+        Type fieldType = StateManager.getConfiguration().isShowGenericSignatures() ? field.getGenericType() : field.getType();
+
+        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? field.getAnnotatedType() : null;
+
+        String type = new GenericsUtils().resolveType(fieldType, annotatedType);
 
         String fieldName = new NameUtils().getMemberName(field);
 
-        String fieldValue = getFieldValue(field);
+        String fieldValue = StateManager.getConfiguration().isDisplayFieldValue() ? getFieldValue(field) : "";
 
         fieldSignature += annotations + indent + modifiers + type + " " + fieldName + fieldValue + ";";
 

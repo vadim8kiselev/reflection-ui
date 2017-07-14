@@ -188,7 +188,7 @@ public interface FernflowerConfiguration extends Configuration {
     /**
      * define new line character to be used for output.
      * '\r\n' (Windows),
-     * '\n' (Unix), default is OS-dependent
+     * '\n' (Unix)
      * <p>
      * Default value: selected by OS
      */

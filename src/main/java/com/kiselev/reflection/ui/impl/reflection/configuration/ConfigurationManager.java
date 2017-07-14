@@ -35,15 +35,31 @@ public class ConfigurationManager {
         return (boolean) configuration.get("dva");
     }
 
-    public boolean isShowGenericSignatures(boolean flag) {
-        return (boolean) configuration.put("sgs", flag);
+    public boolean isShowGenericSignatures() {
+        return (boolean) configuration.get("sgs");
+    }
+
+    public boolean isShowVarArgs() {
+        return (boolean) configuration.get("sva");
+    }
+
+    public boolean isDisplayFieldValue() {
+        return (boolean) configuration.get("dvf");
+    }
+
+    public boolean isDisplayImports() {
+        return (boolean) configuration.get("dim");
+    }
+
+    public boolean isShowClassFullName() {
+        return (boolean) configuration.get("cfn");
     }
 
     public String getIndentSpaces() {
         return (String) configuration.get("cis");
     }
 
-    public String getNewLineCharacter() {
+    public String getLineSeparator() {
         return (String) configuration.get("nlc");
     }
 
@@ -51,17 +67,21 @@ public class ConfigurationManager {
         HashMap<String, Object> configuration = new HashMap<>();
         configuration.put("sat", true);
         configuration.put("sic", true);
-        configuration.put("njm", true);
-        configuration.put("dva", true);
+        configuration.put("njm", false);
+        configuration.put("dva", false);
         configuration.put("sgs", true);
-        configuration.put("cis", 4);
+        configuration.put("sva", true);
+        configuration.put("dvf", true);
+        configuration.put("dim", true);
+        configuration.put("cfn", false);
+        configuration.put("cis", "    ");
         configuration.put("nlc", chooseSystemNewLineCharacter());
 
         return configuration;
     }
 
     private static String chooseSystemNewLineCharacter() {
-        if (System.getProperty("os").startsWith("windows")) {
+        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
             return "\n\r";
         } else {
             return "\n";

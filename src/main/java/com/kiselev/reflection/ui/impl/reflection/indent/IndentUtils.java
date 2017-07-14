@@ -17,7 +17,7 @@ public class IndentUtils {
             declaringClass = member.getDeclaringClass();
 
             if (declaringClass != null) {
-                indent.append("    ");
+                indent.append(StateManager.getConfiguration().getIndentSpaces());
             }
         } else if (object instanceof Class) {
             declaringClass = Class.class.cast(object);
@@ -28,7 +28,7 @@ public class IndentUtils {
         Class<?> parsedClass = StateManager.getParsedClass();
         if (declaringClass != null && !parsedClass.equals(declaringClass)) {
             while ((declaringClass = declaringClass.getDeclaringClass()) != null) {
-                indent.append("    ");
+                indent.append(StateManager.getConfiguration().getIndentSpaces());
             }
         }
 
