@@ -8,6 +8,8 @@ import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler;
 import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
 
+import java.util.Map;
+
 /**
  * Created by Vadim Kiselev on 6/26/2017.
  */
@@ -37,7 +39,7 @@ public class BytecodeParser implements ReflectionUI {
     }
 
     @Override
-    public void setConfiguration(Configuration configuration) {
+    public void setConfiguration(Map<String, Object> configuration) {
 
     }
 }

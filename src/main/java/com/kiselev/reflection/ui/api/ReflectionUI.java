@@ -1,10 +1,10 @@
 package com.kiselev.reflection.ui.api;
 
-import com.kiselev.reflection.ui.configuration.Configuration;
+import java.util.Map;
 
 public interface ReflectionUI {
 
     String parseClass(Class<?> clazz);
 
-    void setConfiguration(Configuration configuration);
+    void setConfiguration(Map<String, Object> configuration);
 }

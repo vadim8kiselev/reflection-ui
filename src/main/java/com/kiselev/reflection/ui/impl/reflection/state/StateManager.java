@@ -5,6 +5,8 @@ import com.kiselev.reflection.ui.configuration.reflection.ReflectionParserConfig
 import com.kiselev.reflection.ui.impl.reflection.configuration.ConfigurationManager;
 import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
 
+import java.util.Map;
+
 /**
  * Created by Aleksei Makarov on 06/18/2017.
  */
@@ -71,7 +73,7 @@ public class StateManager {
         return configuration.get();
     }
 
-    public static void setConfiguration(ReflectionConfiguration configuration) {
-        StateManager.configuration.set(new ConfigurationManager(configuration.getConfiguration()));
+    public static void setConfiguration(Map<String, Object> configuration) {
+        StateManager.configuration.set(new ConfigurationManager(configuration));
     }
 }

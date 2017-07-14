@@ -20,6 +20,7 @@ import com.kiselev.reflection.ui.impl.reflection.type.TypeUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class ReflectionParser implements ReflectionUI {
 
@@ -104,9 +105,7 @@ public class ReflectionParser implements ReflectionUI {
     }
 
     @Override
-    public void setConfiguration(Configuration configuration) {
-        if (configuration instanceof ReflectionConfiguration) {
-            StateManager.setConfiguration((ReflectionConfiguration) configuration);
-        }
+    public void setConfiguration(Map<String, Object> configuration) {
+        StateManager.setConfiguration(configuration);
     }
 }
