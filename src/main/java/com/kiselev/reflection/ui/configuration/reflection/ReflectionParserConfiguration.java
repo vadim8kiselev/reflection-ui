@@ -6,46 +6,49 @@ import java.util.Map;
 /**
  * Created by Алексей on 07/14/2017.
  */
-public class ReflectionParserConfiguration implements ReflectionConfiguration {
+public class ReflectionParserConfiguration {
 
-    private HashMap<String, Object> configuration = new HashMap<>();
-
-    public ReflectionParserConfiguration() {
-
+    public static ReflectionConfiguration configure() {
+        return new Builder();
     }
 
-    @Override
-    public Map<String, Object> getConfiguration() {
-        return configuration;
-    }
+    private static class Builder implements ReflectionConfiguration {
 
-    @Override
-    public ReflectionConfiguration showAnnotationTypes(boolean flag) {
-        return null;
-    }
+        private HashMap<String, Object> configuration = new HashMap<>();
 
-    @Override
-    public ReflectionConfiguration showInnerClasses(boolean flag) {
-        return null;
-    }
+        @Override
+        public Map<String, Object> getConfiguration() {
+            return configuration;
+        }
 
-    @Override
-    public ReflectionConfiguration showNonJavaModifiers(boolean flag) {
-        return null;
-    }
+        @Override
+        public ReflectionConfiguration showAnnotationTypes(boolean flag) {
+            return null;
+        }
 
-    @Override
-    public ReflectionConfiguration showDefaultValueInAnnotation(boolean flag) {
-        return null;
-    }
+        @Override
+        public ReflectionConfiguration showInnerClasses(boolean flag) {
+            return null;
+        }
 
-    @Override
-    public ReflectionConfiguration setCountIndentSpaces(int count) {
-        return null;
-    }
+        @Override
+        public ReflectionConfiguration showNonJavaModifiers(boolean flag) {
+            return null;
+        }
 
-    @Override
-    public ReflectionConfiguration defineNewLineCharacter(String character) {
-        return null;
+        @Override
+        public ReflectionConfiguration showDefaultValueInAnnotation(boolean flag) {
+            return null;
+        }
+
+        @Override
+        public ReflectionConfiguration setCountIndentSpaces(int count) {
+            return null;
+        }
+
+        @Override
+        public ReflectionConfiguration defineNewLineCharacter(String character) {
+            return null;
+        }
     }
 }

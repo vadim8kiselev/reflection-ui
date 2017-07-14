@@ -28,6 +28,10 @@ public class BytecodeParser implements ReflectionUI {
         Decompiler decompiler = new FernflowerDecompiler();
         decompiler.appendAdditionalClasses(collector.getByteCodeOfInnerClasses(clazz));
 
+        if (byteCode == null) {
+            throw new NullPointerException("Byte code of class: " + clazz.getName() + " is not found!");
+        }
+
         return decompiler.decompile(byteCode);
     }
 }
