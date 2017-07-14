@@ -31,6 +31,13 @@ public interface ReflectionConfiguration extends Configuration {
     ReflectionConfiguration showNonJavaModifiers(boolean flag);
 
     /**
+     * Show default value in annotations
+     * <p>
+     * Default value: true
+     */
+    ReflectionConfiguration showDefaultValueInAnnotation(boolean flag);
+
+    /**
      * Indentation string
      * <p>
      * Default value: 3 spaces

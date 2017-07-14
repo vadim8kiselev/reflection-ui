@@ -1,4 +1,4 @@
-package com.kiselev.reflection.ui.impl.exception;
+package com.kiselev.reflection.ui.exception;
 
 /**
  * Created by Aleksei Makarov on 07/13/2017.

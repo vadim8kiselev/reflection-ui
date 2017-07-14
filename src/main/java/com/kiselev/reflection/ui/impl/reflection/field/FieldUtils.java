@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.impl.reflection.field;
 
-import com.kiselev.reflection.ui.impl.exception.ReflectionParserException;
+import com.kiselev.reflection.ui.exception.ReflectionParserException;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;

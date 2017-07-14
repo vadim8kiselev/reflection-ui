@@ -1,8 +1,8 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.reflection.ui.impl.exception.ByteCodeParserException;
-import com.kiselev.reflection.ui.impl.exception.file.ReadFileException;
+import com.kiselev.reflection.ui.exception.ByteCodeParserException;
+import com.kiselev.reflection.ui.exception.file.ReadFileException;
 
 import java.io.File;
 import java.io.IOException;

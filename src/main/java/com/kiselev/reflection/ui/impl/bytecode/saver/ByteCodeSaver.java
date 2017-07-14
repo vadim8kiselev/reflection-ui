@@ -2,7 +2,7 @@ package com.kiselev.reflection.ui.impl.bytecode.saver;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
-import com.kiselev.reflection.ui.impl.exception.file.CreateFileException;
+import com.kiselev.reflection.ui.exception.file.CreateFileException;
 
 import java.io.File;
 import java.io.FileOutputStream;

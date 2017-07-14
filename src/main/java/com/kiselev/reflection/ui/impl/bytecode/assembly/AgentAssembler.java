@@ -4,8 +4,7 @@ import com.kiselev.reflection.ui.impl.bytecode.agent.Agent;
 import com.kiselev.reflection.ui.impl.bytecode.agent.Transformer;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.attach.AgentAttacher;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.AgentBuilder;
-import com.kiselev.reflection.ui.impl.exception.agent.AgentAttachException;
-import com.kiselev.reflection.ui.impl.exception.file.CreateFileException;
+import com.kiselev.reflection.ui.exception.agent.AgentAttachException;
 
 /**
  * Created by Vadim Kiselev on 6/13/2017.

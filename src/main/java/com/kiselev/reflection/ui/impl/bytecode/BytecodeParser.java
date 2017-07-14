@@ -5,7 +5,7 @@ import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler;
-import com.kiselev.reflection.ui.impl.exception.agent.InvalidRetransformClass;
+import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
 
 /**
  * Created by Vadim Kiselev on 6/26/2017.

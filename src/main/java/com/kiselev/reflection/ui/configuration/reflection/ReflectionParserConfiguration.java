@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Алексей on 14.07.2017.
+ * Created by Алексей on 07/14/2017.
  */
 public class ReflectionParserConfiguration implements ReflectionConfiguration {
 
@@ -31,6 +31,11 @@ public class ReflectionParserConfiguration implements ReflectionConfiguration {
 
     @Override
     public ReflectionConfiguration showNonJavaModifiers(boolean flag) {
+        return null;
+    }
+
+    @Override
+    public ReflectionConfiguration showDefaultValueInAnnotation(boolean flag) {
         return null;
     }
 

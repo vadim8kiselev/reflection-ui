@@ -1,6 +1,6 @@
-package com.kiselev.reflection.ui.impl.exception.agent;
+package com.kiselev.reflection.ui.exception.agent;
 
-import com.kiselev.reflection.ui.impl.exception.ByteCodeParserException;
+import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 
 /**
  * Created by Aleksei Makarov on 07/13/2017.

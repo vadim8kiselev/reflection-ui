@@ -4,8 +4,8 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
-import com.kiselev.reflection.ui.impl.exception.agent.InvalidAgentClassException;
-import com.kiselev.reflection.ui.impl.exception.file.CreateFileException;
+import com.kiselev.reflection.ui.exception.agent.InvalidAgentClassException;
+import com.kiselev.reflection.ui.exception.file.CreateFileException;
 
 import java.io.File;
 import java.io.FileOutputStream;
