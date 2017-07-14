@@ -31,11 +31,11 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
     public List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
         for (ByteCodeCollector collector : collectors) {
             List<byte[]> byteCodeList = collector.getByteCodeOfInnerClasses(clazz);
-            if (byteCodeList != null) {
+            if (!byteCodeList.isEmpty()) {
                 return byteCodeList;
             }
         }
 
-        return null;
+        return new ArrayList<>();
     }
 }

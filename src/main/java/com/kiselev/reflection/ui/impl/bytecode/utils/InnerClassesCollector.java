@@ -43,8 +43,8 @@ public class InnerClassesCollector {
             try {
                 Class<?> foundedClass = Class.forName(clazz.getName() + Constants.Symbols.DOLLAR + classId);
                 anonymousOrSyntheticClasses.add(foundedClass);
-
                 anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
+                anonymousOrSyntheticClasses.addAll(getLocalClasses(foundedClass));
             } catch (Exception exception) {
                 break;
             }
@@ -59,6 +59,7 @@ public class InnerClassesCollector {
         for (Class<?> innerOrNestedClass : clazz.getDeclaredClasses()) {
             innerAndNestedClasses.add(innerOrNestedClass);
             innerAndNestedClasses.addAll(getInnerClasses(innerOrNestedClass));
+            innerAndNestedClasses.addAll(getLocalClasses(innerOrNestedClass));
         }
 
         return innerAndNestedClasses;
@@ -88,7 +89,7 @@ public class InnerClassesCollector {
         for (Class<?> loadedClass : classes) {
             String className = ClassNameUtils.getSimpleName(loadedClass);
             if (isLocalClass(clazz, className)) {
-                localClasses.add(loadedClass);
+                addLocalClass(loadedClass, localClasses);
             }
         }
 
@@ -105,10 +106,7 @@ public class InnerClassesCollector {
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
-                Class<?> localClass = collectLocalStaticClass(clazz, entry.getName());
-                if (localClass != null) {
-                    localClasses.add(localClass);
-                }
+                addLocalClass(collectLocalStaticClass(clazz, entry.getName()), localClasses);
             }
         } catch (IOException exception) {
             throw new ReadFileException("Can't read jar file: " + file.getPath(), exception);
@@ -126,14 +124,20 @@ public class InnerClassesCollector {
         if (classes != null) {
             for (File classFile : classes) {
                 String name = ClassNameUtils.getPackageName(clazz) + Constants.Symbols.DOT + classFile.getName();
-                Class<?> localClass = collectLocalStaticClass(clazz, name);
-                if (localClass != null) {
-                    localClasses.add(localClass);
-                }
+                addLocalClass(collectLocalStaticClass(clazz, name), localClasses);
             }
         }
 
         return localClasses;
+    }
+
+    private static void addLocalClass(Class<?> localClass, Collection<Class<?>> localClasses) {
+        if (localClass != null) {
+            localClasses.add(localClass);
+            localClasses.addAll(getInnerAndNestedClasses(localClass));
+            localClasses.addAll(getAnonymousOrSyntheticClasses(localClass));
+            localClasses.addAll(getLocalClasses(localClass));
+        }
     }
 
     private static Class<?> collectLocalStaticClass(Class<?> clazz, String name) {
@@ -163,7 +167,9 @@ public class InnerClassesCollector {
     }
 
     private static boolean isLocalClass(Class<?> clazz, String className) {
-        String name = ClassNameUtils.getSimpleName(clazz) + Constants.Symbols.DOLLAR + 1;
-        return className.startsWith(name) && !className.equals(name);
+        String symbol = Constants.Symbols.DOLLAR + 1;
+        String name = ClassNameUtils.getSimpleName(clazz) + symbol;
+        return className.startsWith(name) && !className.equals(name)
+                && !className.replace(name, "").contains(Constants.Symbols.DOLLAR);
     }
 }

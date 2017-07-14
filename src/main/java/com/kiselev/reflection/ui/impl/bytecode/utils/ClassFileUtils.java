@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Aleksei Makarov on 13.07.2017.
+ * Created by Aleksei Makarov on 07/13/2017.
  */
 public class ClassFileUtils {
 
@@ -25,6 +25,20 @@ public class ClassFileUtils {
             URL resource = loader.getResource(ClassNameUtils.getClassToFileName(clazz));
             if (resource != null) {
                 return resource.getFile();
+            }
+        }
+
+        return null;
+    }
+
+    public static String getStoreClass(Class<?> clazz) {
+        String path = getFilePath(clazz);
+
+        if (path != null) {
+            if (isArchive(path)) {
+                return getArchivePath(path);
+            } else {
+                return getClassPackagePath(clazz);
             }
         }
 
