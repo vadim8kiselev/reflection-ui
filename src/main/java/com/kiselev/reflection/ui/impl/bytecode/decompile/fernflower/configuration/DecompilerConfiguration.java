@@ -146,7 +146,7 @@ public class DecompilerConfiguration {
             return this;
         }
 
-        public FernflowerConfiguration defineNewLineCharacter(String character) {
+        public FernflowerConfiguration defineLineSeparator(String character) {
             if (character.equals("\n")) {
                 configuration.put("nls", ONE);
             } else if (character.equals("\r\n")) {

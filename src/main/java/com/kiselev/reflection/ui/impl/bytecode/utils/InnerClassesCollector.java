@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 /**
  * Created by by Aleksei Makarov on 06/26/2017.
@@ -167,9 +168,9 @@ public class InnerClassesCollector {
     }
 
     private static boolean isLocalClass(Class<?> clazz, String className) {
-        String symbol = Constants.Symbols.DOLLAR + 1;
-        String name = ClassNameUtils.getSimpleName(clazz) + symbol;
-        return className.startsWith(name) && !className.equals(name)
-                && !className.replace(name, "").contains(Constants.Symbols.DOLLAR);
+        String name = ClassNameUtils.getSimpleName(clazz);
+        Pattern pattern = Pattern.compile(name+ "\\$[\\d]+");
+        return pattern.matcher(className).find() && !className.equals(name)
+                && !className.replace(name + Constants.Symbols.DOLLAR,  "").contains(Constants.Symbols.DOLLAR);
     }
 }

@@ -192,7 +192,7 @@ public interface FernflowerConfiguration extends Configuration {
      * <p>
      * Default value: selected by OS
      */
-    FernflowerConfiguration defineNewLineCharacter(String character);
+    FernflowerConfiguration defineLineSeparator(String character);
 
     /**
      * Indentation string
