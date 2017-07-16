@@ -169,7 +169,7 @@ public class InnerClassesCollector {
 
     private static boolean isLocalClass(Class<?> clazz, String className) {
         String name = ClassNameUtils.getSimpleName(clazz);
-        return Pattern.compile(name + "\\$[\\d]+").matcher(className).find()
+        return Pattern.compile(name + "\\$[\\d]+.*").matcher(className).matches()
                 && !isNumber(className.replace(name + Constants.Symbols.DOLLAR, ""))
                 && !className.replace(name + Constants.Symbols.DOLLAR, "").contains(Constants.Symbols.DOLLAR);
     }
