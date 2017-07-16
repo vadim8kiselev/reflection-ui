@@ -1,8 +1,8 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
-import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
+import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -169,8 +169,12 @@ public class InnerClassesCollector {
 
     private static boolean isLocalClass(Class<?> clazz, String className) {
         String name = ClassNameUtils.getSimpleName(clazz);
-        Pattern pattern = Pattern.compile(name+ "\\$[\\d]+");
-        return pattern.matcher(className).find() && !className.equals(name)
-                && !className.replace(name + Constants.Symbols.DOLLAR,  "").contains(Constants.Symbols.DOLLAR);
+        return Pattern.compile(name + "\\$[\\d]+").matcher(className).find()
+                && !isNumber(className.replace(name + Constants.Symbols.DOLLAR, ""))
+                && !className.replace(name + Constants.Symbols.DOLLAR, "").contains(Constants.Symbols.DOLLAR);
+    }
+
+    private static boolean isNumber(String line) {
+        return Pattern.compile("\\d+").matcher(line).matches();
     }
 }
