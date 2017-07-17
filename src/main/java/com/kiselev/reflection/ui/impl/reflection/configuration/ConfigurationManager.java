@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.impl.reflection.configuration;
 
-import com.kiselev.reflection.ui.configuration.reflection.ReflectionParserConfiguration;
+import com.kiselev.reflection.ui.configuration.reflection.ReflectionBuilderConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class ConfigurationManager {
     }
 
     private static Map<String, Object> getDefaultConfiguration() {
-        return ReflectionParserConfiguration
+        return ReflectionBuilderConfiguration
                 .configure()
                 .showAnnotationTypes(true)
                 .showInnerClasses(true)

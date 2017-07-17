@@ -3,6 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
+import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +26,19 @@ public class InnerClassesCollector {
         Set<Class<?>> innerClasses = new HashSet<>();
 
         // Anonymous and synthetic classes
-        innerClasses.addAll(getAnonymousOrSyntheticClasses(clazz));
+        if (ConfigurationManager.isDecompileAnonymousClasses()) {
+            innerClasses.addAll(getAnonymousOrSyntheticClasses(clazz));
+        }
 
         // Inner and nested classes
-        innerClasses.addAll(getInnerAndNestedClasses(clazz));
+        if (ConfigurationManager.isDecompileInnerAndNestedClasses()) {
+            innerClasses.addAll(getInnerAndNestedClasses(clazz));
+        }
 
         // Local classes
-        innerClasses.addAll(getLocalClasses(clazz));
+        if (ConfigurationManager.isDecompileLocalClasses()) {
+            innerClasses.addAll(getLocalClasses(clazz));
+        }
 
         return new ArrayList<>(innerClasses);
     }
@@ -44,8 +51,14 @@ public class InnerClassesCollector {
             try {
                 Class<?> foundedClass = Class.forName(clazz.getName() + Constants.Symbols.DOLLAR + classId);
                 anonymousOrSyntheticClasses.add(foundedClass);
-                anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
-                anonymousOrSyntheticClasses.addAll(getLocalClasses(foundedClass));
+
+                if (ConfigurationManager.isDecompileInnerAndNestedClasses()) {
+                    anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
+                }
+
+                if (ConfigurationManager.isDecompileLocalClasses()) {
+                    anonymousOrSyntheticClasses.addAll(getLocalClasses(foundedClass));
+                }
             } catch (Exception exception) {
                 break;
             }
@@ -60,7 +73,10 @@ public class InnerClassesCollector {
         for (Class<?> innerOrNestedClass : clazz.getDeclaredClasses()) {
             innerAndNestedClasses.add(innerOrNestedClass);
             innerAndNestedClasses.addAll(getInnerClasses(innerOrNestedClass));
-            innerAndNestedClasses.addAll(getLocalClasses(innerOrNestedClass));
+
+            if (ConfigurationManager.isDecompileLocalClasses()) {
+                innerAndNestedClasses.addAll(getLocalClasses(innerOrNestedClass));
+            }
         }
 
         return innerAndNestedClasses;
@@ -135,9 +151,15 @@ public class InnerClassesCollector {
     private static void addLocalClass(Class<?> localClass, Collection<Class<?>> localClasses) {
         if (localClass != null) {
             localClasses.add(localClass);
-            localClasses.addAll(getInnerAndNestedClasses(localClass));
-            localClasses.addAll(getAnonymousOrSyntheticClasses(localClass));
             localClasses.addAll(getLocalClasses(localClass));
+
+            if (ConfigurationManager.isDecompileInnerAndNestedClasses()) {
+                localClasses.addAll(getInnerAndNestedClasses(localClass));
+            }
+
+            if (ConfigurationManager.isDecompileAnonymousClasses()) {
+                localClasses.addAll(getAnonymousOrSyntheticClasses(localClass));
+            }
         }
     }
 

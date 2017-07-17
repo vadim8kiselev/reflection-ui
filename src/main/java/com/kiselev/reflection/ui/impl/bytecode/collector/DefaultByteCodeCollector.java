@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.collector;
 
+import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +13,18 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
     List<ByteCodeCollector> collectors = new ArrayList<>();
 
     public DefaultByteCodeCollector() {
-        collectors.add(new ClassFileByteCodeCollector());
-        collectors.add(new RetransformClassByteCodeCollector());
+        ByteCodeCollector customByteCodeCollector = ConfigurationManager.getCustomByteCodeCollector();
+        if (customByteCodeCollector != null) {
+            collectors.add(customByteCodeCollector);
+        }
+
+        if (ConfigurationManager.isEnableClassFileByteCodeCollector()) {
+            collectors.add(new ClassFileByteCodeCollector());
+        }
+
+        if (ConfigurationManager.isEnableRetransformClassByteCodeCollector()) {
+            collectors.add(new RetransformClassByteCodeCollector());
+        }
     }
 
     @Override
@@ -29,10 +41,12 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
 
     @Override
     public List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
-        for (ByteCodeCollector collector : collectors) {
-            List<byte[]> byteCodeList = collector.getByteCodeOfInnerClasses(clazz);
-            if (!byteCodeList.isEmpty()) {
-                return byteCodeList;
+        if (ConfigurationManager.isDecompileInnerClasses()) {
+            for (ByteCodeCollector collector : collectors) {
+                List<byte[]> byteCodeList = collector.getByteCodeOfInnerClasses(clazz);
+                if (!byteCodeList.isEmpty()) {
+                    return byteCodeList;
+                }
             }
         }
 

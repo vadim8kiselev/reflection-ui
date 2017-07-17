@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Алексей on 07/14/2017.
  */
-public class ByteCodeParserConfiguration {
+public class ByteCodeBuilderConfiguration {
 
     public static ByteCodeConfiguration configure() {
         return new Builder();
@@ -26,62 +26,74 @@ public class ByteCodeParserConfiguration {
 
         @Override
         public ByteCodeConfiguration decompileInnerClasses(boolean flag) {
-            return null;
+            configuration.put("dic", flag);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration decompileInnerAndNestedClasses(boolean flag) {
-            return null;
+            configuration.put("din", flag);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration decompileAnonymousClasses(boolean flag) {
-            return null;
+            configuration.put("dac", flag);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration decompileLocalClasses(boolean flag) {
-            return null;
+            configuration.put("dlc", flag);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration saveByteCodeToFile(boolean flag) {
-            return null;
+            configuration.put("stf", flag);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration setDirectoryToSaveByteCode(String path) {
-            return null;
+            configuration.put("dts", path);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration addCustomByteCodeCollector(Class<? extends ByteCodeCollector> collector) {
-            return null;
+            configuration.put("bcc", collector);
+            return this;
         }
 
         @Override
-        public ByteCodeConfiguration addCustomDecompilerConfiguration(Class<? extends Configuration> configuration) {
-            return null;
+        public ByteCodeConfiguration addCustomDecompilerConfiguration(Configuration configuration) {
+            this.configuration.put("cdc", configuration);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration addCustomDecompiler(Class<? extends Decompiler> decompiler) {
-            return null;
+            configuration.put("acd", decompiler);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration enableClassFileByteCodeCollector(boolean flag) {
-            return null;
+            configuration.put("cfc", flag);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration enableRetransformClassByteCodeCollector(boolean flag) {
-            return null;
+            configuration.put("rcc", flag);
+            return this;
         }
 
         @Override
         public ByteCodeConfiguration enableCustomByteCodeCollector(boolean flag) {
-            return null;
+            configuration.put("cbc", flag);
+            return this;
         }
     }
 }

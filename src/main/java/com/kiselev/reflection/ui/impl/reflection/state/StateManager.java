@@ -1,7 +1,5 @@
 package com.kiselev.reflection.ui.impl.reflection.state;
 
-import com.kiselev.reflection.ui.configuration.reflection.ReflectionConfiguration;
-import com.kiselev.reflection.ui.configuration.reflection.ReflectionParserConfiguration;
 import com.kiselev.reflection.ui.impl.reflection.configuration.ConfigurationManager;
 import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
 

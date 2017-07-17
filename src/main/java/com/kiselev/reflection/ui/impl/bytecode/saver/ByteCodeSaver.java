@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.saver;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
+import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.reflection.ui.exception.file.CreateFileException;
 
@@ -17,7 +18,7 @@ import java.nio.file.Paths;
 public class ByteCodeSaver {
 
     public void saveToFile(Class<?> clazz, byte[] byteCode) {
-        if (clazz != null && byteCode != null) {
+        if (ConfigurationManager.isSaveToFile() && clazz != null && byteCode != null) {
             writeByteCodeToFile(getClassFileName(clazz), byteCode);
         }
     }
@@ -31,15 +32,16 @@ public class ByteCodeSaver {
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = "classes" + File.separator + ClassNameUtils.getJavaBasedClassName(clazz)
+        String classFileName = ClassNameUtils.getJavaBasedClassName(clazz)
                 .replace(Constants.Symbols.DOT, File.separator);
         createClassFileNameDirectory(classFileName);
         return classFileName.replace(Constants.Symbols.DOLLAR, "") + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
     private static void createClassFileNameDirectory(String classFileName) {
-        String path = System.getProperty(Constants.Properties.HOME_DIR) + File.separator
+        String path = ConfigurationManager.getDirectoryForSaveBytecode() + File.separator
                 + classFileName.substring(0, classFileName.lastIndexOf(File.separator));
+        System.out.println(path);
         Path directoryPath = Paths.get(path);
         try {
             Files.createDirectories(directoryPath).toFile();

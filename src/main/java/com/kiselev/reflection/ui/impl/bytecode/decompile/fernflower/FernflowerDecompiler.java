@@ -86,6 +86,7 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
                 .showEmptySuperInvocation(true)
                 .showEmptyDefaultConstructor(true)
                 .decompileGenericSignatures(true)
+                .deInlineFinallyStructures(true)
                 .assumeReturnNotThrowingExceptions(true)
                 .decompileEnumerations(true)
                 .removeGetClassInvocation(false)

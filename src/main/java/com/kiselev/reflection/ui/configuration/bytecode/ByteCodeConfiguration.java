@@ -23,7 +23,7 @@ public interface ByteCodeConfiguration extends Configuration {
 
     ByteCodeConfiguration addCustomByteCodeCollector(Class<? extends ByteCodeCollector> collector);
 
-    ByteCodeConfiguration addCustomDecompilerConfiguration(Class<? extends Configuration> configuration);
+    ByteCodeConfiguration addCustomDecompilerConfiguration(Configuration configuration);
 
     ByteCodeConfiguration addCustomDecompiler(Class<? extends Decompiler> decompiler);
 

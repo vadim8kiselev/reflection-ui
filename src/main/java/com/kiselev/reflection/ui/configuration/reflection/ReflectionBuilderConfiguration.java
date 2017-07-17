@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by Алексей on 07/14/2017.
  */
-public class ReflectionParserConfiguration {
+public class ReflectionBuilderConfiguration {
 
     public static ReflectionConfiguration configure() {
         return new Builder();
