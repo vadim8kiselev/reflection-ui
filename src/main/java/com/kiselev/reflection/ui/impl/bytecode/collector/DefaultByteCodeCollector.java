@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.collector;
 
-import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
+import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +13,16 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
     List<ByteCodeCollector> collectors = new ArrayList<>();
 
     public DefaultByteCodeCollector() {
-        ByteCodeCollector customByteCodeCollector = ConfigurationManager.getCustomByteCodeCollector();
-        if (customByteCodeCollector != null && ConfigurationManager.isEnableCustomByteCodeCollector()) {
+        ByteCodeCollector customByteCodeCollector = StateManager.getConfiguration().getCustomByteCodeCollector();
+        if (customByteCodeCollector != null && StateManager.getConfiguration().isEnableCustomByteCodeCollector()) {
             collectors.add(customByteCodeCollector);
         }
 
-        if (ConfigurationManager.isEnableClassFileByteCodeCollector()) {
+        if (StateManager.getConfiguration().isEnableClassFileByteCodeCollector()) {
             collectors.add(new ClassFileByteCodeCollector());
         }
 
-        if (ConfigurationManager.isEnableRetransformClassByteCodeCollector()) {
+        if (StateManager.getConfiguration().isEnableRetransformClassByteCodeCollector()) {
             collectors.add(new RetransformClassByteCodeCollector());
         }
     }

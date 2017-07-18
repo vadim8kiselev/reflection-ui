@@ -1,7 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.saver;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
+import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.reflection.ui.exception.file.CreateFileException;
 
@@ -32,7 +32,7 @@ public class ByteCodeSaver {
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = ConfigurationManager.getDirectoryForSaveBytecode()
+        String classFileName = StateManager.getConfiguration().getDirectoryForSaveBytecode()
                 + File.separator
                 + ClassNameUtils.getJavaBasedClassName(clazz)
                 .replace(Constants.Symbols.DOT, File.separator);

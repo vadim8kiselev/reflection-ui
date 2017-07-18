@@ -5,7 +5,7 @@ import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
-import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
+import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.saver.ByteCodeSaver;
 import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
@@ -27,7 +27,7 @@ public class BytecodeParser implements ReflectionUI {
             throw new InvalidRetransformClass("Array type can not be decompiled");
         }
 
-        ConfigurationManager.registerConfiguration(new HashMap<>());
+        StateManager.registerConfiguration(new HashMap<>());
 
         ByteCodeSaver saver = new ByteCodeSaver();
         ByteCodeCollector collector = new DefaultByteCodeCollector();
@@ -37,7 +37,7 @@ public class BytecodeParser implements ReflectionUI {
             throw new NullPointerException("Byte code of class: " + clazz.getName() + " is not found!");
         }
 
-        boolean isDecompileIC = ConfigurationManager.isDecompileInnerClasses();
+        boolean isDecompileIC = StateManager.getConfiguration().isDecompileInnerClasses();
         Collection<Class<?>> collection =  isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
 
         List<Class<?>> innerClasses = new ArrayList<>(collection);
@@ -50,14 +50,14 @@ public class BytecodeParser implements ReflectionUI {
             }
         }
 
-        Decompiler decompiler = ConfigurationManager.getDecompiler();
-        Configuration configuration = ConfigurationManager.getCustomDecompilerConfiguration();
+        Decompiler decompiler = StateManager.getConfiguration().getDecompiler();
+        Configuration configuration = StateManager.getConfiguration().getCustomDecompilerConfiguration();
         if (configuration != null) {
             decompiler.setConfiguration(configuration);
         }
         decompiler.appendAdditionalClasses(byteCodeOfInnerClasses.values());
 
-        if (ConfigurationManager.isSaveToFile()) {
+        if (StateManager.getConfiguration().isSaveToFile()) {
             saver.saveToFile(clazz, byteCode);
             for (Map.Entry<Class<?>, byte[]> entry : byteCodeOfInnerClasses.entrySet()) {
                 saver.saveToFile(entry.getKey(), entry.getValue());
@@ -69,6 +69,6 @@ public class BytecodeParser implements ReflectionUI {
 
     @Override
     public void setConfiguration(Map<String, Object> configuration) {
-        ConfigurationManager.registerConfiguration(configuration);
+        StateManager.registerConfiguration(configuration);
     }
 }

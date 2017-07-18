@@ -2,7 +2,6 @@ package com.kiselev.reflection.ui.impl.bytecode.configuration;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.configuration.bytecode.ByteCodeBuilderConfiguration;
-import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
@@ -12,70 +11,67 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Created by Aleksei Makarov on 07/17/2017.
+ * Created by Aleksei Makarov on 07/18/2017.
  */
 public class ConfigurationManager {
 
-    private static ThreadLocal<Map<String, Object>> configurationLocalMap = new ThreadLocal<>();
+    private Map<String, Object> configuration;
 
-    public static void registerConfiguration(Map<String, Object> configuration) {
-        Map<String, Object> stringObjectMap = configurationLocalMap.get();
-        if (stringObjectMap == null) {
-            configurationLocalMap.set(getDefaultConfiguration());
-        }
-
-        configurationLocalMap.get().putAll(configuration);
+    public ConfigurationManager() {
+        this.configuration = getDefaultConfiguration();
     }
 
-    
-    public static boolean isDecompileInnerClasses() {
-        return (boolean)configurationLocalMap.get().get("dic");
+    public ConfigurationManager(Map<String, Object> configuration) {
+        this.configuration = getDefaultConfiguration();
+        this.configuration.putAll(configuration);
     }
 
-    public static boolean isDecompileInnerAndNestedClasses() {
-        return (boolean)configurationLocalMap.get().get("din");
+    public boolean isDecompileInnerClasses() {
+        return (boolean)configuration.get("dic");
     }
 
-    public static boolean isDecompileAnonymousClasses() {
-        return (boolean)configurationLocalMap.get().get("dac");
+    public boolean isDecompileInnerAndNestedClasses() {
+        return (boolean)configuration.get("din");
     }
 
-    public static boolean isDecompileLocalClasses() {
-        return (boolean)configurationLocalMap.get().get("dlc");
+    public boolean isDecompileAnonymousClasses() {
+        return (boolean)configuration.get("dac");
     }
 
-    public static boolean isSaveToFile() {
-        return (boolean)configurationLocalMap.get().get("stf");
+    public boolean isDecompileLocalClasses() {
+        return (boolean)configuration.get("dlc");
     }
 
-    public static String getDirectoryForSaveBytecode() {
-        return (String) configurationLocalMap.get().get("dts");
+    public boolean isSaveToFile() {
+        return (boolean)configuration.get("stf");
     }
 
-    @SuppressWarnings("unchecked")
-    public static ByteCodeCollector getCustomByteCodeCollector() {
-        return (ByteCodeCollector) configurationLocalMap.get().get("bcc");
-    }
-    
-    public static Configuration getCustomDecompilerConfiguration() {
-        return (Configuration) configurationLocalMap.get().get("cdc");
+    public String getDirectoryForSaveBytecode() {
+        return (String) configuration.get("dts");
     }
 
-    @SuppressWarnings("unchecked")
-    public static Decompiler getDecompiler() {
-        return (Decompiler) configurationLocalMap.get().get("acd");
+    public ByteCodeCollector getCustomByteCodeCollector() {
+        return (ByteCodeCollector) configuration.get("bcc");
     }
 
-    public static boolean isEnableClassFileByteCodeCollector() {
-        return (boolean)configurationLocalMap.get().get("cfc");
+    public Configuration getCustomDecompilerConfiguration() {
+        return (Configuration) configuration.get("cdc");
     }
 
-    public static boolean isEnableRetransformClassByteCodeCollector() {
-        return (boolean)configurationLocalMap.get().get("rcc");
+    public Decompiler getDecompiler() {
+        return (Decompiler) configuration.get("acd");
     }
 
-    public static boolean isEnableCustomByteCodeCollector() {
-        return (boolean)configurationLocalMap.get().get("cbc");
+    public boolean isEnableClassFileByteCodeCollector() {
+        return (boolean)configuration.get("cfc");
+    }
+
+    public boolean isEnableRetransformClassByteCodeCollector() {
+        return (boolean)configuration.get("rcc");
+    }
+
+    public boolean isEnableCustomByteCodeCollector() {
+        return (boolean)configuration.get("cbc");
     }
 
     private static Map<String, Object> getDefaultConfiguration() {

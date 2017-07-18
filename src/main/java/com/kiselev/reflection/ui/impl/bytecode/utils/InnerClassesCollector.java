@@ -3,7 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
+import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,17 +26,17 @@ public class InnerClassesCollector {
         Set<Class<?>> innerClasses = new HashSet<>();
 
         // Anonymous and synthetic classes
-        if (ConfigurationManager.isDecompileAnonymousClasses()) {
+        if (StateManager.getConfiguration().isDecompileAnonymousClasses()) {
             innerClasses.addAll(getAnonymousOrSyntheticClasses(clazz));
         }
 
         // Inner and nested classes
-        if (ConfigurationManager.isDecompileInnerAndNestedClasses()) {
+        if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
             innerClasses.addAll(getInnerAndNestedClasses(clazz));
         }
 
         // Local classes
-        if (ConfigurationManager.isDecompileLocalClasses()) {
+        if (StateManager.getConfiguration().isDecompileLocalClasses()) {
             innerClasses.addAll(getLocalClasses(clazz));
         }
 
@@ -52,11 +52,11 @@ public class InnerClassesCollector {
                 Class<?> foundedClass = Class.forName(clazz.getName() + Constants.Symbols.DOLLAR + classId);
                 anonymousOrSyntheticClasses.add(foundedClass);
 
-                if (ConfigurationManager.isDecompileInnerAndNestedClasses()) {
+                if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
                     anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
                 }
 
-                if (ConfigurationManager.isDecompileLocalClasses()) {
+                if (StateManager.getConfiguration().isDecompileLocalClasses()) {
                     anonymousOrSyntheticClasses.addAll(getLocalClasses(foundedClass));
                 }
             } catch (Exception exception) {
@@ -74,7 +74,7 @@ public class InnerClassesCollector {
             innerAndNestedClasses.add(innerOrNestedClass);
             innerAndNestedClasses.addAll(getInnerClasses(innerOrNestedClass));
 
-            if (ConfigurationManager.isDecompileLocalClasses()) {
+            if (StateManager.getConfiguration().isDecompileLocalClasses()) {
                 innerAndNestedClasses.addAll(getLocalClasses(innerOrNestedClass));
             }
         }
@@ -153,11 +153,11 @@ public class InnerClassesCollector {
             localClasses.add(localClass);
             localClasses.addAll(getLocalClasses(localClass));
 
-            if (ConfigurationManager.isDecompileInnerAndNestedClasses()) {
+            if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
                 localClasses.addAll(getInnerAndNestedClasses(localClass));
             }
 
-            if (ConfigurationManager.isDecompileAnonymousClasses()) {
+            if (StateManager.getConfiguration().isDecompileAnonymousClasses()) {
                 localClasses.addAll(getAnonymousOrSyntheticClasses(localClass));
             }
         }
