@@ -7,9 +7,9 @@ import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollecto
 import com.kiselev.reflection.ui.impl.bytecode.configuration.ConfigurationManager;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.saver.ByteCodeSaver;
+import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Vadim Kiselev on 6/26/2017.
@@ -34,12 +34,19 @@ public class BytecodeParser implements ReflectionUI {
             throw new NullPointerException("Byte code of class: " + clazz.getName() + " is not found!");
         }
 
-        List<byte[]> byteCodeOfInnerClasses = collector.getByteCodeOfInnerClasses(clazz);
+        List<Class<?>> innerClasses = new ArrayList<>(InnerClassesCollector.getInnerClasses(clazz));
+        List<byte[]> byteCodeOfInnerClasses = new ArrayList<>();
+        for (Class<?> innerClass : innerClasses) {
+            byteCodeOfInnerClasses.add(collector.getByteCode(innerClass));
+        }
 
         Decompiler decompiler = ConfigurationManager.getDecompiler();
         decompiler.appendAdditionalClasses(byteCodeOfInnerClasses);
 
         saver.saveToFile(clazz, byteCode);
+        for (int i = 0; i < innerClasses.size(); i++) {
+            saver.saveToFile(innerClasses.get(i), byteCodeOfInnerClasses.get(i));
+        }
 
         return decompiler.decompile(byteCode);
     }

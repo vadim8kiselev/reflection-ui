@@ -32,20 +32,6 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
         }
     }
 
-    @Override
-    public List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
-        List<byte[]> innerClasses = new ArrayList<>();
-
-        for (Class<?> innerClass : InnerClassesCollector.getInnerClasses(clazz)) {
-            byte[] byteCode = getByteCode(innerClass);
-            if (byteCode != null) {
-                innerClasses.add(byteCode);
-            }
-        }
-
-        return innerClasses;
-    }
-
     private byte[] getByteCodeFromFile(String path) {
         try (FileInputStream stream = new FileInputStream(path)) {
             return readByteFromStream(stream);
@@ -71,11 +57,11 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
 
     private byte[] readByteFromStream(InputStream stream) {
         try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
-            int reads = stream.read();
+            int read = stream.read();
 
-            while (reads != -1) {
-                byteStream.write(reads);
-                reads = stream.read();
+            while (read != -1) {
+                byteStream.write(read);
+                read = stream.read();
             }
 
             return byteStream.toByteArray();

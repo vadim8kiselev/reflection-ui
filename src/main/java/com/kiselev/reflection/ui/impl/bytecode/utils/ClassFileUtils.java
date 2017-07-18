@@ -31,20 +31,6 @@ public class ClassFileUtils {
         return null;
     }
 
-    public static String getStoreClass(Class<?> clazz) {
-        String path = getFilePath(clazz);
-
-        if (path != null) {
-            if (isArchive(path)) {
-                return getArchivePath(path);
-            } else {
-                return getClassPackagePath(clazz);
-            }
-        }
-
-        return null;
-    }
-
     public static boolean isDynamicCreateClass(Class<?> clazz) {
         return getFilePath(clazz) == null;
     }

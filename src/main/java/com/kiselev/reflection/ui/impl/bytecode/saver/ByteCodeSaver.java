@@ -32,16 +32,16 @@ public class ByteCodeSaver {
     }
 
     private static String getClassFileName(Class<?> clazz) {
-        String classFileName = ClassNameUtils.getJavaBasedClassName(clazz)
+        String classFileName = ConfigurationManager.getDirectoryForSaveBytecode()
+                + File.separator
+                + ClassNameUtils.getJavaBasedClassName(clazz)
                 .replace(Constants.Symbols.DOT, File.separator);
         createClassFileNameDirectory(classFileName);
-        return classFileName.replace(Constants.Symbols.DOLLAR, "") + Constants.Suffix.CLASS_FILE_SUFFIX;
+        return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
     private static void createClassFileNameDirectory(String classFileName) {
-        String path = ConfigurationManager.getDirectoryForSaveBytecode() + File.separator
-                + classFileName.substring(0, classFileName.lastIndexOf(File.separator));
-        System.out.println(path);
+        String path = classFileName.substring(0, classFileName.lastIndexOf(File.separator));
         Path directoryPath = Paths.get(path);
         try {
             Files.createDirectories(directoryPath).toFile();

@@ -15,15 +15,4 @@ public class RetransformClassByteCodeCollector implements ByteCodeCollector {
     public byte[] getByteCode(Class<?> clazz) {
         return ByteCodeHolder.getByteCode(clazz);
     }
-
-    @Override
-    public List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
-        List<byte[]> innerClasses = new ArrayList<>();
-
-        for (Class<?> innerClass : InnerClassesCollector.getInnerClasses(clazz)) {
-            innerClasses.add(ByteCodeHolder.getByteCode(innerClass));
-        }
-
-        return innerClasses;
-    }
 }

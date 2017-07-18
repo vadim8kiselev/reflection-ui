@@ -21,11 +21,11 @@ public interface ByteCodeConfiguration extends Configuration {
 
     ByteCodeConfiguration setDirectoryToSaveByteCode(String path);
 
-    ByteCodeConfiguration addCustomByteCodeCollector(Class<? extends ByteCodeCollector> collector);
+    ByteCodeConfiguration addCustomByteCodeCollector(ByteCodeCollector collector);
 
     ByteCodeConfiguration addCustomDecompilerConfiguration(Configuration configuration);
 
-    ByteCodeConfiguration addCustomDecompiler(Class<? extends Decompiler> decompiler);
+    ByteCodeConfiguration addCustomDecompiler(Decompiler decompiler);
 
     ByteCodeConfiguration enableClassFileByteCodeCollector(boolean flag);
 

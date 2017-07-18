@@ -61,7 +61,7 @@ public class ByteCodeBuilderConfiguration {
         }
 
         @Override
-        public ByteCodeConfiguration addCustomByteCodeCollector(Class<? extends ByteCodeCollector> collector) {
+        public ByteCodeConfiguration addCustomByteCodeCollector(ByteCodeCollector collector) {
             configuration.put("bcc", collector);
             return this;
         }
@@ -73,7 +73,7 @@ public class ByteCodeBuilderConfiguration {
         }
 
         @Override
-        public ByteCodeConfiguration addCustomDecompiler(Class<? extends Decompiler> decompiler) {
+        public ByteCodeConfiguration addCustomDecompiler(Decompiler decompiler) {
             configuration.put("acd", decompiler);
             return this;
         }

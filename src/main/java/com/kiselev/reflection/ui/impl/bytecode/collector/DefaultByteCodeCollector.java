@@ -14,7 +14,7 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
 
     public DefaultByteCodeCollector() {
         ByteCodeCollector customByteCodeCollector = ConfigurationManager.getCustomByteCodeCollector();
-        if (customByteCodeCollector != null) {
+        if (customByteCodeCollector != null && ConfigurationManager.isEnableCustomByteCodeCollector()) {
             collectors.add(customByteCodeCollector);
         }
 
@@ -37,19 +37,5 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
         }
 
         return null;
-    }
-
-    @Override
-    public List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
-        if (ConfigurationManager.isDecompileInnerClasses()) {
-            for (ByteCodeCollector collector : collectors) {
-                List<byte[]> byteCodeList = collector.getByteCodeOfInnerClasses(clazz);
-                if (!byteCodeList.isEmpty()) {
-                    return byteCodeList;
-                }
-            }
-        }
-
-        return new ArrayList<>();
     }
 }

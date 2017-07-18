@@ -54,17 +54,7 @@ public class ConfigurationManager {
 
     @SuppressWarnings("unchecked")
     public static ByteCodeCollector getCustomByteCodeCollector() {
-        Map<String, Object> stringObjectMap = configurationLocalMap.get();
-        Class<? extends ByteCodeCollector> byteCodeCollector = (Class<? extends ByteCodeCollector>) stringObjectMap.get("bcc");
-        if (byteCodeCollector != null) {
-            try {
-                return byteCodeCollector.newInstance();
-            } catch (InstantiationException | IllegalAccessException exception) {
-                throw new ByteCodeParserException("Can't create object by class: " + byteCodeCollector.getName(), exception);
-            }
-        } else {
-            return null;
-        }
+        return (ByteCodeCollector) configurationLocalMap.get().get("bcc");
     }
     
     public static Configuration getCustomDecompilerConfiguration() {
@@ -73,13 +63,7 @@ public class ConfigurationManager {
 
     @SuppressWarnings("unchecked")
     public static Decompiler getDecompiler() {
-        Map<String, Object> stringObjectMap = configurationLocalMap.get();
-        Class<? extends Decompiler> decompilerClazz = (Class<? extends Decompiler>) stringObjectMap.get("acd");
-        try {
-            return decompilerClazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException exception) {
-            throw new ByteCodeParserException("Can't create object by class: " + decompilerClazz.getName(), exception);
-        }
+        return (Decompiler) configurationLocalMap.get().get("acd");
     }
 
     public static boolean isEnableClassFileByteCodeCollector() {
@@ -101,7 +85,7 @@ public class ConfigurationManager {
                 .decompileInnerAndNestedClasses(true)
                 .decompileAnonymousClasses(true)
                 .decompileLocalClasses(true)
-                .addCustomDecompiler(FernflowerDecompiler.class)
+                .addCustomDecompiler(new FernflowerDecompiler())
                 .enableClassFileByteCodeCollector(true)
                 .enableRetransformClassByteCodeCollector(true)
                 .saveByteCodeToFile(false)
