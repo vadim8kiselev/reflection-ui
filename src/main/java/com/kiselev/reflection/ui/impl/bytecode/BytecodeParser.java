@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode;
 
 import com.kiselev.reflection.ui.api.ReflectionUI;
+import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
@@ -35,17 +36,26 @@ public class BytecodeParser implements ReflectionUI {
         }
 
         List<Class<?>> innerClasses = new ArrayList<>(InnerClassesCollector.getInnerClasses(clazz));
-        List<byte[]> byteCodeOfInnerClasses = new ArrayList<>();
+        Map<Class<?>, byte[]> byteCodeOfInnerClasses = new HashMap<>();
         for (Class<?> innerClass : innerClasses) {
-            byteCodeOfInnerClasses.add(collector.getByteCode(innerClass));
+            byte[] byteCodeOfInnerClass = collector.getByteCode(innerClass);
+            if (byteCodeOfInnerClass != null) {
+                byteCodeOfInnerClasses.put(innerClass, byteCodeOfInnerClass);
+            }
         }
 
         Decompiler decompiler = ConfigurationManager.getDecompiler();
-        decompiler.appendAdditionalClasses(byteCodeOfInnerClasses);
+        Configuration configuration = ConfigurationManager.getCustomDecompilerConfiguration();
+        if (configuration != null) {
+            decompiler.setConfiguration(configuration);
+        }
+        decompiler.appendAdditionalClasses(byteCodeOfInnerClasses.values());
 
-        saver.saveToFile(clazz, byteCode);
-        for (int i = 0; i < innerClasses.size(); i++) {
-            saver.saveToFile(innerClasses.get(i), byteCodeOfInnerClasses.get(i));
+        if (ConfigurationManager.isSaveToFile()) {
+            saver.saveToFile(clazz, byteCode);
+            for (Map.Entry<Class<?>, byte[]> entry : byteCodeOfInnerClasses.entrySet()) {
+                saver.saveToFile(entry.getKey(), entry.getValue());
+            }
         }
 
         return decompiler.decompile(byteCode);

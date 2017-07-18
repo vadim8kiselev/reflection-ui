@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 public class ByteCodeSaver {
 
     public void saveToFile(Class<?> clazz, byte[] byteCode) {
-        if (ConfigurationManager.isSaveToFile() && clazz != null && byteCode != null) {
+        if (clazz != null && byteCode != null) {
             writeByteCodeToFile(getClassFileName(clazz), byteCode);
         }
     }

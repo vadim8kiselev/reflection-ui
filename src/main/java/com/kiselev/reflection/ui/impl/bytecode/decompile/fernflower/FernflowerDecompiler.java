@@ -62,7 +62,7 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration.getConfiguration();
+        this.configuration.putAll(configuration.getConfiguration());
     }
 
     @Override
