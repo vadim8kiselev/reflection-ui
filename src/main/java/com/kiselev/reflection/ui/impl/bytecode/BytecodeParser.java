@@ -27,6 +27,8 @@ public class BytecodeParser implements ReflectionUI {
             throw new InvalidRetransformClass("Array type can not be decompiled");
         }
 
+        ConfigurationManager.registerConfiguration(new HashMap<>());
+
         ByteCodeSaver saver = new ByteCodeSaver();
         ByteCodeCollector collector = new DefaultByteCodeCollector();
 
@@ -35,8 +37,12 @@ public class BytecodeParser implements ReflectionUI {
             throw new NullPointerException("Byte code of class: " + clazz.getName() + " is not found!");
         }
 
-        List<Class<?>> innerClasses = new ArrayList<>(InnerClassesCollector.getInnerClasses(clazz));
+        boolean isDecompileIC = ConfigurationManager.isDecompileInnerClasses();
+        Collection<Class<?>> collection =  isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
+
+        List<Class<?>> innerClasses = new ArrayList<>(collection);
         Map<Class<?>, byte[]> byteCodeOfInnerClasses = new HashMap<>();
+
         for (Class<?> innerClass : innerClasses) {
             byte[] byteCodeOfInnerClass = collector.getByteCode(innerClass);
             if (byteCodeOfInnerClass != null) {
@@ -63,6 +69,6 @@ public class BytecodeParser implements ReflectionUI {
 
     @Override
     public void setConfiguration(Map<String, Object> configuration) {
-        ConfigurationManager.setConfiguration(configuration);
+        ConfigurationManager.registerConfiguration(configuration);
     }
 }

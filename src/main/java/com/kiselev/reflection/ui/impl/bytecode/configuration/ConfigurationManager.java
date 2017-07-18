@@ -18,7 +18,7 @@ public class ConfigurationManager {
 
     private static ThreadLocal<Map<String, Object>> configurationLocalMap = new ThreadLocal<>();
 
-    public static void setConfiguration(Map<String, Object> configuration) {
+    public static void registerConfiguration(Map<String, Object> configuration) {
         Map<String, Object> stringObjectMap = configurationLocalMap.get();
         if (stringObjectMap == null) {
             configurationLocalMap.set(getDefaultConfiguration());

@@ -193,7 +193,8 @@ public class InnerClassesCollector {
         String name = ClassNameUtils.getSimpleName(clazz);
         return Pattern.compile(name + "\\$[\\d]+.*").matcher(className).matches()
                 && !isNumber(className.replace(name + Constants.Symbols.DOLLAR, ""))
-                && !className.replace(name + Constants.Symbols.DOLLAR, "").contains(Constants.Symbols.DOLLAR);
+                && !className.replace(name + Constants.Symbols.DOLLAR, "")
+                .contains(Constants.Symbols.DOLLAR);
     }
 
     private static boolean isNumber(String line) {
