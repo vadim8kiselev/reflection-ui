@@ -6,6 +6,9 @@ import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 
 /**
  * Created by Алексей on 07/14/2017.
+ *
+ * Builder configuration for class
+ * @see com.kiselev.reflection.ui.impl.bytecode.BytecodeParser
  */
 public interface ByteCodeConfiguration extends Configuration {
 

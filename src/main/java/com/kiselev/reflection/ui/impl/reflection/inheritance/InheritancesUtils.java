@@ -21,7 +21,8 @@ public class InheritancesUtils {
     }
 
     private String getSuperClass(Class<?> clazz) {
-        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? clazz.getAnnotatedSuperclass() : null;
+        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+        AnnotatedType annotatedType = isShowTypeAnnotation ? clazz.getAnnotatedSuperclass() : null;
 
         String superClass;
         if (StateManager.getConfiguration().isShowGenericSignatures()) {
@@ -33,7 +34,8 @@ public class InheritancesUtils {
     }
 
     private String getInterfaces(Class<?> clazz) {
-        AnnotatedType[] annotatedTypes = StateManager.getConfiguration().isShowAnnotationTypes() ? clazz.getAnnotatedInterfaces() : null;
+        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+        AnnotatedType[] annotatedTypes = isShowTypeAnnotation ? clazz.getAnnotatedInterfaces() : null;
         String interfaces;
         if (StateManager.getConfiguration().isShowGenericSignatures()) {
             interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), annotatedTypes));

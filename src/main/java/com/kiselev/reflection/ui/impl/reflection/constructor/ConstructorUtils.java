@@ -42,9 +42,13 @@ public class ConstructorUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(constructor.getModifiers());
 
-        String generics = StateManager.getConfiguration().isShowGenericSignatures() ? new GenericsUtils().getGenerics(constructor) : "";
+        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? constructor.getAnnotatedReturnType() : null;
+        String generics = isShowGeneric ? new GenericsUtils().getGenerics(constructor) : "";
+
+        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+
+        AnnotatedType annotatedType = isShowTypeAnnotation ? constructor.getAnnotatedReturnType() : null;
 
         String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(), annotatedType);
 
@@ -52,7 +56,9 @@ public class ConstructorUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(constructor);
 
-        String body = " {" + lineSeparator + indent + StateManager.getConfiguration().getIndentSpaces() + "/* Compiled code */" + lineSeparator + indent + "}";
+        String oneIndent = StateManager.getConfiguration().getIndentSpaces();
+
+        String body = " {" + lineSeparator + indent + oneIndent + "/* Compiled code */" + lineSeparator + indent + "}";
 
         constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + body;
 

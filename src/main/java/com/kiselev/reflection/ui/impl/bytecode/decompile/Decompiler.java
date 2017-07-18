@@ -9,9 +9,25 @@ import java.util.Collection;
  */
 public interface Decompiler {
 
+    /**
+     * Decompicating bytecode
+     *
+     * @param byteCode - bytecode of class
+     * @return pseudo source code
+     * */
     String decompile(byte[] byteCode);
 
+    /**
+     * Set decompiler configuration
+     *
+     * @param configuration - decompiler configuration
+     * */
     void setConfiguration(Configuration configuration);
 
+    /**
+     * Add inner classes for current decompiling class
+     *
+     * @param classes - bytecode of inner classes
+     * */
     void appendAdditionalClasses(Collection<byte[]> classes);
 }

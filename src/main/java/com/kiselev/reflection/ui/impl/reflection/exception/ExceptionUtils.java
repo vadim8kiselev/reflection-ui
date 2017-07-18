@@ -16,7 +16,10 @@ public class ExceptionUtils {
 
         List<String> exceptionTypes = new ArrayList<>();
         AnnotatedType[] annotatedExceptionTypes = executable.getAnnotatedExceptionTypes();
-        Type[] genericExceptionTypes = StateManager.getConfiguration().isShowGenericSignatures() ? executable.getGenericExceptionTypes() : executable.getExceptionTypes();
+
+        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
+
+        Type[] genericExceptionTypes = isShowGeneric ? executable.getGenericExceptionTypes() : executable.getExceptionTypes();
         for (int index = 0; index < genericExceptionTypes.length; index++) {
             String exceptionType;
             if (StateManager.getConfiguration().isShowAnnotationTypes()) {

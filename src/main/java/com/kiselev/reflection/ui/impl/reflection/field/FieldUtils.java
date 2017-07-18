@@ -44,9 +44,13 @@ public class FieldUtils {
 
         String modifiers = new ModifiersUtils().getModifiers(field.getModifiers());
 
-        Type fieldType = StateManager.getConfiguration().isShowGenericSignatures() ? field.getGenericType() : field.getType();
+        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? field.getAnnotatedType() : null;
+        Type fieldType = isShowGeneric ? field.getGenericType() : field.getType();
+
+        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+
+        AnnotatedType annotatedType = isShowTypeAnnotation ? field.getAnnotatedType() : null;
 
         String type = new GenericsUtils().resolveType(fieldType, annotatedType);
 

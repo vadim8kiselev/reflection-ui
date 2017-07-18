@@ -5,5 +5,11 @@ package com.kiselev.reflection.ui.impl.bytecode.collector;
  */
 public interface ByteCodeCollector {
 
+    /**
+     * Get bytecode of class
+     *
+     * @param clazz - class for which getting bytecode
+     * @return bytecode of class
+     */
     byte[] getByteCode(Class<?> clazz);
 }

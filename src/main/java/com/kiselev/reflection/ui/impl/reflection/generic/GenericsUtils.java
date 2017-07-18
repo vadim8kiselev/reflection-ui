@@ -53,7 +53,8 @@ public class GenericsUtils {
             if (clazz.isArray()) {
                 AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
                 boundType = resolveType(clazz.getComponentType(), annotatedArrayType);
-                boundType += new AnnotationUtils().getInlineAnnotations(getAnnotatedTypeForArray(clazz, annotatedArrayType)) + "[]";
+                AnnotatedType annotatedForArrayType = getAnnotatedTypeForArray(clazz, annotatedArrayType);
+                boundType += new AnnotationUtils().getInlineAnnotations(annotatedForArrayType) + "[]";
             } else {
                 if (isNeedNameForInnerClass(clazz)) {
                     String typeName = resolveType(clazz.getDeclaringClass(), null);
@@ -89,9 +90,13 @@ public class GenericsUtils {
 
             String genericArguments = "";
 
-            String parametrizedRawTypeName = new NameUtils().getTypeName(Class.class.cast(parameterizedType.getRawType()));
+            Class<?> clazz = Class.class.cast(parameterizedType.getRawType());
 
-            List<String> innerGenericTypes = getGenericArguments(parameterizedType, AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType)));
+            String parametrizedRawTypeName = new NameUtils().getTypeName(clazz);
+
+            AnnotatedParameterizedType apType = AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType));
+
+            List<String> innerGenericTypes = getGenericArguments(parameterizedType, apType);
 
             if (!innerGenericTypes.isEmpty()) {
                 genericArguments = "<" + String.join(", ", innerGenericTypes) + ">";
@@ -102,7 +107,8 @@ public class GenericsUtils {
             GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
             AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType);
-            boundType += new AnnotationUtils().getInlineAnnotations(getAnnotatedTypeForArray(genericArrayType, annotatedArrayType)) + "[]";
+            AnnotatedType annotatedTypeForArray = getAnnotatedTypeForArray(genericArrayType, annotatedArrayType);
+            boundType += new AnnotationUtils().getInlineAnnotations(annotatedTypeForArray) + "[]";
         }
 
         return getCorrectAnnotations(annotations) + boundType;

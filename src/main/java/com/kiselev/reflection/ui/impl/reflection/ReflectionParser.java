@@ -27,6 +27,7 @@ public class ReflectionParser implements ReflectionUI {
     @Override
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
+
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         StateManager.registerImportUtils(clazz);
@@ -66,7 +67,9 @@ public class ReflectionParser implements ReflectionUI {
 
         String typeName = new NameUtils().getTypeName(clazz);
 
-        String generics = StateManager.getConfiguration().isShowGenericSignatures() ? new GenericsUtils().getGenerics(clazz) : " ";
+        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
+
+        String generics = isShowGeneric ? new GenericsUtils().getGenerics(clazz) : " ";
 
         String inheritances = new InheritancesUtils().getInheritances(clazz);
 

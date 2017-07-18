@@ -37,11 +37,13 @@ public class AnnotationUtils {
     public String getAnnotations(AnnotatedElement annotatedElement) {
         StringBuilder annotations = new StringBuilder();
 
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+
         if (annotatedElement != null) {
             String indent = new IndentUtils().getIndent(annotatedElement);
 
             for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
-                annotations.append(indent).append(getAnnotation(annotation)).append(StateManager.getConfiguration().getLineSeparator());
+                annotations.append(indent).append(getAnnotation(annotation)).append(lineSeparator);
             }
         }
 
@@ -93,7 +95,9 @@ public class AnnotationUtils {
                 }
             }
         } catch (Exception exception) {
-            throw new ReflectionParserException("Can't get default annotation value", exception);
+            String message = "Can't get default annotation value for annotation: "
+                    + annotation.annotationType().getName();
+            throw new ReflectionParserException(message, exception);
         }
 
         return map;
@@ -149,7 +153,9 @@ public class AnnotationUtils {
                 annotations.addAll(Arrays.asList(retrievedAnnotations));
             }
         } catch (ReflectiveOperationException exception) {
-            throw new ReflectionParserException("Can't get annotation value", exception);
+            String message = "Can't get default annotation value for annotation: "
+                    + annotation.annotationType().getName();
+            throw new ReflectionParserException(message, exception);
         }
 
         return annotations;

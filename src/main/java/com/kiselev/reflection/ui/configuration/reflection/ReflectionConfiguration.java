@@ -4,6 +4,9 @@ import com.kiselev.reflection.ui.configuration.Configuration;
 
 /**
  * Created by Алексей on 07/14/2017.
+ *
+ * Builder configuration for class
+ * @see com.kiselev.reflection.ui.impl.reflection.ReflectionParser
  */
 public interface ReflectionConfiguration extends Configuration {
 
@@ -66,7 +69,7 @@ public interface ReflectionConfiguration extends Configuration {
     ReflectionConfiguration displayImports(boolean flag);
 
     /**
-     * Show class full name
+     * Show full name for classes
      * <p>
      * Default value: false
      */

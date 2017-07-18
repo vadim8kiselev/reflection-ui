@@ -19,6 +19,7 @@ public class ArgumentUtils {
         ArrayList<String> strings = new ArrayList<>();
 
         AnnotatedType[] annotatedParameterTypes = executable.getAnnotatedParameterTypes();
+
         Parameter[] parameters = executable.getParameters();
 
         for (int index = 0; index < parameters.length; index++) {
@@ -39,7 +40,9 @@ public class ArgumentUtils {
 
         String annotations = getArgumentAnnotations(parameter);
 
-        Type type = StateManager.getConfiguration().isShowGenericSignatures() ? parameter.getParameterizedType() : parameter.getType();
+        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
+
+        Type type = isShowGeneric ? parameter.getParameterizedType() : parameter.getType();
 
         String genericType = new GenericsUtils().resolveType(type, annotatedType);
 

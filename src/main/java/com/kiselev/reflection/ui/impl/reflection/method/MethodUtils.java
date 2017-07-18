@@ -48,11 +48,15 @@ public class MethodUtils {
 
         String modifiers = isDefault + getModifiers(method);
 
-        String generics = StateManager.getConfiguration().isShowGenericSignatures() ? new GenericsUtils().getGenerics(method) : "";
+        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        Type type = StateManager.getConfiguration().isShowGenericSignatures() ? method.getGenericReturnType() : method.getReturnType();
+        String generics = isShowGeneric ? new GenericsUtils().getGenerics(method) : "";
 
-        AnnotatedType annotatedType = StateManager.getConfiguration().isShowAnnotationTypes() ? method.getAnnotatedReturnType() : null;
+        Type type = isShowGeneric ? method.getGenericReturnType() : method.getReturnType();
+
+        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+
+        AnnotatedType annotatedType = isShowTypeAnnotation ? method.getAnnotatedReturnType() : null;
 
         String returnType = new GenericsUtils().resolveType(type, annotatedType);
 
@@ -64,8 +68,10 @@ public class MethodUtils {
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
-        String body = isMethodRealization(method) ? " {" + lineSeparator + indent +
-                StateManager.getConfiguration().getIndentSpaces() + "/* Compiled code */" + lineSeparator + indent + "}" : ";";
+        String oneIndent = StateManager.getConfiguration().getIndentSpaces();
+
+        String body = isMethodRealization(method) ? " {" + lineSeparator + indent
+                + oneIndent + "/* Compiled code */" + lineSeparator + indent + "}" : ";";
 
         methodSignature += annotations + indent + modifiers + generics + returnType
                 + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
@@ -93,7 +99,9 @@ public class MethodUtils {
     }
 
     private String getModifiers(Method method) {
-        String modifiers = new ModifiersUtils().getModifiers(method.getModifiers()).replace("transient ", "");
+        String modifiers = new ModifiersUtils().getModifiers(method.getModifiers());
+        modifiers = modifiers.replace("transient ", "");
+
         if (modifiers.contains("volatile")) {
             String bridgeModifier = StateManager.getConfiguration().isShowNonJavaModifiers() ? "bridge " : "";
             modifiers = bridgeModifier + modifiers.replace("volatile ", "");
