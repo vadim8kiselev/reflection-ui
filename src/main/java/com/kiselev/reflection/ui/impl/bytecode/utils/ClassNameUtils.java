@@ -1,15 +1,18 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
-import com.kiselev.reflection.ui.exception.DecompilationException;
+import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import jd.core.model.classfile.ConstantPool;
-import jd.core.model.classfile.constant.*;
-import jd.core.process.deserializer.ClassFormatException;
+import org.jetbrains.java.decompiler.main.DecompilerContext;
+import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
+import org.jetbrains.java.decompiler.struct.consts.LinkConstant;
+import org.jetbrains.java.decompiler.struct.consts.PooledConstant;
+import org.jetbrains.java.decompiler.struct.consts.PrimitiveConstant;
+import org.jetbrains.java.decompiler.struct.gen.VarType;
+import org.jetbrains.java.decompiler.util.DataInputFullStream;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by Aleksei Makarov on 07/12/2017.
@@ -53,46 +56,16 @@ public class ClassNameUtils {
     }
 
     public static String getClassName(byte[] bytecode) {
-        try (DataInputStream stream = new DataInputStream(new ByteArrayInputStream(bytecode))) {
-            if (stream.readInt() != -889275714) {
-                throw new ClassFormatException("Invalid Java .class file");
-            }
-
-            stream.readUnsignedShort();
-            stream.readUnsignedShort();
-            Constant[] constants = readClassNameConstants(stream);
-            ConstantPool constantPool = new ConstantPool(constants);
-            stream.readUnsignedShort();
-            return constantPool.getConstantClassName(stream.readUnsignedShort());
+        try (DataInputFullStream stream = new DataInputFullStream(bytecode)) {
+            stream.discard(8);
+            DecompilerContext.initContext(Collections.emptyMap());
+            ConstantPool pool = new ConstantPool(stream);
+            stream.discard(2);
+            int thisClassIdx = stream.readUnsignedShort();
+            stream.discard(2);
+            return pool.getPrimitiveConstant(thisClassIdx).getString();
         } catch (IOException exception) {
-            throw new DecompilationException("Can't get class name from bytes", exception);
+            throw new ByteCodeParserException("Bytecode is can't class", exception);
         }
-    }
-
-    private static Constant[] readClassNameConstants(DataInput stream) throws IOException {
-        Constant[] constants = new Constant[stream.readUnsignedShort()];
-
-        for (int i = 1; i < constants.length; ++i) {
-            byte tag = stream.readByte();
-            switch (tag) {
-                case 1:
-                    constants[i] = new ConstantUtf8(tag, stream.readUTF());
-                    break;
-                case 7:
-                    constants[i] = new ConstantClass(tag, stream.readUnsignedShort());
-                    break;
-                case 3: stream.readInt(); break;
-                case 4: stream.readFloat(); break;
-                case 5: stream.readLong(); break;
-                case 6: stream.readDouble(); break;
-                case 8: stream.readUnsignedShort(); break;
-                case 9:
-                case 10:
-                case 11:
-                case 12: stream.readUnsignedShort(); stream.readUnsignedShort();
-            }
-        }
-
-        return constants;
     }
 }

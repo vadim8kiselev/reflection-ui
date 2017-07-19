@@ -32,6 +32,8 @@ import java.util.Map;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.
+ *
+ * This decompiler can't work with java 8
  */
 public class JDDecompiler implements Decompiler {
 
@@ -64,7 +66,7 @@ public class JDDecompiler implements Decompiler {
 
             return jdPrinter.getSource();
         } catch (ClassFormatException exception) {
-            throw new DecompilationException("JD can't decompile class with lambda expressions", exception);
+            throw new DecompilationException("JD can't decompile classes of java 8", exception);
         } catch (LoaderException | FileNotFoundException exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
         }
@@ -93,7 +95,11 @@ public class JDDecompiler implements Decompiler {
 
     private CommonPreferences getCommonPreferences() {
         if (configuration == null) {
-            configuration = getDefaultConfiguration();
+            this.configuration = getDefaultConfiguration();
+        } else {
+            Map<String, Object> newConfiguration = getDefaultConfiguration();
+            newConfiguration.putAll(configuration);
+            this.configuration = newConfiguration;
         }
         boolean showDefaultConstructor = (boolean) configuration.get("shc");
         boolean realignmentLineNumber = (boolean) configuration.get("rln");
@@ -193,6 +199,16 @@ public class JDDecompiler implements Decompiler {
             return index;
         }
 
+        private int getFirstNonSpaceNumber(String line, int number) {
+            for (int i = number - 1; i > 0; i--) {
+                if (line.charAt(i) != ' ') {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         private boolean isContainsOpenBlock(CharSequence charSequence) {
             int index = charSequence.length() - 1;
             for (int i = 0; i < index; i++) {
@@ -208,7 +224,7 @@ public class JDDecompiler implements Decompiler {
             int index = 1;
             while (index != 0) {
                 int openBlock = line.indexOf("{", index);
-                int nonSpace = getFirstNonSpace(line, openBlock);
+                int nonSpace = getFirstNonSpaceNumber(line, openBlock);
                 if (nonSpace != -1 && line.charAt(nonSpace) == '\n') {
                     line = line.substring(0, nonSpace) + " " + line.substring(openBlock, line.length());
                     index = openBlock;
@@ -218,16 +234,6 @@ public class JDDecompiler implements Decompiler {
             }
 
             return line;
-        }
-
-        private int getFirstNonSpace(String line, int number) {
-            for (int i = number - 1; i > 0; i--) {
-                if (line.charAt(i) != ' ') {
-                    return i;
-                }
-            }
-
-            return -1;
         }
     }
 }
