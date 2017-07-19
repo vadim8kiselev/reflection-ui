@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Created by Aleksei Makarov on 07/19/2017.
  *
- * This decompiler can't work with java 8
+ * This decompiler doesn't work with java 8
  */
 public class JDDecompiler implements Decompiler {
 
@@ -90,8 +90,6 @@ public class JDDecompiler implements Decompiler {
 
         this.innerClasses = innerClasses;
     }
-
-
 
     private CommonPreferences getCommonPreferences() {
         if (configuration == null) {
@@ -153,8 +151,6 @@ public class JDDecompiler implements Decompiler {
 
         private StringBuilder builder = new StringBuilder();
 
-        int count = 0;
-
         public JDPrinter(OutputStream stream) throws FileNotFoundException {
             super(stream);
         }
@@ -162,7 +158,6 @@ public class JDDecompiler implements Decompiler {
         @Override
         public PrintStream append(CharSequence csq) {
             if (isContainsOpenBlock(csq)) {
-                count++;
                 int index = getFirstNonSpaceNumber(builder);
                 if (builder.charAt(index) == '\n') {
                     builder.deleteCharAt(index);

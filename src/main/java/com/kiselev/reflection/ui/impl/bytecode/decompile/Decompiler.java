@@ -11,7 +11,7 @@ public interface Decompiler {
 
     /**
      * Decompicating bytecode
-     *
+     * <p>
      * @param byteCode - bytecode of class
      * @return pseudo source code
      * */
@@ -19,14 +19,14 @@ public interface Decompiler {
 
     /**
      * Set decompiler configuration
-     *
+     * <p>
      * @param configuration - decompiler configuration
      * */
     void setConfiguration(Configuration configuration);
 
     /**
      * Add inner classes for current decompiling class
-     *
+     * <p>
      * @param classes - bytecode of inner classes
      * */
     void appendAdditionalClasses(Collection<byte[]> classes);

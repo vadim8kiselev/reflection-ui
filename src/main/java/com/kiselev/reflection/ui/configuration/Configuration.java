@@ -9,6 +9,7 @@ public interface Configuration {
 
     /**
      * Get configuration in type map
+     * <p>
      * key - String
      * value - Object
      */

@@ -16,7 +16,7 @@ public interface FernflowerConfiguration extends Configuration {
     /**
      * Show bridge methods
      * <p>
-     * Default value: false
+     * Default value: true
      */
     FernflowerConfiguration showBridgeMethods(boolean flag);
 
@@ -51,21 +51,21 @@ public interface FernflowerConfiguration extends Configuration {
     /**
      * Show empty super invocation
      * <p>
-     * Default value: false
+     * Default value: true
      */
     FernflowerConfiguration showEmptySuperInvocation(boolean flag);
 
     /**
      * Show empty default constructor
      * <p>
-     * Default value: false
+     * Default value: true
      */
     FernflowerConfiguration showEmptyDefaultConstructor(boolean flag);
 
     /**
      * Decompile generic signatures
      * <p>
-     * Default value: false
+     * Default value: true
      */
     FernflowerConfiguration decompileGenericSignatures(boolean flag);
 
@@ -79,7 +79,7 @@ public interface FernflowerConfiguration extends Configuration {
     /**
      * Decompile enumerations to class
      * <p>
-     * Default value: false
+     * Default value: true
      */
     FernflowerConfiguration decompileEnumerations(boolean flag);
 
@@ -121,7 +121,7 @@ public interface FernflowerConfiguration extends Configuration {
     /**
      * Consider nameless types as java.lang.Object (workaround to a compiler architecture flaw)
      * <p>
-     * Default value: true
+     * Default value: false
      */
     FernflowerConfiguration considerNamelessTypes(boolean flag);
 
@@ -135,7 +135,7 @@ public interface FernflowerConfiguration extends Configuration {
     /**
      * Remove empty exception ranges
      * <p>
-     * Default value: true
+     * Default value: false
      */
     FernflowerConfiguration removeEmptyExceptionRanges(boolean flag);
 
@@ -165,14 +165,15 @@ public interface FernflowerConfiguration extends Configuration {
      * It is used to determine which class identifiers should be renamed and provides
      * new identifier names (see "Renaming identifiers")
      * <p>
-     * Default value: false
+     * Default value:
+     * @see org.jetbrains.java.decompiler.modules.renamer.ConverterHelper
      */
     FernflowerConfiguration setNewIIdentifierRenamer(Class<? extends IIdentifierRenamer> renamer);
 
     /**
      * Check for IntelliJ IDEA-specific @NotNull annotation and remove inserted code if found
      * <p>
-     * Default value: true
+     * Default value: false
      */
     FernflowerConfiguration checkNonNullAnnotation(boolean flag);
 
@@ -195,14 +196,14 @@ public interface FernflowerConfiguration extends Configuration {
     /**
      * Indentation string
      * <p>
-     * Default value: 3 spaces
+     * Default value: 4 spaces
      */
     FernflowerConfiguration setCountIndentSpaces(int indent);
 
     /**
      * A logging level, possible values are TRACE, INFO, WARN, ERROR
      * <p>
-     * Default value: INFO
+     * Default value: ERROR
      */
     FernflowerConfiguration setLogLevel(LogLevel level);
 }
