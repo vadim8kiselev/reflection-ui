@@ -29,6 +29,19 @@
             <artifactId>ea-agent-loader</artifactId>
             <version>v1.0.3</version>
         </dependency>
+
+        <!-- Java Decompiler -->
+        <dependency>
+            <groupId>jd</groupId>
+            <artifactId>jd-core</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jd</groupId>
+            <artifactId>jd-common</artifactId>
+            <version>0.7.1</version>
+        </dependency>
     </dependencies>
 
     <build>
