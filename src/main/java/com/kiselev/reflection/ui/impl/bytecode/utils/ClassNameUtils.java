@@ -5,20 +5,17 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import jd.core.process.deserializer.ClassFormatException;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
-import org.jetbrains.java.decompiler.struct.consts.LinkConstant;
-import org.jetbrains.java.decompiler.struct.consts.PooledConstant;
-import org.jetbrains.java.decompiler.struct.consts.PrimitiveConstant;
-import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.util.DataInputFullStream;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
 
 /**
  * Created by Aleksei Makarov on 07/12/2017.
  */
 public class ClassNameUtils {
+
+    public static final int MAGIC = 0xCAFEBABE;
 
     public static String getJavaBasedClassName(Class<?> clazz) {
         String className = clazz.getName();
@@ -58,7 +55,7 @@ public class ClassNameUtils {
 
     public static String getClassName(byte[] bytecode) {
         try (DataInputFullStream stream = new DataInputFullStream(bytecode)) {
-            if(stream.readInt() != -889275714) {
+            if(stream.readInt() != MAGIC) {
                 throw new ClassFormatException("Invalid java bytecode of class");
             }
 
