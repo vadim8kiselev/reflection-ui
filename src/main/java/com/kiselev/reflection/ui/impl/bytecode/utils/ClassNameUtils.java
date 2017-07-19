@@ -86,9 +86,9 @@ public class ClassNameUtils {
                 case 5: stream.readLong(); break;
                 case 6: stream.readDouble(); break;
                 case 8: stream.readUnsignedShort(); break;
-                case 9: stream.readUnsignedShort(); stream.readUnsignedShort(); break;
-                case 10: stream.readUnsignedShort(); stream.readUnsignedShort(); break;
-                case 11: stream.readUnsignedShort(); stream.readUnsignedShort(); break;
+                case 9:
+                case 10:
+                case 11:
                 case 12: stream.readUnsignedShort(); stream.readUnsignedShort();
             }
         }

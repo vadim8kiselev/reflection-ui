@@ -9,8 +9,6 @@ import jd.common.printer.text.PlainTextPrinter;
 import jd.core.loader.Loader;
 import jd.core.loader.LoaderException;
 import jd.core.model.classfile.ClassFile;
-import jd.core.model.classfile.ConstantPool;
-import jd.core.model.classfile.constant.*;
 import jd.core.model.layout.block.LayoutBlock;
 import jd.core.model.reference.ReferenceMap;
 import jd.core.printer.InstructionPrinter;
@@ -22,7 +20,12 @@ import jd.core.process.deserializer.ClassFormatException;
 import jd.core.process.layouter.ClassFileLayouter;
 import jd.core.process.writer.ClassFileWriter;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -204,7 +207,7 @@ public class JDDecompiler implements Decompiler {
         private String normalizeOpenBlockCharacter(String line) {
             int index = 1;
             while (index != 0) {
-                int openBlock = getOpenBlockChar(line, index);
+                int openBlock = line.indexOf("{", index);
                 int nonSpace = getFirstNonSpace(line, openBlock);
                 if (nonSpace != -1 && line.charAt(nonSpace) == '\n') {
                     line = line.substring(0, nonSpace) + " " + line.substring(openBlock, line.length());
@@ -215,16 +218,6 @@ public class JDDecompiler implements Decompiler {
             }
 
             return line;
-        }
-
-        private int getOpenBlockChar(String line, int number) {
-            for (int i = number; i < line.length(); i++) {
-                if (line.charAt(i) == '{') {
-                    return i;
-                }
-            }
-
-            return -1;
         }
 
         private int getFirstNonSpace(String line, int number) {

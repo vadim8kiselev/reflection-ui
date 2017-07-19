@@ -1,7 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.jd.configuration;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
-import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerConfiguration;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.
