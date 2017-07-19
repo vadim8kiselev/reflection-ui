@@ -101,6 +101,7 @@ public class JDDecompiler implements Decompiler {
             newConfiguration.putAll(configuration);
             this.configuration = newConfiguration;
         }
+
         boolean showDefaultConstructor = (boolean) configuration.get("shc");
         boolean realignmentLineNumber = (boolean) configuration.get("rln");
         boolean showPrefixThis = (boolean) configuration.get("spt");

@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
+import jd.core.process.deserializer.ClassFormatException;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 import org.jetbrains.java.decompiler.struct.consts.LinkConstant;
@@ -57,7 +58,11 @@ public class ClassNameUtils {
 
     public static String getClassName(byte[] bytecode) {
         try (DataInputFullStream stream = new DataInputFullStream(bytecode)) {
-            stream.discard(8);
+            if(stream.readInt() != -889275714) {
+                throw new ClassFormatException("Invalid java bytecode of class");
+            }
+
+            stream.discard(4);
             DecompilerContext.initContext(Collections.emptyMap());
             ConstantPool pool = new ConstantPool(stream);
             stream.discard(2);
