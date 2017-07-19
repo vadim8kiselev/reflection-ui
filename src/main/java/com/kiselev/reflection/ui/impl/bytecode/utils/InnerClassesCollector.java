@@ -101,8 +101,16 @@ public class InnerClassesCollector {
     private static Collection<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
         Collection<Class<?>> localClasses = new ArrayList<>();
 
-        ClassLoader classLoader = clazz.getClassLoader();
-        Collection<Class<?>> classes = getLoadedClasses(classLoader);
+        ClassLoader loader = clazz.getClassLoader();
+
+        if (loader == null) {
+            loader = ClassLoader.getSystemClassLoader();
+            while (loader != null && loader.getParent() != null) {
+                loader = loader.getParent();
+            }
+        }
+
+        Collection<Class<?>> classes = getLoadedClasses(loader);
         for (Class<?> loadedClass : classes) {
             String className = ClassNameUtils.getSimpleName(loadedClass);
             if (isLocalClass(clazz, className)) {

@@ -3,7 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.configuration.Configuration;
-import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.DecompilerConfiguration;
+import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.LogLevel;
 import com.kiselev.reflection.ui.exception.DecompilationException;
 import org.jetbrains.java.decompiler.main.Fernflower;
@@ -76,7 +76,7 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
     }
 
     private Map<String, Object> getDefaultConfiguration() {
-        return DecompilerConfiguration
+        return FernflowerBuilderConfiguration
                 .getBuilderConfiguration()
                 .showBridgeMethods(true)
                 .showMemberSyntheticClasses(true)

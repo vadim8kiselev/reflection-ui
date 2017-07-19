@@ -26,9 +26,9 @@ public interface ByteCodeConfiguration extends Configuration {
 
     ByteCodeConfiguration addCustomByteCodeCollector(ByteCodeCollector collector);
 
-    ByteCodeConfiguration addCustomDecompilerConfiguration(Configuration configuration);
+    ByteCodeConfiguration setDecompilerConfiguration(Configuration configuration);
 
-    ByteCodeConfiguration addCustomDecompiler(Decompiler decompiler);
+    ByteCodeConfiguration setDecompiler(Decompiler decompiler);
 
     ByteCodeConfiguration enableClassFileByteCodeCollector(boolean flag);
 

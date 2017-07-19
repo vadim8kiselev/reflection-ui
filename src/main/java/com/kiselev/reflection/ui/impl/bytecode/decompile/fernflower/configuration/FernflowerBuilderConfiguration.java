@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by Aleksei Makarov on 06/23/2017.
  */
-public class DecompilerConfiguration {
+public class FernflowerBuilderConfiguration {
 
     public static FernflowerConfiguration getBuilderConfiguration() {
         return new Builder();

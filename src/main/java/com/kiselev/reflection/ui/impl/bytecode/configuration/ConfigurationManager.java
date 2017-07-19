@@ -81,7 +81,7 @@ public class ConfigurationManager {
                 .decompileInnerAndNestedClasses(true)
                 .decompileAnonymousClasses(true)
                 .decompileLocalClasses(true)
-                .addCustomDecompiler(new FernflowerDecompiler())
+                .setDecompiler(new FernflowerDecompiler())
                 .enableClassFileByteCodeCollector(true)
                 .enableRetransformClassByteCodeCollector(true)
                 .saveByteCodeToFile(false)

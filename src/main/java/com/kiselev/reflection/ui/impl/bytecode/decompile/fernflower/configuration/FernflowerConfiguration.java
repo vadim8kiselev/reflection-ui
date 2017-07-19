@@ -11,11 +11,6 @@ import java.util.Map;
 public interface FernflowerConfiguration extends Configuration {
 
     /**
-     * Get final configuration
-     */
-    Map<String, Object> getConfiguration();
-
-    /**
      * Show bridge methods
      * <p>
      * Default value: false

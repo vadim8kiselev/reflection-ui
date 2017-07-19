@@ -67,13 +67,13 @@ public class ByteCodeBuilderConfiguration {
         }
 
         @Override
-        public ByteCodeConfiguration addCustomDecompilerConfiguration(Configuration configuration) {
+        public ByteCodeConfiguration setDecompilerConfiguration(Configuration configuration) {
             this.configuration.put("cdc", configuration);
             return this;
         }
 
         @Override
-        public ByteCodeConfiguration addCustomDecompiler(Decompiler decompiler) {
+        public ByteCodeConfiguration setDecompiler(Decompiler decompiler) {
             configuration.put("acd", decompiler);
             return this;
         }
