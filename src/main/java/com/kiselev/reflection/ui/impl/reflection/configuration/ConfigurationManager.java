@@ -17,7 +17,7 @@ public class ConfigurationManager {
     }
 
     public ConfigurationManager(Map<String, Object> configuration) {
-        this.configuration.putAll(getDefaultConfiguration());
+        this();
         this.configuration.putAll(configuration);
     }
 
