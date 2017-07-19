@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.jd.configuration;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
+import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerConfiguration;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.
@@ -51,4 +52,11 @@ public interface JDConfiguration extends Configuration {
      * Default value: false
      */
     JDConfiguration showLineNumbers(boolean flag);
+
+    /**
+     * Indentation string
+     * <p>
+     * Default value: 3 spaces
+     */
+    JDConfiguration setCountIndentSpaces(int indent);
 }

@@ -9,6 +9,8 @@ import jd.common.printer.text.PlainTextPrinter;
 import jd.core.loader.Loader;
 import jd.core.loader.LoaderException;
 import jd.core.model.classfile.ClassFile;
+import jd.core.model.classfile.ConstantPool;
+import jd.core.model.classfile.constant.*;
 import jd.core.model.layout.block.LayoutBlock;
 import jd.core.model.reference.ReferenceMap;
 import jd.core.printer.InstructionPrinter;
@@ -59,7 +61,7 @@ public class JDDecompiler implements Decompiler {
 
             return jdPrinter.getSource();
         } catch (ClassFormatException exception) {
-            throw new DecompilationException("JD can't decompile file with lambda expressions", exception);
+            throw new DecompilationException("JD can't decompile class with lambda expressions", exception);
         } catch (LoaderException | FileNotFoundException exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
         }
@@ -83,6 +85,8 @@ public class JDDecompiler implements Decompiler {
 
         this.innerClasses = innerClasses;
     }
+
+
 
     private CommonPreferences getCommonPreferences() {
         if (configuration == null) {
@@ -112,6 +116,7 @@ public class JDDecompiler implements Decompiler {
                 .mergeEmptyLines(true)
                 .unicodeEscape(false)
                 .showLineNumbers(false)
+                .setCountIndentSpaces(4)
                 .getConfiguration();
     }
 
@@ -153,7 +158,7 @@ public class JDDecompiler implements Decompiler {
                     builder.deleteCharAt(index);
                 }
             } else if (csq.equals("  ")) {
-                builder.append("    ");
+                builder.append(configuration.get("ind"));
                 return null;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
                 builder.deleteCharAt(getNumberOfLineSeparator(builder));
@@ -164,7 +169,7 @@ public class JDDecompiler implements Decompiler {
         }
 
         public String getSource() {
-            return normalizeBlocks(builder.toString());
+            return normalizeOpenBlockCharacter(builder.toString());
         }
 
         private int getNumberOfLineSeparator(StringBuilder builder) {
@@ -196,7 +201,7 @@ public class JDDecompiler implements Decompiler {
             return false;
         }
 
-        private String normalizeBlocks(String line) {
+        private String normalizeOpenBlockCharacter(String line) {
             int index = 1;
             while (index != 0) {
                 int openBlock = getOpenBlockChar(line, index);

@@ -56,5 +56,17 @@ public class JDBuilderConfiguration {
             configuration.put("sln", flag);
             return this;
         }
+
+        @Override
+        public JDConfiguration setCountIndentSpaces(int indent) {
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < indent; i++) {
+                builder.append(" ");
+            }
+
+            configuration.put("ind", builder.toString());
+            return this;
+        }
     }
 }

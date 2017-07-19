@@ -38,15 +38,14 @@ public class BytecodeParser implements ReflectionUI {
         }
 
         boolean isDecompileIC = StateManager.getConfiguration().isDecompileInnerClasses();
+
         Collection<Class<?>> collection =  isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
+        List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
 
-        List<Class<?>> innerClasses = new ArrayList<>(collection);
-        Map<Class<?>, byte[]> byteCodeOfInnerClasses = new HashMap<>();
-
-        for (Class<?> innerClass : innerClasses) {
+        for (Class<?> innerClass : collection) {
             byte[] byteCodeOfInnerClass = collector.getByteCode(innerClass);
             if (byteCodeOfInnerClass != null) {
-                byteCodeOfInnerClasses.put(innerClass, byteCodeOfInnerClass);
+                bytecodeOfInnerClasses.add(byteCodeOfInnerClass);
             }
         }
 
@@ -55,12 +54,12 @@ public class BytecodeParser implements ReflectionUI {
         if (configuration != null) {
             decompiler.setConfiguration(configuration);
         }
-        decompiler.appendAdditionalClasses(byteCodeOfInnerClasses.values());
+        decompiler.appendAdditionalClasses(bytecodeOfInnerClasses);
 
         if (StateManager.getConfiguration().isSaveToFile()) {
-            saver.saveToFile(clazz, byteCode);
-            for (Map.Entry<Class<?>, byte[]> entry : byteCodeOfInnerClasses.entrySet()) {
-                saver.saveToFile(entry.getKey(), entry.getValue());
+            saver.saveToFile(byteCode);
+            for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
+                saver.saveToFile(bytecodeOfInnerClass);
             }
         }
 

@@ -17,9 +17,9 @@ import java.nio.file.Paths;
  */
 public class ByteCodeSaver {
 
-    public void saveToFile(Class<?> clazz, byte[] byteCode) {
-        if (clazz != null && byteCode != null) {
-            writeByteCodeToFile(getClassFileName(clazz), byteCode);
+    public void saveToFile(byte[] byteCode) {
+        if (byteCode != null) {
+            writeByteCodeToFile(getClassFileName(byteCode), byteCode);
         }
     }
 
@@ -31,11 +31,10 @@ public class ByteCodeSaver {
         }
     }
 
-    private static String getClassFileName(Class<?> clazz) {
+    private static String getClassFileName(byte[] byteCode) {
         String classFileName = StateManager.getConfiguration().getDirectoryForSaveBytecode()
                 + File.separator
-                + ClassNameUtils.getJavaBasedClassName(clazz)
-                .replace(Constants.Symbols.DOT, File.separator);
+                + ClassNameUtils.getClassName(byteCode);
         createClassFileNameDirectory(classFileName);
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
