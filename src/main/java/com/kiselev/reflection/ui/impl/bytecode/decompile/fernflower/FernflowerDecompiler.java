@@ -121,7 +121,7 @@ public class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, De
             unit.addClass(structClass, structClass.qualifiedName + Constants.Suffix.CLASS_FILE_SUFFIX);
             units.put(structClass.qualifiedName, unit);
         } catch (Exception exception) {
-            throw new DecompilationException("Something wrong with fernflower", exception);
+            throw new DecompilationException("Decompilation process is interrupted", exception);
         }
     }
 

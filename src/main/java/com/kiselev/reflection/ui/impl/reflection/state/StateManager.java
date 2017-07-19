@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.reflection.state;
 
+import com.kiselev.reflection.ui.exception.ReflectionParserException;
 import com.kiselev.reflection.ui.impl.reflection.configuration.ConfigurationManager;
 import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
 
@@ -32,7 +33,7 @@ public class StateManager {
     public static ImportUtils getImportUtils() {
         ImportUtils importUtils = importUtilsMap.get();
         if (importUtils == null) {
-            throw new RuntimeException("Import utils for current thread is not register");
+            throw new ReflectionParserException("Import utils for current thread is not register");
         }
 
         return importUtils;

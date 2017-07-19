@@ -5,6 +5,10 @@ package com.kiselev.reflection.ui.exception;
  */
 public class ReflectionParserException extends RuntimeException {
 
+    public ReflectionParserException(String message) {
+        super(message);
+    }
+
     public ReflectionParserException(String message, Throwable cause) {
         super(message, cause);
     }

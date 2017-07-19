@@ -61,7 +61,7 @@ public class JDDecompiler implements Decompiler {
         } catch (ClassFormatException exception) {
             throw new DecompilationException("JD can't decompile file with lambda expressions", exception);
         } catch (LoaderException | FileNotFoundException exception) {
-            throw new DecompilationException("Something wrong with jd decompiler", exception);
+            throw new DecompilationException("Decompilation process is interrupted", exception);
         }
     }
 
@@ -138,13 +138,21 @@ public class JDDecompiler implements Decompiler {
 
         private StringBuilder builder = new StringBuilder();
 
+        int count = 0;
+
         public JDPrinter(OutputStream stream) throws FileNotFoundException {
             super(stream);
         }
 
         @Override
         public PrintStream append(CharSequence csq) {
-            if (csq.equals("  ")) {
+            if (isContainsOpenBlock(csq)) {
+                count++;
+                int index = getFirstNonSpaceNumber(builder);
+                if (builder.charAt(index) == '\n') {
+                    builder.deleteCharAt(index);
+                }
+            } else if (csq.equals("  ")) {
                 builder.append("    ");
                 return null;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
@@ -156,7 +164,7 @@ public class JDDecompiler implements Decompiler {
         }
 
         public String getSource() {
-            return builder.toString();
+            return normalizeBlocks(builder.toString());
         }
 
         private int getNumberOfLineSeparator(StringBuilder builder) {
@@ -175,6 +183,53 @@ public class JDDecompiler implements Decompiler {
             }
 
             return index;
+        }
+
+        private boolean isContainsOpenBlock(CharSequence charSequence) {
+            int index = charSequence.length() - 1;
+            for (int i = 0; i < index; i++) {
+                if (charSequence.charAt(index) == '{') {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private String normalizeBlocks(String line) {
+            int index = 1;
+            while (index != 0) {
+                int openBlock = getOpenBlockChar(line, index);
+                int nonSpace = getFirstNonSpace(line, openBlock);
+                if (nonSpace != -1 && line.charAt(nonSpace) == '\n') {
+                    line = line.substring(0, nonSpace) + " " + line.substring(openBlock, line.length());
+                    index = openBlock;
+                } else {
+                    index = openBlock + 1;
+                }
+            }
+
+            return line;
+        }
+
+        private int getOpenBlockChar(String line, int number) {
+            for (int i = number; i < line.length(); i++) {
+                if (line.charAt(i) == '{') {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private int getFirstNonSpace(String line, int number) {
+            for (int i = number - 1; i > 0; i--) {
+                if (line.charAt(i) != ' ') {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }

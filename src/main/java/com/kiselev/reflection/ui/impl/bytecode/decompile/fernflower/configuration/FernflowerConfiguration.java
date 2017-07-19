@@ -7,6 +7,9 @@ import java.util.Map;
 
 /**
  * Created by Aleksei Makarov on 06/24/2017.
+ *
+ * Builder configuration for
+ * @see com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler
  */
 public interface FernflowerConfiguration extends Configuration {
 
