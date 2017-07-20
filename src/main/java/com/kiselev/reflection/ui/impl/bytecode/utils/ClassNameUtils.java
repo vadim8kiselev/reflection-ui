@@ -60,7 +60,9 @@ public class ClassNameUtils {
             }
 
             stream.discard(4);
-            DecompilerContext.initContext(Collections.emptyMap());
+            if (DecompilerContext.getCurrentContext() == null) {
+                DecompilerContext.initContext(Collections.emptyMap());
+            }
             ConstantPool pool = new ConstantPool(stream);
             stream.discard(2);
             int thisClassIdx = stream.readUnsignedShort();

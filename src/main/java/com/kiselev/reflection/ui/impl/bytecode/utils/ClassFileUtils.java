@@ -12,14 +12,7 @@ import java.net.URL;
 public class ClassFileUtils {
 
     public static String getFilePath(Class<?> clazz) {
-        ClassLoader loader = clazz.getClassLoader();
-
-        if (loader == null) {
-            loader = ClassLoader.getSystemClassLoader();
-            while (loader != null && loader.getParent() != null) {
-                loader = loader.getParent();
-            }
-        }
+        ClassLoader loader = getClassLoader(clazz);
 
         if (loader != null) {
             URL resource = loader.getResource(ClassNameUtils.getClassToFileName(clazz));
@@ -31,8 +24,17 @@ public class ClassFileUtils {
         return null;
     }
 
-    public static boolean isDynamicCreateClass(Class<?> clazz) {
-        return getFilePath(clazz) == null;
+    public static ClassLoader getClassLoader(Class<?> clazz) {
+        ClassLoader loader = clazz.getClassLoader();
+
+        if (loader == null) {
+            loader = ClassLoader.getSystemClassLoader();
+            while (loader != null && loader.getParent() != null) {
+                loader = loader.getParent();
+            }
+        }
+
+        return loader;
     }
 
     public static boolean isArchive(String path) {

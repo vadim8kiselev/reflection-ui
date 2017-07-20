@@ -2,8 +2,10 @@ package com.kiselev.reflection.ui.impl.bytecode.decompile.jd;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.exception.DecompilationException;
+import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.jd.configuration.JDBuilderConfiguration;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import jd.common.preferences.CommonPreferences;
 import jd.common.printer.text.PlainTextPrinter;
 import jd.core.loader.Loader;
@@ -23,40 +25,40 @@ import jd.core.process.writer.ClassFileWriter;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.FileNotFoundException;
-import java.io.OutputStream;
 import java.io.PrintStream;
-
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.
- *
- * This decompiler doesn't work with java 8
+ * <p>
+ * This decompiler doesn't work with java 8 and can't show local classes
  */
-public class JDDecompiler implements Decompiler {
+public final class JDDecompiler implements Decompiler {
 
-    private ArrayList<ClassFile> innerClasses;
+    private ArrayList<ClassFile> innerClasses = new ArrayList<>();
 
     private Map<String, Object> configuration;
-
-    private static final String fakeName = "FakeClassName.class";
 
     @Override
     public String decompile(byte[] byteCode) {
         try {
             Loader loader = new JDLoader(byteCode);
             JDPrinter jdPrinter = new JDPrinter(System.out);
-            ClassFile classFile = ClassFileDeserializer.Deserialize(loader, fakeName);
-            classFile.setInnerClassFiles(innerClasses);
+
+            String className = ClassNameUtils.getClassName(byteCode);
+            ClassFile classFile = ClassFileDeserializer.Deserialize(loader, className);
+            resolveInnerClasses(classFile, innerClasses);
 
             ReferenceMap referenceMap = new ReferenceMap();
             ClassFileAnalyzer.Analyze(referenceMap, classFile);
             ReferenceAnalyzer.Analyze(referenceMap, classFile);
 
             CommonPreferences preferences = getCommonPreferences();
-
             Printer printer = new InstructionPrinter(new PlainTextPrinter(preferences, jdPrinter));
 
             ArrayList<LayoutBlock> layoutBlockList = new ArrayList<>(1024);
@@ -66,7 +68,7 @@ public class JDDecompiler implements Decompiler {
 
             return jdPrinter.getSource();
         } catch (ClassFormatException exception) {
-            throw new DecompilationException("JD can't decompile classes of java 8", exception);
+            throw new DecompilationException("JD can't decompile class: " + ClassNameUtils.getClassName(byteCode), exception);
         } catch (LoaderException | FileNotFoundException exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
         }
@@ -82,13 +84,37 @@ public class JDDecompiler implements Decompiler {
         ArrayList<ClassFile> innerClasses = new ArrayList<>();
         for (byte[] bytecode : classes) {
             try {
-                innerClasses.add(ClassFileDeserializer.Deserialize(new JDLoader(bytecode), fakeName));
+                String className = ClassNameUtils.getClassName(bytecode);
+                innerClasses.add(ClassFileDeserializer.Deserialize(new JDLoader(bytecode), className));
             } catch (LoaderException exception) {
                 throw new DecompilationException("Error loading inner classes", exception);
             }
         }
 
         this.innerClasses = innerClasses;
+    }
+
+    private void resolveInnerClasses(ClassFile classFile, List<ClassFile> innerClasses) {
+        String className = ClassNameUtils.normalizeSimpleName(classFile.getThisClassName()) + Constants.Symbols.DOLLAR;
+        Iterator<ClassFile> iterator = innerClasses.iterator();
+        ArrayList<ClassFile> currentInnerClasses = new ArrayList<>();
+        while (iterator.hasNext()) {
+            ClassFile innerClass = iterator.next();
+            String innerClassName = ClassNameUtils.normalizeSimpleName(innerClass.getThisClassName());
+            if (!innerClassName.replace(className, "").contains(Constants.Symbols.DOLLAR)) {
+                innerClass.setOuterClass(classFile);
+                currentInnerClasses.add(innerClass);
+                iterator.remove();
+            }
+        }
+
+        classFile.setInnerClassFiles(currentInnerClasses);
+
+        if (!innerClasses.isEmpty()) {
+            for (ClassFile currentInnerClass : currentInnerClasses) {
+                resolveInnerClasses(currentInnerClass, innerClasses);
+            }
+        }
     }
 
     private CommonPreferences getCommonPreferences() {
@@ -152,7 +178,7 @@ public class JDDecompiler implements Decompiler {
         private StringBuilder builder = new StringBuilder();
 
         public JDPrinter(OutputStream stream) throws FileNotFoundException {
-            super(stream);
+            super(stream);  //stub
         }
 
         @Override
@@ -174,7 +200,7 @@ public class JDDecompiler implements Decompiler {
         }
 
         public String getSource() {
-            return normalizeOpenBlockCharacter(builder.toString());
+            return normalizeOpenBlockCharacter(builder);
         }
 
         private int getNumberOfLineSeparator(StringBuilder builder) {
@@ -187,15 +213,10 @@ public class JDDecompiler implements Decompiler {
         }
 
         private int getFirstNonSpaceNumber(StringBuilder builder) {
-            int index = builder.length() - 1;
-            while (builder.charAt(index) == ' ') {
-                index--;
-            }
-
-            return index;
+            return getFirstNonSpaceNumber(builder, builder.length());
         }
 
-        private int getFirstNonSpaceNumber(String line, int number) {
+        private int getFirstNonSpaceNumber(StringBuilder line, int number) {
             for (int i = number - 1; i > 0; i--) {
                 if (line.charAt(i) != ' ') {
                     return i;
@@ -216,20 +237,21 @@ public class JDDecompiler implements Decompiler {
             return false;
         }
 
-        private String normalizeOpenBlockCharacter(String line) {
+        private String normalizeOpenBlockCharacter(StringBuilder builder) {
             int index = 1;
             while (index != 0) {
-                int openBlock = line.indexOf("{", index);
-                int nonSpace = getFirstNonSpaceNumber(line, openBlock);
-                if (nonSpace != -1 && line.charAt(nonSpace) == '\n') {
-                    line = line.substring(0, nonSpace) + " " + line.substring(openBlock, line.length());
+                int openBlock = builder.indexOf("{", index);
+                int nonSpace = getFirstNonSpaceNumber(builder, openBlock);
+                if (nonSpace != -1 && builder.charAt(nonSpace) == '\n') {
+                    builder.delete(nonSpace, openBlock);
+                    builder.insert(nonSpace, ' ');
                     index = openBlock;
                 } else {
                     index = openBlock + 1;
                 }
             }
 
-            return line;
+            return builder.toString();
         }
     }
 }

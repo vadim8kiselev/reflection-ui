@@ -21,48 +21,107 @@ public class ConfigurationManager {
         this.configuration.putAll(configuration);
     }
 
+    private boolean isInstance(Object object, Class<?> clazz) {
+        return clazz.isInstance(object);
+    }
+
     public boolean isShowAnnotationTypes() {
-        return (boolean) configuration.get("sat");
+        Object config = configuration.get("sat");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("sat");
+        } else {
+            return (boolean) getDefaultConfiguration().get("sat");
+        }
     }
 
     public boolean isShowInnerClasses() {
-        return (boolean) configuration.get("sic");
+        Object config = configuration.get("sic");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("sic");
+        } else {
+            return (boolean) getDefaultConfiguration().get("sic");
+        }
     }
 
     public boolean isShowNonJavaModifiers() {
-        return (boolean) configuration.get("njm");
+        Object config = configuration.get("njm");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("njm");
+        } else {
+            return (boolean) getDefaultConfiguration().get("njm");
+        }
     }
 
     public boolean isShowDefaultValueInAnnotation() {
-        return (boolean) configuration.get("dva");
+        Object config = configuration.get("dva");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("dva");
+        } else {
+            return (boolean) getDefaultConfiguration().get("dva");
+        }
     }
 
     public boolean isShowGenericSignatures() {
-        return (boolean) configuration.get("sgs");
+        Object config = configuration.get("sgs");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("sgs");
+        } else {
+            return (boolean) getDefaultConfiguration().get("sgs");
+        }
     }
 
     public boolean isShowVarArgs() {
-        return (boolean) configuration.get("sva");
+        Object config = configuration.get("sva");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("sva");
+        } else {
+            return (boolean) getDefaultConfiguration().get("sva");
+        }
     }
 
     public boolean isDisplayFieldValue() {
-        return (boolean) configuration.get("dvf");
+        Object config = configuration.get("dvf");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("dvf");
+        } else {
+            return (boolean) getDefaultConfiguration().get("dvf");
+        }
     }
 
     public boolean isDisplayImports() {
-        return (boolean) configuration.get("dim");
+        Object config = configuration.get("dim");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("dim");
+        } else {
+            return (boolean) getDefaultConfiguration().get("dim");
+        }
     }
 
     public boolean isShowClassFullName() {
-        return (boolean) configuration.get("cfn");
+        Object config = configuration.get("cfn");
+        if (isInstance(config, boolean.class)) {
+            return (boolean) configuration.get("cfn");
+        } else {
+            return (boolean) getDefaultConfiguration().get("cfn");
+        }
     }
 
     public String getIndentSpaces() {
-        return (String) configuration.get("cis");
+        Object config = configuration.get("cis");
+        if (isInstance(config, String.class)) {
+            return (String) configuration.get("cis");
+        } else {
+            return (String) getDefaultConfiguration().get("cis");
+        }
     }
 
     public String getLineSeparator() {
-        return (String) configuration.get("nlc");
+        Object config = configuration.get("nlc");
+        if (isInstance(config, String.class)) {
+            return (String) configuration.get("nlc");
+        } else {
+            return (String) getDefaultConfiguration().get("nlc");
+        }
     }
 
     private static Map<String, Object> getDefaultConfiguration() {

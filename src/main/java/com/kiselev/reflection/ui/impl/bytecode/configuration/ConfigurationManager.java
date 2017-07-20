@@ -26,52 +26,116 @@ public class ConfigurationManager {
         this.configuration.putAll(configuration);
     }
 
+    private boolean isInstance(Object object, Class<?> clazz) {
+        return clazz.isInstance(object);
+    }
+
     public boolean isDecompileInnerClasses() {
-        return (boolean)configuration.get("dic");
+        Object config = configuration.get("dic");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("dic");
+        } else {
+            return (boolean)getDefaultConfiguration().get("dic");
+        }
     }
 
     public boolean isDecompileInnerAndNestedClasses() {
-        return (boolean)configuration.get("din");
+        Object config = configuration.get("din");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("din");
+        } else {
+            return (boolean)getDefaultConfiguration().get("din");
+        }
     }
 
     public boolean isDecompileAnonymousClasses() {
-        return (boolean)configuration.get("dac");
+        Object config = configuration.get("dac");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("dac");
+        } else {
+            return (boolean)getDefaultConfiguration().get("dac");
+        }
     }
 
     public boolean isDecompileLocalClasses() {
-        return (boolean)configuration.get("dlc");
+        Object config = configuration.get("dlc");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("dlc");
+        } else {
+            return (boolean)getDefaultConfiguration().get("dlc");
+        }
     }
 
     public boolean isSaveToFile() {
-        return (boolean)configuration.get("stf");
+        Object config = configuration.get("stf");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("stf");
+        } else {
+            return (boolean)getDefaultConfiguration().get("stf");
+        }
     }
 
     public String getDirectoryForSaveBytecode() {
-        return (String) configuration.get("dts");
+        Object config = configuration.get("dts");
+        if (isInstance(config, String.class)) {
+            return (String)configuration.get("dts");
+        } else {
+            return (String)getDefaultConfiguration().get("dts");
+        }
     }
 
     public ByteCodeCollector getCustomByteCodeCollector() {
-        return (ByteCodeCollector) configuration.get("bcc");
+        Object config = configuration.get("bcc");
+        if (isInstance(config, ByteCodeCollector.class)) {
+            return (ByteCodeCollector)configuration.get("bcc");
+        } else {
+            return (ByteCodeCollector)getDefaultConfiguration().get("bcc");
+        }
     }
 
     public Configuration getCustomDecompilerConfiguration() {
-        return (Configuration) configuration.get("cdc");
+        Object config = configuration.get("cdc");
+        if (isInstance(config, Configuration.class)) {
+            return (Configuration)configuration.get("cdc");
+        } else {
+            return (Configuration)getDefaultConfiguration().get("cdc");
+        }
     }
 
     public Decompiler getDecompiler() {
-        return (Decompiler) configuration.get("acd");
+        Object config = configuration.get("acd");
+        if (isInstance(config, Decompiler.class)) {
+            return (Decompiler)configuration.get("acd");
+        } else {
+            return (Decompiler)getDefaultConfiguration().get("acd");
+        }
     }
 
     public boolean isEnableClassFileByteCodeCollector() {
-        return (boolean)configuration.get("cfc");
+        Object config = configuration.get("cfc");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("cfc");
+        } else {
+            return (boolean)getDefaultConfiguration().get("cfc");
+        }
     }
 
     public boolean isEnableRetransformClassByteCodeCollector() {
-        return (boolean)configuration.get("rcc");
+        Object config = configuration.get("rcc");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("rcc");
+        } else {
+            return (boolean)getDefaultConfiguration().get("rcc");
+        }
     }
 
     public boolean isEnableCustomByteCodeCollector() {
-        return (boolean)configuration.get("cbc");
+        Object config = configuration.get("cbc");
+        if (isInstance(config, boolean.class)) {
+            return (boolean)configuration.get("cbc");
+        } else {
+            return (boolean)getDefaultConfiguration().get("cbc");
+        }
     }
 
     private static Map<String, Object> getDefaultConfiguration() {

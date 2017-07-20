@@ -85,7 +85,7 @@ public class InnerClassesCollector {
     private static Collection<Class<?>> getLocalClasses(Class<?> clazz) {
         Collection<Class<?>> localClasses = new ArrayList<>();
 
-        if (ClassFileUtils.isDynamicCreateClass(clazz)) {
+        if (isDynamicCreateClass(clazz)) {
             localClasses.addAll(collectLocalDynamicClass(clazz));
         } else {
             if (ClassFileUtils.isArchive(ClassFileUtils.getFilePath(clazz))) {
@@ -98,17 +98,14 @@ public class InnerClassesCollector {
         return localClasses;
     }
 
+    public static boolean isDynamicCreateClass(Class<?> clazz) {
+        return ClassFileUtils.getFilePath(clazz) == null;
+    }
+
     private static Collection<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
         Collection<Class<?>> localClasses = new ArrayList<>();
 
-        ClassLoader loader = clazz.getClassLoader();
-
-        if (loader == null) {
-            loader = ClassLoader.getSystemClassLoader();
-            while (loader != null && loader.getParent() != null) {
-                loader = loader.getParent();
-            }
-        }
+        ClassLoader loader = ClassFileUtils.getClassLoader(clazz);
 
         Collection<Class<?>> classes = getLoadedClasses(loader);
         for (Class<?> loadedClass : classes) {
@@ -175,6 +172,7 @@ public class InnerClassesCollector {
         String fullName = ClassNameUtils.normalizeFullName(name);
         String simpleName = ClassNameUtils.normalizeSimpleName(name);
 
+
         if (name.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX) && isLocalClass(clazz, simpleName)) {
             try {
                 return Class.forName(fullName);
@@ -198,14 +196,18 @@ public class InnerClassesCollector {
     }
 
     private static boolean isLocalClass(Class<?> clazz, String className) {
-        String name = ClassNameUtils.getSimpleName(clazz);
-        return Pattern.compile(name + "\\$[\\d]+.*").matcher(className).matches()
-                && !isNumber(className.replace(name + Constants.Symbols.DOLLAR, ""))
-                && !className.replace(name + Constants.Symbols.DOLLAR, "")
-                .contains(Constants.Symbols.DOLLAR);
+        String name = ClassNameUtils.getSimpleName(clazz) + Constants.Symbols.DOLLAR;
+
+        return Pattern.compile(getPattern(name)).matcher(className).matches() &&
+                !isNumber(className.replace(name, "")) &&
+                !className.replace(name, "").contains(Constants.Symbols.DOLLAR);
     }
 
     private static boolean isNumber(String line) {
         return Pattern.compile("\\d+").matcher(line).matches();
+    }
+
+    private static String getPattern(String name) {
+        return name.replace(Constants.Symbols.DOLLAR, "\\" + Constants.Symbols.DOLLAR) + "[\\d]+.*";
     }
 }

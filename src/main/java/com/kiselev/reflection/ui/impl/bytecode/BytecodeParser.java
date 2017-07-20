@@ -27,9 +27,6 @@ public class BytecodeParser implements ReflectionUI {
             throw new InvalidRetransformClass("Array type can not be decompiled");
         }
 
-        StateManager.registerConfiguration(new HashMap<>());
-
-        ByteCodeSaver saver = new ByteCodeSaver();
         ByteCodeCollector collector = new DefaultByteCodeCollector();
 
         byte[] byteCode = collector.getByteCode(clazz);
@@ -57,6 +54,8 @@ public class BytecodeParser implements ReflectionUI {
         decompiler.appendAdditionalClasses(bytecodeOfInnerClasses);
 
         if (StateManager.getConfiguration().isSaveToFile()) {
+            ByteCodeSaver saver = new ByteCodeSaver();
+
             saver.saveToFile(byteCode);
             for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
                 saver.saveToFile(bytecodeOfInnerClass);
