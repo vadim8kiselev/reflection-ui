@@ -76,7 +76,10 @@ public final class JDDecompiler implements Decompiler {
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration.getConfiguration();
+        if (this.configuration == null) {
+            this.configuration = getDefaultConfiguration();
+        }
+        this.configuration.putAll(configuration.getConfiguration());
     }
 
     @Override
@@ -164,7 +167,6 @@ public final class JDDecompiler implements Decompiler {
 
         @Override
         public DataInputStream load(String dummy) throws LoaderException {
-            System.out.println(dummy);
             return new DataInputStream(new ByteArrayInputStream(bytecode));
         }
 
