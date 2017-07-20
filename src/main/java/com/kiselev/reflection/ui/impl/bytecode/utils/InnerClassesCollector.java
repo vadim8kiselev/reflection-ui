@@ -98,7 +98,7 @@ public class InnerClassesCollector {
         return localClasses;
     }
 
-    public static boolean isDynamicCreateClass(Class<?> clazz) {
+    private static boolean isDynamicCreateClass(Class<?> clazz) {
         return ClassFileUtils.getFilePath(clazz) == null;
     }
 

@@ -67,7 +67,7 @@ public final class JDDecompiler implements Decompiler {
                     classFile.getMajorVersion(), classFile.getMinorVersion(), layoutBlockList);
 
             return jdPrinter.getSource();
-        } catch (ClassFormatException exception) {
+        } catch (ClassFormatException | NullPointerException exception) {
             throw new DecompilationException("JD can't decompile class: " + ClassNameUtils.getClassName(byteCode), exception);
         } catch (LoaderException | FileNotFoundException exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
@@ -164,6 +164,7 @@ public final class JDDecompiler implements Decompiler {
 
         @Override
         public DataInputStream load(String dummy) throws LoaderException {
+            System.out.println(dummy);
             return new DataInputStream(new ByteArrayInputStream(bytecode));
         }
 

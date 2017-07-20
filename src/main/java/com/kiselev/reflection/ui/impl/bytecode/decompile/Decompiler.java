@@ -10,7 +10,7 @@ import java.util.Collection;
 public interface Decompiler {
 
     /**
-     * Decompicating bytecode
+     * Process of decompiling bytecode
      * <p>
      * @param byteCode - bytecode of class
      * @return pseudo source code
