@@ -32,7 +32,7 @@ public class ConfigurationManager {
 
     public boolean isDecompileInnerClasses() {
         Object config = configuration.get("dic");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("dic");
         } else {
             return (boolean)getDefaultConfiguration().get("dic");
@@ -41,7 +41,7 @@ public class ConfigurationManager {
 
     public boolean isDecompileInnerAndNestedClasses() {
         Object config = configuration.get("din");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("din");
         } else {
             return (boolean)getDefaultConfiguration().get("din");
@@ -50,7 +50,7 @@ public class ConfigurationManager {
 
     public boolean isDecompileAnonymousClasses() {
         Object config = configuration.get("dac");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("dac");
         } else {
             return (boolean)getDefaultConfiguration().get("dac");
@@ -59,7 +59,7 @@ public class ConfigurationManager {
 
     public boolean isDecompileLocalClasses() {
         Object config = configuration.get("dlc");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("dlc");
         } else {
             return (boolean)getDefaultConfiguration().get("dlc");
@@ -68,7 +68,7 @@ public class ConfigurationManager {
 
     public boolean isSaveToFile() {
         Object config = configuration.get("stf");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("stf");
         } else {
             return (boolean)getDefaultConfiguration().get("stf");
@@ -113,7 +113,7 @@ public class ConfigurationManager {
 
     public boolean isEnableClassFileByteCodeCollector() {
         Object config = configuration.get("cfc");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("cfc");
         } else {
             return (boolean)getDefaultConfiguration().get("cfc");
@@ -122,7 +122,7 @@ public class ConfigurationManager {
 
     public boolean isEnableRetransformClassByteCodeCollector() {
         Object config = configuration.get("rcc");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("rcc");
         } else {
             return (boolean)getDefaultConfiguration().get("rcc");
@@ -131,7 +131,7 @@ public class ConfigurationManager {
 
     public boolean isEnableCustomByteCodeCollector() {
         Object config = configuration.get("cbc");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean)configuration.get("cbc");
         } else {
             return (boolean)getDefaultConfiguration().get("cbc");

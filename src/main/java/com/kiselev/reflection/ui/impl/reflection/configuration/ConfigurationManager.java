@@ -27,7 +27,7 @@ public class ConfigurationManager {
 
     public boolean isShowAnnotationTypes() {
         Object config = configuration.get("sat");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("sat");
         } else {
             return (boolean) getDefaultConfiguration().get("sat");
@@ -36,7 +36,7 @@ public class ConfigurationManager {
 
     public boolean isShowInnerClasses() {
         Object config = configuration.get("sic");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("sic");
         } else {
             return (boolean) getDefaultConfiguration().get("sic");
@@ -45,7 +45,7 @@ public class ConfigurationManager {
 
     public boolean isShowNonJavaModifiers() {
         Object config = configuration.get("njm");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("njm");
         } else {
             return (boolean) getDefaultConfiguration().get("njm");
@@ -54,7 +54,7 @@ public class ConfigurationManager {
 
     public boolean isShowDefaultValueInAnnotation() {
         Object config = configuration.get("dva");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("dva");
         } else {
             return (boolean) getDefaultConfiguration().get("dva");
@@ -63,7 +63,7 @@ public class ConfigurationManager {
 
     public boolean isShowGenericSignatures() {
         Object config = configuration.get("sgs");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("sgs");
         } else {
             return (boolean) getDefaultConfiguration().get("sgs");
@@ -72,7 +72,7 @@ public class ConfigurationManager {
 
     public boolean isShowVarArgs() {
         Object config = configuration.get("sva");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("sva");
         } else {
             return (boolean) getDefaultConfiguration().get("sva");
@@ -81,7 +81,7 @@ public class ConfigurationManager {
 
     public boolean isDisplayFieldValue() {
         Object config = configuration.get("dvf");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("dvf");
         } else {
             return (boolean) getDefaultConfiguration().get("dvf");
@@ -90,7 +90,7 @@ public class ConfigurationManager {
 
     public boolean isDisplayImports() {
         Object config = configuration.get("dim");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("dim");
         } else {
             return (boolean) getDefaultConfiguration().get("dim");
@@ -99,7 +99,7 @@ public class ConfigurationManager {
 
     public boolean isShowClassFullName() {
         Object config = configuration.get("cfn");
-        if (isInstance(config, boolean.class)) {
+        if (isInstance(config, Boolean.class)) {
             return (boolean) configuration.get("cfn");
         } else {
             return (boolean) getDefaultConfiguration().get("cfn");

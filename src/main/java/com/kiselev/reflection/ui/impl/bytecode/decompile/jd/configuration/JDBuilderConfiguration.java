@@ -9,7 +9,7 @@ import java.util.Map;
 public class JDBuilderConfiguration {
 
     public static JDConfiguration getBuilderConfiguration() {
-        return new JDBuilderConfiguration.Builder();
+        return new Builder();
     }
 
     private static class Builder implements JDConfiguration {
