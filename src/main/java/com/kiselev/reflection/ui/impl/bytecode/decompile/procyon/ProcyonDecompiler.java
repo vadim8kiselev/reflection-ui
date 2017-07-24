@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.procyon;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
+import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
@@ -32,9 +33,9 @@ public final class ProcyonDecompiler implements Decompiler {
 
     private byte[] byteCode;
 
-    private Map<String, Object> configuration;
+    private Map<String, Object> configuration = getDefaultConfiguration();
 
-    private Map<String, byte[]> byteCodeMap;
+    private Map<String, byte[]> byteCodeMap = new HashMap<>();
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -65,16 +66,11 @@ public final class ProcyonDecompiler implements Decompiler {
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        if (this.configuration == null) {
-            this.configuration = getDefaultConfiguration();
-        }
-
         this.configuration.putAll(configuration.getConfiguration());
     }
 
     @Override
     public void appendAdditionalClasses(Collection<byte[]> classes) {
-        this.byteCodeMap = new HashMap<>();
         for (byte[] byteCode : classes) {
             byteCodeMap.put(ClassNameUtils.getClassName(byteCode), byteCode);
         }
@@ -82,7 +78,11 @@ public final class ProcyonDecompiler implements Decompiler {
 
     private class ProcyonTypeLoader implements ITypeLoader {
 
-        boolean isLoadReferenceOnClass = (boolean) configuration.get("ucr");
+        private String outerClassName = ClassNameUtils.getClassName(ProcyonDecompiler.this.byteCode);
+
+        private boolean isLoadReferenceOnClass = (boolean) configuration.get("ucr");
+
+        private static final int START_POSITION = 0;
 
         @Override
         public boolean tryLoadType(String baseClassName, Buffer buffer) {
@@ -90,8 +90,7 @@ public final class ProcyonDecompiler implements Decompiler {
 
             if (byteCode == null) {
                 if (isLoadReferenceOnClass) {
-
-                    if (baseClassName.contains(ClassNameUtils.getClassName(ProcyonDecompiler.this.byteCode))) {
+                    if (baseClassName.contains(outerClassName + Constants.Symbols.DOLLAR)) {
                         return false;
                     }
 
@@ -103,14 +102,18 @@ public final class ProcyonDecompiler implements Decompiler {
                     } else {
                         ByteCodeCollector collector = new DefaultByteCodeCollector();
                         byteCode = collector.getByteCode(clazz);
+
+                        if (byteCode == null) {
+                            return false;
+                        }
                     }
                 } else {
                     return false;
                 }
             }
 
-            buffer.putByteArray(byteCode, 0, byteCode.length);
-            buffer.position(0);
+            buffer.putByteArray(byteCode, START_POSITION, byteCode.length);
+            buffer.position(START_POSITION);
 
             return true;
         }

@@ -28,54 +28,39 @@ import java.util.jar.Manifest;
 /**
  * Created by Aleksei Makarov on 06/26/2017.
  */
-public final class FernflowerDecompiler implements IBytecodeProvider, IResultSaver, Decompiler {
+public final class FernflowerDecompiler implements Decompiler {
 
-    private byte[] byteCode;
-
-    private String source = "";
-
-    private Map<String, Object> configuration;
+    private Map<String, Object> configuration = getDefaultConfiguration();
 
     private List<byte[]> additionalClasses = new ArrayList<>();
 
-    public FernflowerDecompiler() {
-    }
+    private FernflowerResultSaver saver = new FernflowerResultSaver();
 
     @Override
     public String decompile(byte[] byteCode) {
-        this.byteCode = byteCode;
-
         if (configuration == null) {
             configuration = getDefaultConfiguration();
         }
 
         IFernflowerLogger logger = new PrintStreamLogger(System.out);
-        BaseDecompiler decompiler = new BaseDecompiler(this, this, configuration, logger);
+        BaseDecompiler decompiler = new BaseDecompiler(null, saver, configuration, logger);
         for (byte[] nestedClass : additionalClasses) {
-            dirtyHack(decompiler, nestedClass);
+            uploadBytecode(decompiler, nestedClass);
         }
-        dirtyHack(decompiler, byteCode);
+        uploadBytecode(decompiler, byteCode);
         decompiler.decompileContext();
 
-        return source;
+        return saver.getSource();
     }
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        if (this.configuration == null) {
-            this.configuration = getDefaultConfiguration();
-        }
         this.configuration.putAll(configuration.getConfiguration());
     }
 
     @Override
     public void appendAdditionalClasses(Collection<byte[]> classes) {
         this.additionalClasses.addAll(classes);
-    }
-
-    @Override
-    public byte[] getBytecode(String s, String s1) throws IOException {
-        return byteCode;
     }
 
     private Map<String, Object> getDefaultConfiguration() {
@@ -109,7 +94,7 @@ public final class FernflowerDecompiler implements IBytecodeProvider, IResultSav
                 .getConfiguration();
     }
 
-    private void dirtyHack(BaseDecompiler decompiler, byte[] byteCode) {
+    private void uploadBytecode(BaseDecompiler decompiler, byte[] byteCode) {
         try {
             Fernflower fernflower = getFernflower(decompiler);
             StructClass structClass = createClassStruct(byteCode);
@@ -124,7 +109,7 @@ public final class FernflowerDecompiler implements IBytecodeProvider, IResultSav
             unit.addClass(structClass, structClass.qualifiedName + Constants.Suffix.CLASS_FILE_SUFFIX);
             units.put(structClass.qualifiedName, unit);
         } catch (Exception exception) {
-            throw new DecompilationException("Something wrong with fernflower", exception);
+            throw new DecompilationException("Can't upload bytecode to fernflower", exception);
         }
     }
 
@@ -154,39 +139,48 @@ public final class FernflowerDecompiler implements IBytecodeProvider, IResultSav
     }
 
     private ContextUnit createFalseContextUnit(Fernflower fernflower) {
-        return new ContextUnit(0, null, "", true, this, fernflower);
+        return new ContextUnit(0, null, "", true, saver, fernflower);
     }
 
-    @Override
-    public void saveClassFile(String dummy, String dummyTwo, String dummyThree, String source, int[] dummyFour) {
-        this.source = source;
-    }
+    private static class FernflowerResultSaver implements IResultSaver {
 
-    @Override
-    public void createArchive(String s, String s1, Manifest manifest) {
-    }
+        private String source = "";
 
-    @Override
-    public void saveDirEntry(String s, String s1, String s2) {
-    }
+        @Override
+        public void saveClassFile(String dummy, String dummyTwo, String dummyThree, String source, int[] dummyFour) {
+            this.source = source;
+        }
 
-    @Override
-    public void copyEntry(String s, String s1, String s2, String s3) {
-    }
+        public String getSource() {
+            return source;
+        }
 
-    @Override
-    public void saveClassEntry(String s, String s1, String s2, String s3, String s4) {
-    }
+        @Override
+        public void createArchive(String s, String s1, Manifest manifest) {
+        }
 
-    @Override
-    public void closeArchive(String s, String s1) {
-    }
+        @Override
+        public void saveDirEntry(String s, String s1, String s2) {
+        }
 
-    @Override
-    public void saveFolder(String s) {
-    }
+        @Override
+        public void copyEntry(String s, String s1, String s2, String s3) {
+        }
 
-    @Override
-    public void copyFile(String s, String s1, String s2) {
+        @Override
+        public void saveClassEntry(String s, String s1, String s2, String s3, String s4) {
+        }
+
+        @Override
+        public void closeArchive(String s, String s1) {
+        }
+
+        @Override
+        public void saveFolder(String s) {
+        }
+
+        @Override
+        public void copyFile(String s, String s1, String s2) {
+        }
     }
 }

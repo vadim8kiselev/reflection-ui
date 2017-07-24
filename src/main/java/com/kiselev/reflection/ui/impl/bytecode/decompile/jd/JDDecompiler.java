@@ -42,7 +42,7 @@ public final class JDDecompiler implements Decompiler {
 
     private ArrayList<ClassFile> innerClasses = new ArrayList<>();
 
-    private Map<String, Object> configuration;
+    private Map<String, Object> configuration = getDefaultConfiguration();
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -76,9 +76,6 @@ public final class JDDecompiler implements Decompiler {
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        if (this.configuration == null) {
-            this.configuration = getDefaultConfiguration();
-        }
         this.configuration.putAll(configuration.getConfiguration());
     }
 
@@ -180,6 +177,8 @@ public final class JDDecompiler implements Decompiler {
 
         private StringBuilder builder = new StringBuilder();
 
+        private String indent = (String) configuration.get("ind");
+
         public JDPrinter(OutputStream stream) throws FileNotFoundException {
             super(stream);  //stub
         }
@@ -192,7 +191,7 @@ public final class JDDecompiler implements Decompiler {
                     builder.deleteCharAt(index);
                 }
             } else if (csq.equals("  ")) {
-                builder.append(configuration.get("ind"));
+                builder.append(indent);
                 return null;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
                 builder.deleteCharAt(getNumberOfLineSeparator(builder));
