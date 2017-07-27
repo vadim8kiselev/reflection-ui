@@ -128,15 +128,12 @@ public final class ProcyonDecompiler implements Decompiler {
     }
 
     private DecompilerSettings getDecompilerSettings() {
-        if (this.configuration == null) {
-            this.configuration = getDefaultConfiguration();
-        }
         DecompilerSettings settings = new DecompilerSettings();
         settings.setExcludeNestedTypes((boolean) configuration.get("ent"));
         settings.setFlattenSwitchBlocks((boolean) configuration.get("fsb"));
         settings.setForceExplicitImports((boolean) configuration.get("fei"));
         settings.setForceExplicitTypeArguments((boolean) configuration.get("eta"));
-        settings.setLanguage((Language)configuration.get("lan"));
+        settings.setLanguage((Language) configuration.get("lan"));
         settings.setFormattingOptions((JavaFormattingOptions) configuration.get("jfo"));
         settings.setShowSyntheticMembers((boolean) configuration.get("ssm"));
         settings.setAlwaysGenerateExceptionVariableForCatchBlocks((boolean) configuration.get("gec"));

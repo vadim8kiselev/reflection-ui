@@ -51,6 +51,7 @@ public class InnerClassesCollector {
             try {
                 Class<?> foundedClass = Class.forName(clazz.getName() + Constants.Symbols.DOLLAR + classId);
                 anonymousOrSyntheticClasses.add(foundedClass);
+                anonymousOrSyntheticClasses.addAll(getAnonymousOrSyntheticClasses(foundedClass));
 
                 if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
                     anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
