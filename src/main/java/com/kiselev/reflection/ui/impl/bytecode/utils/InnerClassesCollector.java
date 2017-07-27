@@ -173,7 +173,6 @@ public class InnerClassesCollector {
         String fullName = ClassNameUtils.normalizeFullName(name);
         String simpleName = ClassNameUtils.normalizeSimpleName(name);
 
-
         if (name.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX) && isLocalClass(clazz, simpleName)) {
             try {
                 return Class.forName(fullName);

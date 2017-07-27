@@ -6,6 +6,7 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.jd.configuration.JDBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
+import com.kiselev.reflection.ui.impl.bytecode.utils.WriterClassUtils;
 import jd.common.preferences.CommonPreferences;
 import jd.common.printer.text.PlainTextPrinter;
 import jd.core.loader.Loader;
@@ -185,8 +186,8 @@ public final class JDDecompiler implements Decompiler {
 
         @Override
         public PrintStream append(CharSequence csq) {
-            if (isContainsOpenBlock(csq)) {
-                int index = getFirstNonSpaceNumber(builder);
+            if (WriterClassUtils.isContainsOpenBlock(csq)) {
+                int index = WriterClassUtils.getFirstNonSpaceNumber(builder);
                 if (builder.charAt(index) == '\n') {
                     builder.deleteCharAt(index);
                 }
@@ -194,66 +195,15 @@ public final class JDDecompiler implements Decompiler {
                 builder.append(indent);
                 return null;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
-                builder.deleteCharAt(getNumberOfLineSeparator(builder));
-                builder.delete(getFirstNonSpaceNumber(builder), builder.length() - 1);
+                builder.deleteCharAt(WriterClassUtils.getNumberOfLineSeparator(builder));
+                builder.delete(WriterClassUtils.getFirstNonSpaceNumber(builder), builder.length() - 1);
             }
             builder.append(csq);
             return null;
         }
 
         public String getSource() {
-            return normalizeOpenBlockCharacter(builder);
-        }
-
-        private int getNumberOfLineSeparator(StringBuilder builder) {
-            int index = builder.length() - 1;
-            while (builder.charAt(index) != '\n') {
-                index--;
-            }
-
-            return index + 1;
-        }
-
-        private int getFirstNonSpaceNumber(StringBuilder builder) {
-            return getFirstNonSpaceNumber(builder, builder.length());
-        }
-
-        private int getFirstNonSpaceNumber(StringBuilder line, int number) {
-            for (int i = number - 1; i > 0; i--) {
-                if (line.charAt(i) != ' ') {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        private boolean isContainsOpenBlock(CharSequence charSequence) {
-            int index = charSequence.length() - 1;
-            for (int i = 0; i < index; i++) {
-                if (charSequence.charAt(index) == '{') {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private String normalizeOpenBlockCharacter(StringBuilder builder) {
-            int index = 1;
-            while (index != 0) {
-                int openBlock = builder.indexOf("{", index);
-                int nonSpace = getFirstNonSpaceNumber(builder, openBlock);
-                if (nonSpace != -1 && builder.charAt(nonSpace) == '\n') {
-                    builder.delete(nonSpace, openBlock);
-                    builder.insert(nonSpace, ' ');
-                    index = openBlock;
-                } else {
-                    index = openBlock + 1;
-                }
-            }
-
-            return builder.toString();
+            return WriterClassUtils.normalizeOpenBlockCharacter(builder);
         }
     }
 }

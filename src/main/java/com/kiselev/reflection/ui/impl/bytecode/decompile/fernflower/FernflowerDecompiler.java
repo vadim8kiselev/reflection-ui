@@ -1,15 +1,14 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower;
 
+import com.kiselev.reflection.ui.configuration.Configuration;
+import com.kiselev.reflection.ui.exception.DecompilationException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
-import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.LogLevel;
-import com.kiselev.reflection.ui.exception.DecompilationException;
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
-import org.jetbrains.java.decompiler.main.extern.IBytecodeProvider;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IResultSaver;
 import org.jetbrains.java.decompiler.struct.ContextUnit;
