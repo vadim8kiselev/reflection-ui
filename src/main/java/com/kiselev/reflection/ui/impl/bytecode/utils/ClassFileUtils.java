@@ -3,6 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -10,6 +11,8 @@ import java.net.URL;
  * Created by Aleksei Makarov on 07/13/2017.
  */
 public class ClassFileUtils {
+
+    private static final String SHIELDED_SPACE = "%20";
 
     public static String getFilePath(Class<?> clazz) {
         ClassLoader loader = getClassLoader(clazz);
@@ -44,7 +47,7 @@ public class ClassFileUtils {
     public static String getClassPackagePath(Class<?> clazz) {
         String path = getFilePath(clazz);
 
-        if (path!= null && !isArchive(path)) {
+        if (path != null && !isArchive(path)) {
             return path.substring(0, path.lastIndexOf(Constants.Symbols.SLASH));
         }
 
@@ -52,9 +55,9 @@ public class ClassFileUtils {
     }
 
     public static String getArchivePath(String arFilePath) {
-        if (arFilePath!= null && isArchive(arFilePath)) {
+        if (arFilePath != null && isArchive(arFilePath)) {
             String path = arFilePath.substring(0, getSeparatorPosition(arFilePath))
-                    .replace(Constants.Symbols.SLASH, "\\").replace("%20", " ");
+                    .replace(Constants.Symbols.SLASH, "\\").replace(SHIELDED_SPACE, " ");
             try {
                 URL urlPath = new URL(path);
                 return urlPath.getFile();
@@ -67,7 +70,7 @@ public class ClassFileUtils {
     }
 
     public static String getClassNameFromArchivePath(String jarFilePath) {
-        if (jarFilePath!= null && isArchive(jarFilePath)) {
+        if (jarFilePath != null && isArchive(jarFilePath)) {
             return jarFilePath.substring(getSeparatorPosition(jarFilePath) + 2, jarFilePath.length());
         }
 

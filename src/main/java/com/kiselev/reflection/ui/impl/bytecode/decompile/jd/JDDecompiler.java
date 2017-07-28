@@ -6,7 +6,7 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.jd.configuration.JDBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
-import com.kiselev.reflection.ui.impl.bytecode.utils.WriterClassUtils;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassStringUtils;
 import jd.common.preferences.CommonPreferences;
 import jd.common.printer.text.PlainTextPrinter;
 import jd.core.loader.Loader;
@@ -186,8 +186,8 @@ public final class JDDecompiler implements Decompiler {
 
         @Override
         public PrintStream append(CharSequence csq) {
-            if (WriterClassUtils.isContainsOpenBlock(csq)) {
-                int index = WriterClassUtils.getFirstNonSpaceNumber(builder);
+            if (ClassStringUtils.isContainsOpenBlock(csq)) {
+                int index = ClassStringUtils.getFirstNonSpaceNumber(builder);
                 if (builder.charAt(index) == '\n') {
                     builder.deleteCharAt(index);
                 }
@@ -195,15 +195,15 @@ public final class JDDecompiler implements Decompiler {
                 builder.append(indent);
                 return null;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
-                builder.deleteCharAt(WriterClassUtils.getNumberOfLineSeparator(builder));
-                builder.delete(WriterClassUtils.getFirstNonSpaceNumber(builder), builder.length() - 1);
+                builder.deleteCharAt(ClassStringUtils.getNumberOfLineSeparator(builder));
+                builder.delete(ClassStringUtils.getFirstNonSpaceNumber(builder), builder.length() - 1);
             }
             builder.append(csq);
             return null;
         }
 
         public String getSource() {
-            return WriterClassUtils.normalizeOpenBlockCharacter(builder);
+            return ClassStringUtils.normalizeOpenBlockCharacter(builder);
         }
     }
 }

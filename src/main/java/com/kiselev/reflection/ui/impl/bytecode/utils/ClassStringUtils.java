@@ -1,9 +1,9 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 /**
- * Created by Aleksei Makarov on 27.07.2017.
+ * Created by Aleksei Makarov on 07/27/2017.
  */
-public class WriterClassUtils {
+public class ClassStringUtils {
 
     public static int getNumberOfLineSeparator(StringBuilder builder) {
         int index = builder.length() - 1;
