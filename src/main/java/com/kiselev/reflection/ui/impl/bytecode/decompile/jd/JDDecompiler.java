@@ -52,7 +52,6 @@ public final class JDDecompiler implements Decompiler {
     public String decompile(byte[] byteCode) {
         try {
             Loader loader = new JDLoader(byteCode);
-            JDPrinter jdPrinter = new JDPrinter(System.out);
 
             String className = ClassNameUtils.getClassName(byteCode);
             ClassFile classFile = ClassFileDeserializer.Deserialize(loader, className);
@@ -63,6 +62,7 @@ public final class JDDecompiler implements Decompiler {
             ReferenceAnalyzer.Analyze(referenceMap, classFile);
 
             CommonPreferences preferences = getCommonPreferences();
+            JDPrinter jdPrinter = new JDPrinter(System.out);
             Printer printer = new InstructionPrinter(new PlainTextPrinter(preferences, jdPrinter));
 
             ArrayList<LayoutBlock> layoutBlockList = new ArrayList<>(1024);
@@ -180,7 +180,7 @@ public final class JDDecompiler implements Decompiler {
 
         private StringBuilder builder = new StringBuilder();
 
-        private String indent = utils.getConfig("ind", String.class);
+        private String indent;
 
         private static final String JD_INDENT = "  ";
 
@@ -188,6 +188,7 @@ public final class JDDecompiler implements Decompiler {
 
         public JDPrinter(OutputStream stream) throws FileNotFoundException {
             super(stream);
+            this.indent = utils.getConfig("ind", String.class);
         }
 
         @Override

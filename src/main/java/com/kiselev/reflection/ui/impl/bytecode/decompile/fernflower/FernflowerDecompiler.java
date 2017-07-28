@@ -35,6 +35,10 @@ public final class FernflowerDecompiler implements Decompiler {
 
     private FernflowerResultSaver saver = new FernflowerResultSaver();
 
+    private static final int CLASS_TYPE = 1;
+
+    private static final int CLASS_FILE_TYPE = 0;
+
     @Override
     public String decompile(byte[] byteCode) {
         if (configuration == null) {
@@ -122,7 +126,7 @@ public final class FernflowerDecompiler implements Decompiler {
     private StructClass createClassStruct(byte[] byteCode) throws IOException {
         LazyLoader lazyLoader = new LazyLoader((dummy, dummyTwo) -> byteCode);
         StructClass structClass = new StructClass(byteCode, true, lazyLoader);
-        LazyLoader.Link link = new LazyLoader.Link(1, structClass.qualifiedName, null);
+        LazyLoader.Link link = new LazyLoader.Link(CLASS_TYPE, structClass.qualifiedName, "");
         lazyLoader.addClassLink(structClass.qualifiedName, link);
 
         return structClass;
@@ -138,7 +142,7 @@ public final class FernflowerDecompiler implements Decompiler {
     }
 
     private ContextUnit createFalseContextUnit(Fernflower fernflower) {
-        return new ContextUnit(0, null, "", true, saver, fernflower);
+        return new ContextUnit(CLASS_FILE_TYPE, "", "", true, saver, fernflower);
     }
 
     private static class FernflowerResultSaver implements IResultSaver {

@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.configuration.util;
 
+import com.kiselev.reflection.ui.exception.OptionNotFoundException;
+
 import java.util.Map;
 
 /**
@@ -22,10 +24,15 @@ public class ConfigurationUtils {
 
     public <T> T getConfig(String config, Class<T> type) {
         Object option = configuration.get(config);
-        if (isInstance(option, Boolean.class)) {
+        if (isInstance(option, type)) {
             return type.cast(option);
         } else {
-            return type.cast(defaultConfiguration.get(config));
+            Object defaultOption = defaultConfiguration.get(config);
+            if (!defaultConfiguration.containsKey(config)) {
+                String exceptionMessage = String.format("Default option %s it isn't put down", config);
+                throw new OptionNotFoundException(exceptionMessage);
+            }
+            return type.cast(defaultOption);
         }
     }
 

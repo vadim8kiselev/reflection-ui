@@ -136,7 +136,7 @@ public final class ProcyonDecompiler implements Decompiler {
 
         settings.setExcludeNestedTypes(utils.getConfig("ent", Boolean.class));
         settings.setFlattenSwitchBlocks(utils.getConfig("fsb", Boolean.class));
-        settings.setForceExplicitImports(utils.getConfig("fer", Boolean.class));
+        settings.setForceExplicitImports(utils.getConfig("fei", Boolean.class));
         settings.setForceExplicitTypeArguments(utils.getConfig("eta", Boolean.class));
         settings.setLanguage(utils.getConfig("lan", Language.class));
         settings.setFormattingOptions(utils.getConfig("jfo", JavaFormattingOptions.class));
