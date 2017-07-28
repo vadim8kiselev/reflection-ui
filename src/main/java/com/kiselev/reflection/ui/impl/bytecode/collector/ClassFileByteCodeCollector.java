@@ -21,7 +21,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
     public byte[] getByteCode(Class<?> clazz) {
         String filePath = ClassFileUtils.getFilePath(clazz);
 
-        if (!filePath.isEmpty()) {
+        if (filePath.isEmpty()) {
             return null;
         }
 
