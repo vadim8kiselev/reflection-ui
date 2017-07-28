@@ -21,7 +21,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
     public byte[] getByteCode(Class<?> clazz) {
         String filePath = ClassFileUtils.getFilePath(clazz);
 
-        if (filePath == null) {
+        if (!filePath.isEmpty()) {
             return null;
         }
 
@@ -36,7 +36,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
         try (FileInputStream stream = new FileInputStream(path)) {
             return readByteFromStream(stream);
         } catch (IOException exception) {
-            throw new ReadFileException("Can't read file by path: " + path, exception);
+            throw new ReadFileException(String.format("Can't read file by path: %s", path), exception);
         }
     }
 
@@ -51,7 +51,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
                 return readByteFromStream(fileStream);
             }
         } catch (Exception exception) {
-            throw new ReadFileException("Can't read file by path: " + path, exception);
+            throw new ReadFileException(String.format("Can't read file by path: %s", path), exception);
         }
     }
 
@@ -66,7 +66,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
 
             return byteStream.toByteArray();
         } catch (IOException exception) {
-            throw new ReadFileException("Can't read file from stream: " + stream, exception);
+            throw new ReadFileException(String.format("Can't read file from stream: %s", stream), exception);
         }
     }
 }

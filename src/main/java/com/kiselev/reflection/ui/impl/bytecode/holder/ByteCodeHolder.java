@@ -45,7 +45,7 @@ public class ByteCodeHolder {
                 instrumentation.retransformClasses(clazz);
             }
         } catch (UnmodifiableClassException exception) {
-            String message = "Class: " + clazz.getName() + " is can't retransform";
+            String message = String.format("Class: %s is can't retransform", clazz.getName());
             throw new InvalidRetransformClass(message, exception);
         }
     }

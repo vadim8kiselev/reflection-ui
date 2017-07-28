@@ -2,6 +2,7 @@ package com.kiselev.reflection.ui.impl.bytecode.configuration;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.configuration.bytecode.ByteCodeBuilderConfiguration;
+import com.kiselev.reflection.ui.configuration.util.ConfigurationUtils;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
@@ -17,128 +18,69 @@ public class ConfigurationManager {
 
     private Map<String, Object> configuration;
 
+    private ConfigurationUtils utils;
+
     public ConfigurationManager() {
         this.configuration = getDefaultConfiguration();
+        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
     }
 
     public ConfigurationManager(Map<String, Object> configuration) {
         this();
         this.configuration.putAll(configuration);
-    }
-
-    private boolean isInstance(Object object, Class<?> clazz) {
-        return clazz.isInstance(object);
+        this.utils.appendConfiguration(configuration);
     }
 
     public boolean isDecompileInnerClasses() {
-        Object config = configuration.get("dic");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("dic");
-        } else {
-            return (boolean)getDefaultConfiguration().get("dic");
-        }
+        return utils.getConfig("dic", Boolean.class);
     }
 
     public boolean isDecompileInnerAndNestedClasses() {
-        Object config = configuration.get("din");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("din");
-        } else {
-            return (boolean)getDefaultConfiguration().get("din");
-        }
+        return utils.getConfig("din", Boolean.class);
     }
 
     public boolean isDecompileAnonymousClasses() {
-        Object config = configuration.get("dac");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("dac");
-        } else {
-            return (boolean)getDefaultConfiguration().get("dac");
-        }
+        return utils.getConfig("dac", Boolean.class);
     }
 
     public boolean isDecompileLocalClasses() {
-        Object config = configuration.get("dlc");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("dlc");
-        } else {
-            return (boolean)getDefaultConfiguration().get("dlc");
-        }
+        return utils.getConfig("dlc", Boolean.class);
     }
 
     public boolean isSaveToFile() {
-        Object config = configuration.get("stf");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("stf");
-        } else {
-            return (boolean)getDefaultConfiguration().get("stf");
-        }
+        return utils.getConfig("cfc", Boolean.class);
     }
 
     public String getDirectoryForSaveBytecode() {
-        Object config = configuration.get("dts");
-        if (isInstance(config, String.class)) {
-            return (String)configuration.get("dts");
-        } else {
-            return (String)getDefaultConfiguration().get("dts");
-        }
+        return utils.getConfig("dts", String.class);
     }
 
     public ByteCodeCollector getCustomByteCodeCollector() {
-        Object config = configuration.get("bcc");
-        if (isInstance(config, ByteCodeCollector.class)) {
-            return (ByteCodeCollector)configuration.get("bcc");
-        } else {
-            return (ByteCodeCollector)getDefaultConfiguration().get("bcc");
-        }
+        return utils.getConfig("bcc", ByteCodeCollector.class);
     }
 
     public Configuration getCustomDecompilerConfiguration() {
-        Object config = configuration.get("cdc");
-        if (isInstance(config, Configuration.class)) {
-            return (Configuration)configuration.get("cdc");
-        } else {
-            return (Configuration)getDefaultConfiguration().get("cdc");
-        }
+        return utils.getConfig("cdc", Configuration.class);
     }
 
     public Decompiler getDecompiler() {
-        Object config = configuration.get("acd");
-        if (isInstance(config, Decompiler.class)) {
-            return (Decompiler)configuration.get("acd");
-        } else {
-            return (Decompiler)getDefaultConfiguration().get("acd");
-        }
+        return utils.getConfig("acd", Decompiler.class);
     }
 
     public boolean isEnableClassFileByteCodeCollector() {
-        Object config = configuration.get("cfc");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("cfc");
-        } else {
-            return (boolean)getDefaultConfiguration().get("cfc");
-        }
+        return utils.getConfig("cfc", Boolean.class);
     }
 
     public boolean isEnableRetransformClassByteCodeCollector() {
-        Object config = configuration.get("rcc");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("rcc");
-        } else {
-            return (boolean)getDefaultConfiguration().get("rcc");
-        }
+        return utils.getConfig("rcc",  Boolean.class);
     }
 
     public boolean isEnableCustomByteCodeCollector() {
-        Object config = configuration.get("cbc");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean)configuration.get("cbc");
-        } else {
-            return (boolean)getDefaultConfiguration().get("cbc");
-        }
+        return utils.getConfig("cbc", Boolean.class);
     }
 
     private static Map<String, Object> getDefaultConfiguration() {
+        final String HOME_DIR = System.getProperty(Constants.Properties.HOME_DIR);
         return ByteCodeBuilderConfiguration
                 .configure()
                 .decompileInnerClasses(true)
@@ -150,7 +92,7 @@ public class ConfigurationManager {
                 .enableRetransformClassByteCodeCollector(true)
                 .saveByteCodeToFile(false)
                 .enableCustomByteCodeCollector(false)
-                .setDirectoryToSaveByteCode(System.getProperty(Constants.Properties.HOME_DIR) + File.separator + "classes")
+                .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")
                 .getConfiguration();
     }
 }

@@ -31,7 +31,7 @@ public class BytecodeParser implements ReflectionUI {
 
         byte[] byteCode = collector.getByteCode(clazz);
         if (byteCode == null) {
-            throw new NullPointerException("Byte code of class: " + clazz.getName() + " is not found!");
+            throw new NullPointerException(String.format("Byte code of class: %s is not found!", clazz.getName()));
         }
 
         boolean isDecompileIC = StateManager.getConfiguration().isDecompileInnerClasses();

@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.jd;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
+import com.kiselev.reflection.ui.configuration.util.ConfigurationUtils;
 import com.kiselev.reflection.ui.exception.DecompilationException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
@@ -44,6 +45,8 @@ public final class JDDecompiler implements Decompiler {
     private ArrayList<ClassFile> innerClasses = new ArrayList<>();
 
     private Map<String, Object> configuration = getDefaultConfiguration();
+
+    private ConfigurationUtils utils;
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -119,6 +122,17 @@ public final class JDDecompiler implements Decompiler {
     }
 
     private CommonPreferences getCommonPreferences() {
+        loadConfiguration();
+
+        return new CommonPreferences(utils.getConfig("shc", Boolean.class),
+                utils.getConfig("rln", Boolean.class),
+                utils.getConfig("spt", Boolean.class),
+                utils.getConfig("mel", Boolean.class),
+                utils.getConfig("uce", Boolean.class),
+                utils.getConfig("sln", Boolean.class));
+    }
+
+    private void loadConfiguration() {
         if (configuration == null) {
             this.configuration = getDefaultConfiguration();
         } else {
@@ -127,19 +141,7 @@ public final class JDDecompiler implements Decompiler {
             this.configuration = newConfiguration;
         }
 
-        boolean showDefaultConstructor = (boolean) configuration.get("shc");
-        boolean realignmentLineNumber = (boolean) configuration.get("rln");
-        boolean showPrefixThis = (boolean) configuration.get("spt");
-        boolean mergeEmptyLines = (boolean) configuration.get("mel");
-        boolean unicodeEscape = (boolean) configuration.get("uce");
-        boolean showLineNumbers = (boolean) configuration.get("sln");
-
-        return new CommonPreferences(showDefaultConstructor,
-                realignmentLineNumber,
-                showPrefixThis,
-                mergeEmptyLines,
-                unicodeEscape,
-                showLineNumbers);
+        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
     }
 
     private Map<String, Object> getDefaultConfiguration() {
@@ -178,10 +180,14 @@ public final class JDDecompiler implements Decompiler {
 
         private StringBuilder builder = new StringBuilder();
 
-        private String indent = (String) configuration.get("ind");
+        private String indent = utils.getConfig("ind", String.class);
+
+        private static final String JD_INDENT = "  ";
+
+        private final PrintStream STUB = null;
 
         public JDPrinter(OutputStream stream) throws FileNotFoundException {
-            super(stream);  //stub
+            super(stream);
         }
 
         @Override
@@ -191,15 +197,15 @@ public final class JDDecompiler implements Decompiler {
                 if (builder.charAt(index) == '\n') {
                     builder.deleteCharAt(index);
                 }
-            } else if (csq.equals("  ")) {
+            } else if (csq.equals(JD_INDENT)) {
                 builder.append(indent);
-                return null;
+                return STUB;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
                 builder.deleteCharAt(ClassStringUtils.getNumberOfLineSeparator(builder));
                 builder.delete(ClassStringUtils.getFirstNonSpaceNumber(builder), builder.length() - 1);
             }
             builder.append(csq);
-            return null;
+            return STUB;
         }
 
         public String getSource() {

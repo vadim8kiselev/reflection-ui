@@ -47,7 +47,9 @@ public class ReflectionParser implements ReflectionUI {
             imports = StateManager.getImportUtils().getImports();
         }
 
-        parsedClass += packageName + imports + classSignature + "{" + lineSeparator + lineSeparator + classContent + indent + "}";
+        parsedClass += packageName + imports + classSignature;
+
+        parsedClass += "{" + lineSeparator + lineSeparator + classContent + indent + "}";
 
         StateManager.popCurrentClass();
 

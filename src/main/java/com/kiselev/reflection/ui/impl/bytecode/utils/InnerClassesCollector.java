@@ -22,6 +22,10 @@ import java.util.regex.Pattern;
  */
 public class InnerClassesCollector {
 
+    private static final String LOCAL_CLASS_PATTERN = "[\\d]+.*";
+
+    private static final String POSITIVE_NUMBER_PATTERN = "\\d+";
+
     public static Collection<Class<?>> getInnerClasses(Class<?> clazz) {
         Set<Class<?>> innerClasses = new HashSet<>();
 
@@ -100,7 +104,7 @@ public class InnerClassesCollector {
     }
 
     private static boolean isDynamicCreateClass(Class<?> clazz) {
-        return ClassFileUtils.getFilePath(clazz) == null;
+        return ClassFileUtils.getFilePath(clazz).isEmpty();
     }
 
     private static Collection<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
@@ -132,7 +136,7 @@ public class InnerClassesCollector {
                 addLocalClass(collectLocalStaticClass(clazz, entry.getName()), localClasses);
             }
         } catch (IOException exception) {
-            throw new ReadFileException("Can't read jar file: " + file.getPath(), exception);
+            throw new ReadFileException(String.format("Can't read jar file: %s", file.getPath()), exception);
         }
 
         return localClasses;
@@ -198,16 +202,17 @@ public class InnerClassesCollector {
     private static boolean isLocalClass(Class<?> clazz, String className) {
         String name = ClassNameUtils.getSimpleName(clazz) + Constants.Symbols.DOLLAR;
 
-        return Pattern.compile(getPattern(name)).matcher(className).matches() &&
+        return getPattern(name).matcher(className).matches() &&
                 !isNumber(className.replace(name, "")) &&
                 !className.replace(name, "").contains(Constants.Symbols.DOLLAR);
     }
 
     private static boolean isNumber(String line) {
-        return Pattern.compile("\\d+").matcher(line).matches();
+        return Pattern.compile(POSITIVE_NUMBER_PATTERN).matcher(line).matches();
     }
 
-    private static String getPattern(String name) {
-        return name.replace(Constants.Symbols.DOLLAR, "\\" + Constants.Symbols.DOLLAR) + "[\\d]+.*";
+    private static Pattern getPattern(String name) {
+        String pattern = name.replace(Constants.Symbols.DOLLAR, "\\" + Constants.Symbols.DOLLAR);
+        return Pattern.compile(pattern + LOCAL_CLASS_PATTERN);
     }
 }

@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.reflection.configuration;
 
 import com.kiselev.reflection.ui.configuration.reflection.ReflectionBuilderConfiguration;
+import com.kiselev.reflection.ui.configuration.util.ConfigurationUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,116 +13,61 @@ public class ConfigurationManager {
 
     private Map<String, Object> configuration = new HashMap<>();
 
+    private ConfigurationUtils utils;
+
     public ConfigurationManager() {
-        configuration.putAll(getDefaultConfiguration());
+        this.configuration.putAll(getDefaultConfiguration());
+        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
     }
 
     public ConfigurationManager(Map<String, Object> configuration) {
         this();
         this.configuration.putAll(configuration);
-    }
-
-    private boolean isInstance(Object object, Class<?> clazz) {
-        return clazz.isInstance(object);
+        this.utils.appendConfiguration(configuration);
     }
 
     public boolean isShowAnnotationTypes() {
-        Object config = configuration.get("sat");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("sat");
-        } else {
-            return (boolean) getDefaultConfiguration().get("sat");
-        }
+        return utils.getConfig("sat", Boolean.class);
     }
 
     public boolean isShowInnerClasses() {
-        Object config = configuration.get("sic");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("sic");
-        } else {
-            return (boolean) getDefaultConfiguration().get("sic");
-        }
+        return utils.getConfig("sic", Boolean.class);
     }
 
     public boolean isShowNonJavaModifiers() {
-        Object config = configuration.get("njm");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("njm");
-        } else {
-            return (boolean) getDefaultConfiguration().get("njm");
-        }
+        return utils.getConfig("njm", Boolean.class);
     }
 
     public boolean isShowDefaultValueInAnnotation() {
-        Object config = configuration.get("dva");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("dva");
-        } else {
-            return (boolean) getDefaultConfiguration().get("dva");
-        }
+        return utils.getConfig("dva", Boolean.class);
     }
 
     public boolean isShowGenericSignatures() {
-        Object config = configuration.get("sgs");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("sgs");
-        } else {
-            return (boolean) getDefaultConfiguration().get("sgs");
-        }
+        return utils.getConfig("sgs", Boolean.class);
     }
 
     public boolean isShowVarArgs() {
-        Object config = configuration.get("sva");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("sva");
-        } else {
-            return (boolean) getDefaultConfiguration().get("sva");
-        }
+        return utils.getConfig("sva", Boolean.class);
     }
 
     public boolean isDisplayFieldValue() {
-        Object config = configuration.get("dvf");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("dvf");
-        } else {
-            return (boolean) getDefaultConfiguration().get("dvf");
-        }
+        return utils.getConfig("dvf", Boolean.class);
     }
 
     public boolean isDisplayImports() {
-        Object config = configuration.get("dim");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("dim");
-        } else {
-            return (boolean) getDefaultConfiguration().get("dim");
-        }
+        return utils.getConfig("dim", Boolean.class);
     }
 
     public boolean isShowClassFullName() {
-        Object config = configuration.get("cfn");
-        if (isInstance(config, Boolean.class)) {
-            return (boolean) configuration.get("cfn");
-        } else {
-            return (boolean) getDefaultConfiguration().get("cfn");
-        }
+        return utils.getConfig("cfn", Boolean.class);
     }
 
     public String getIndentSpaces() {
-        Object config = configuration.get("cis");
-        if (isInstance(config, String.class)) {
-            return (String) configuration.get("cis");
-        } else {
-            return (String) getDefaultConfiguration().get("cis");
-        }
+        return utils.getConfig("cis", String.class);
     }
 
     public String getLineSeparator() {
-        Object config = configuration.get("nlc");
-        if (isInstance(config, String.class)) {
-            return (String) configuration.get("nlc");
-        } else {
-            return (String) getDefaultConfiguration().get("nlc");
-        }
+        return utils.getConfig("nlc", String.class);
     }
 
     private static Map<String, Object> getDefaultConfiguration() {

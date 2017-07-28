@@ -7,7 +7,13 @@ import com.ea.agentloader.AgentLoader;
  */
 public final class AgentAttacher {
 
+    private static final String EMPTY_OPTIONS = "";
+
     public static void attach(String agentPath) throws Exception {
-        AgentLoader.loadAgent(agentPath, "");
+        AgentLoader.loadAgent(agentPath, EMPTY_OPTIONS);
+    }
+
+    public static void attach(String agentPath, String options) throws Exception {
+        AgentLoader.loadAgent(agentPath, options);
     }
 }

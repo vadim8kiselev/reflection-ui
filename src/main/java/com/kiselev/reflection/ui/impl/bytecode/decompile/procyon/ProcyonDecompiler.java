@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.procyon;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
+import com.kiselev.reflection.ui.configuration.util.ConfigurationUtils;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
@@ -36,6 +37,8 @@ public final class ProcyonDecompiler implements Decompiler {
     private Map<String, Object> configuration = getDefaultConfiguration();
 
     private Map<String, byte[]> byteCodeMap = new HashMap<>();
+
+    private ConfigurationUtils utils;
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -80,7 +83,7 @@ public final class ProcyonDecompiler implements Decompiler {
 
         private String outerClassName = ClassNameUtils.getClassName(ProcyonDecompiler.this.byteCode);
 
-        private boolean isLoadReferenceOnClass = (boolean) configuration.get("ucr");
+        private boolean isLoadReferenceOnClass = utils.getConfig("ucr", Boolean.class);
 
         private static final int START_POSITION = 0;
 
@@ -129,23 +132,25 @@ public final class ProcyonDecompiler implements Decompiler {
 
     private DecompilerSettings getDecompilerSettings() {
         DecompilerSettings settings = new DecompilerSettings();
-        settings.setExcludeNestedTypes((boolean) configuration.get("ent"));
-        settings.setFlattenSwitchBlocks((boolean) configuration.get("fsb"));
-        settings.setForceExplicitImports((boolean) configuration.get("fei"));
-        settings.setForceExplicitTypeArguments((boolean) configuration.get("eta"));
-        settings.setLanguage((Language) configuration.get("lan"));
-        settings.setFormattingOptions((JavaFormattingOptions) configuration.get("jfo"));
-        settings.setShowSyntheticMembers((boolean) configuration.get("ssm"));
-        settings.setAlwaysGenerateExceptionVariableForCatchBlocks((boolean) configuration.get("gec"));
-        settings.setIncludeErrorDiagnostics((boolean) configuration.get("ied"));
-        settings.setIncludeLineNumbersInBytecode((boolean) configuration.get("iln"));
-        settings.setRetainRedundantCasts((boolean) configuration.get("rrc"));
-        settings.setRetainPointlessSwitches((boolean) configuration.get("rps"));
-        settings.setUnicodeOutputEnabled((boolean) configuration.get("uoe"));
-        settings.setShowDebugLineNumbers((boolean) configuration.get("sdl"));
-        settings.setMergeVariables((boolean) configuration.get("mva"));
-        settings.setSimplifyMemberReferences((boolean) configuration.get("smr"));
-        settings.setDisableForEachTransforms((boolean) configuration.get("det"));
+        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+
+        settings.setExcludeNestedTypes(utils.getConfig("ent", Boolean.class));
+        settings.setFlattenSwitchBlocks(utils.getConfig("fsb", Boolean.class));
+        settings.setForceExplicitImports(utils.getConfig("fer", Boolean.class));
+        settings.setForceExplicitTypeArguments(utils.getConfig("eta", Boolean.class));
+        settings.setLanguage(utils.getConfig("lan", Language.class));
+        settings.setFormattingOptions(utils.getConfig("jfo", JavaFormattingOptions.class));
+        settings.setShowSyntheticMembers(utils.getConfig("ssm", Boolean.class));
+        settings.setAlwaysGenerateExceptionVariableForCatchBlocks(utils.getConfig("gec", Boolean.class));
+        settings.setIncludeErrorDiagnostics(utils.getConfig("ied", Boolean.class));
+        settings.setIncludeLineNumbersInBytecode(utils.getConfig("iln", Boolean.class));
+        settings.setRetainRedundantCasts(utils.getConfig("rrc", Boolean.class));
+        settings.setRetainPointlessSwitches(utils.getConfig("rps", Boolean.class));
+        settings.setUnicodeOutputEnabled(utils.getConfig("uoe", Boolean.class));
+        settings.setShowDebugLineNumbers(utils.getConfig("sdl", Boolean.class));
+        settings.setMergeVariables(utils.getConfig("mva", Boolean.class));
+        settings.setSimplifyMemberReferences(utils.getConfig("smr", Boolean.class));
+        settings.setDisableForEachTransforms(utils.getConfig("det", Boolean.class));
 
         return settings;
     }

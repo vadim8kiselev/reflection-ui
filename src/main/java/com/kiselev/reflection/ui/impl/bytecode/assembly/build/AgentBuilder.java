@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly.build;
 
+import com.kiselev.reflection.ui.exception.agent.ClassNotFoundException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollector;
@@ -64,7 +65,8 @@ public final class AgentBuilder {
 
         public AgentJarBuilder addAgentClass(Class<?> agentClass) {
             if (!isAgentClass(agentClass)) {
-                throw new InvalidAgentClassException("Class " + agentClass.getName() + " is can't be a agent class");
+                String exceptionMessage = String.format("Class %s is can't be a agent class", agentClass.getName());
+                throw new InvalidAgentClassException(exceptionMessage);
             }
             this.agentClass = agentClass;
             return this;
@@ -141,7 +143,8 @@ public final class AgentBuilder {
 
                         byte[] byteCode = reader.getByteCode(attachedClass);
                         if (byteCode == null) {
-                            throw new RuntimeException("Class is not found!");
+                            String exceptionMessage = String.format("Class %s is not found!", attachedClass.getName());
+                            throw new ClassNotFoundException(exceptionMessage);
                         }
 
                         jarStream.write(byteCode);
@@ -174,8 +177,8 @@ public final class AgentBuilder {
 
                 return new Manifest(stream);
             } catch (IOException exception) {
-                String message = "Manifest with name: \"" + manifestName + "\" is can't created";
-                throw new CreateFileException(message, exception);
+                String exceptionMessage = String.format("Manifest with name: \"%s\" is can't created", manifestName);
+                throw new CreateFileException(exceptionMessage, exception);
             }
         }
     }

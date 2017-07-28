@@ -14,6 +14,8 @@ public class ClassFileUtils {
 
     private static final String SHIELDED_SPACE = "%20";
 
+    private static final String EMPTY_PATH = "";
+
     public static String getFilePath(Class<?> clazz) {
         ClassLoader loader = getClassLoader(clazz);
 
@@ -24,7 +26,7 @@ public class ClassFileUtils {
             }
         }
 
-        return null;
+        return EMPTY_PATH;
     }
 
     public static ClassLoader getClassLoader(Class<?> clazz) {
@@ -47,26 +49,26 @@ public class ClassFileUtils {
     public static String getClassPackagePath(Class<?> clazz) {
         String path = getFilePath(clazz);
 
-        if (path != null && !isArchive(path)) {
+        if (!path.isEmpty() && !isArchive(path)) {
             return path.substring(0, path.lastIndexOf(Constants.Symbols.SLASH));
         }
 
-        return "";
+        return EMPTY_PATH;
     }
 
-    public static String getArchivePath(String arFilePath) {
-        if (arFilePath != null && isArchive(arFilePath)) {
-            String path = arFilePath.substring(0, getSeparatorPosition(arFilePath))
-                    .replace(Constants.Symbols.SLASH, "\\").replace(SHIELDED_SPACE, " ");
+    public static String getArchivePath(String jarFilePath) {
+        if (!jarFilePath.isEmpty() && isArchive(jarFilePath)) {
+            String path = jarFilePath.substring(0, getSeparatorPosition(jarFilePath));
+            path = path.replace(Constants.Symbols.SLASH, "\\").replace(SHIELDED_SPACE, " ");
             try {
                 URL urlPath = new URL(path);
                 return urlPath.getFile();
             } catch (MalformedURLException exception) {
-                throw new ByteCodeParserException("Jar path: " + path + " is undefined");
+                throw new ByteCodeParserException(String.format("Jar path: %s is undefined", path));
             }
         }
 
-        return "";
+        return EMPTY_PATH;
     }
 
     public static String getClassNameFromArchivePath(String jarFilePath) {
@@ -74,7 +76,7 @@ public class ClassFileUtils {
             return jarFilePath.substring(getSeparatorPosition(jarFilePath) + 2, jarFilePath.length());
         }
 
-        return "";
+        return EMPTY_PATH;
     }
 
     private static int getSeparatorPosition(String jarFilePath) {
@@ -88,6 +90,6 @@ public class ClassFileUtils {
         if (path.contains(".ear!")) return "ear";
         if (path.contains(".zip!")) return "zip";
 
-        return "";
+        return EMPTY_PATH;
     }
 }
