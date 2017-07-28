@@ -1,9 +1,8 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
-
-import java.util.Map;
 
 /**
  * Created by Aleksei Makarov on 06/24/2017.
@@ -205,5 +204,5 @@ public interface FernflowerConfiguration extends Configuration {
      * <p>
      * Default value: ERROR
      */
-    FernflowerConfiguration setLogLevel(LogLevel level);
+    FernflowerConfiguration setLogLevel(IFernflowerLogger.Severity level);
 }

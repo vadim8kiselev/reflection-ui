@@ -27,12 +27,11 @@ public class ConfigurationUtils {
         if (isInstance(option, type)) {
             return type.cast(option);
         } else {
-            Object defaultOption = defaultConfiguration.get(config);
             if (!defaultConfiguration.containsKey(config)) {
-                String exceptionMessage = String.format("Default option %s it isn't put down", config);
+                String exceptionMessage = String.format("Default option: \"%s\" it isn't put down", config);
                 throw new OptionNotFoundException(exceptionMessage);
             }
-            return type.cast(defaultOption);
+            return type.cast(defaultConfiguration.get(config));
         }
     }
 

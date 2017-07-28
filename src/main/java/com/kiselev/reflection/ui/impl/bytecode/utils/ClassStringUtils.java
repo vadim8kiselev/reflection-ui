@@ -5,9 +5,13 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
  */
 public class ClassStringUtils {
 
+    private static final Character OPEN_BLOCK = '{';
+
+    private static final Character LINE_SEPARATOR = '\n';
+
     public static int getNumberOfLineSeparator(StringBuilder builder) {
         int index = builder.length() - 1;
-        while (builder.charAt(index) != '\n') {
+        while (builder.charAt(index) != LINE_SEPARATOR) {
             index--;
         }
 
@@ -20,7 +24,7 @@ public class ClassStringUtils {
 
     public static int getFirstNonSpaceNumber(StringBuilder line, int number) {
         for (int i = number - 1; i > 0; i--) {
-            if (line.charAt(i) != ' ') {
+            if (line.charAt(i) != OPEN_BLOCK) {
                 return i;
             }
         }
@@ -31,7 +35,7 @@ public class ClassStringUtils {
     public static boolean isContainsOpenBlock(CharSequence charSequence) {
         int index = charSequence.length() - 1;
         for (int i = 0; i < index; i++) {
-            if (charSequence.charAt(index) == '{') {
+            if (charSequence.charAt(index) == OPEN_BLOCK) {
                 return true;
             }
         }
@@ -42,9 +46,9 @@ public class ClassStringUtils {
     public static String normalizeOpenBlockCharacter(StringBuilder builder) {
         int index = 1;
         while (index != 0) {
-            int openBlock = builder.indexOf("{", index);
+            int openBlock = builder.indexOf(OPEN_BLOCK.toString(), index);
             int nonSpace = getFirstNonSpaceNumber(builder, openBlock);
-            if (nonSpace != -1 && builder.charAt(nonSpace) == '\n') {
+            if (nonSpace != -1 && builder.charAt(nonSpace) == LINE_SEPARATOR) {
                 builder.delete(nonSpace, openBlock);
                 builder.insert(nonSpace, ' ');
                 index = openBlock;
@@ -58,5 +62,9 @@ public class ClassStringUtils {
 
     public static boolean isEmpty(String line) {
         return line != null && !line.isEmpty();
+    }
+
+    public static String delete(String from, String deleteElement) {
+        return from.replace(deleteElement, "");
     }
 }

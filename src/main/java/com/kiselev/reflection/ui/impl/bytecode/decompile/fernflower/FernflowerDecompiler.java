@@ -5,7 +5,6 @@ import com.kiselev.reflection.ui.exception.DecompilationException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
-import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.LogLevel;
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
@@ -93,7 +92,7 @@ public final class FernflowerDecompiler implements Decompiler {
                 .checkNonNullAnnotation(true)
                 .decompileLambdaExpressionsToAnonymousClasses(false)
                 .setCountIndentSpaces(4)
-                .setLogLevel(LogLevel.ERROR)
+                .setLogLevel(IFernflowerLogger.Severity.ERROR)
                 .getConfiguration();
     }
 

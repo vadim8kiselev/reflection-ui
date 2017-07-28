@@ -43,6 +43,9 @@ public final class ProcyonDecompiler implements Decompiler {
     @Override
     public String decompile(byte[] byteCode) {
         this.byteCode = byteCode;
+        if (this.utils == null) {
+            this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+        }
         String className = ClassNameUtils.getClassName(byteCode);
         byteCodeMap.put(className, byteCode);
 
@@ -70,6 +73,7 @@ public final class ProcyonDecompiler implements Decompiler {
     @Override
     public void setConfiguration(Configuration configuration) {
         this.configuration.putAll(configuration.getConfiguration());
+        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
     @Override
@@ -97,18 +101,9 @@ public final class ProcyonDecompiler implements Decompiler {
                         return false;
                     }
 
-                    String className = ClassNameUtils.normalizeFullName(baseClassName);
-                    Class<?> clazz = loadClass(className);
-
-                    if (clazz == null) {
+                    byteCode = loadByteCode(ClassNameUtils.normalizeFullName(baseClassName));
+                    if (byteCode == null) {
                         return false;
-                    } else {
-                        ByteCodeCollector collector = new DefaultByteCodeCollector();
-                        byteCode = collector.getByteCode(clazz);
-
-                        if (byteCode == null) {
-                            return false;
-                        }
                     }
                 } else {
                     return false;
@@ -128,11 +123,25 @@ public final class ProcyonDecompiler implements Decompiler {
                 return null;
             }
         }
+
+        private byte[] loadByteCode(String className) {
+            Class<?> clazz = loadClass(className);
+
+            if (clazz != null) {
+                ByteCodeCollector collector = new DefaultByteCodeCollector();
+                byteCode = collector.getByteCode(clazz);
+
+                if (byteCode != null) {
+                    return byteCode;
+                }
+            }
+
+            return null;
+        }
     }
 
     private DecompilerSettings getDecompilerSettings() {
         DecompilerSettings settings = new DecompilerSettings();
-        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
 
         settings.setExcludeNestedTypes(utils.getConfig("ent", Boolean.class));
         settings.setFlattenSwitchBlocks(utils.getConfig("fsb", Boolean.class));

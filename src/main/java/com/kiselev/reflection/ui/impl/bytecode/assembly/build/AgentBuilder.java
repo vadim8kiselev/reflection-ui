@@ -1,6 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly.build;
 
-import com.kiselev.reflection.ui.exception.agent.ClassNotFoundException;
+import com.kiselev.reflection.ui.exception.agent.ClassLoadException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollector;
@@ -144,7 +144,7 @@ public final class AgentBuilder {
                         byte[] byteCode = reader.getByteCode(attachedClass);
                         if (byteCode == null) {
                             String exceptionMessage = String.format("Class %s is not found!", attachedClass.getName());
-                            throw new ClassNotFoundException(exceptionMessage);
+                            throw new ClassLoadException(exceptionMessage);
                         }
 
                         jarStream.write(byteCode);

@@ -33,7 +33,7 @@ public class ClassNameUtils {
 
     public static String normalizeFullName(String className) {
         if (className.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX)) {
-            className = className.replace(Constants.Suffix.CLASS_FILE_SUFFIX, "");
+            className = ClassStringUtils.delete(className, Constants.Suffix.CLASS_FILE_SUFFIX);
         }
 
         return className.replace(Constants.Symbols.SLASH, Constants.Symbols.DOT);

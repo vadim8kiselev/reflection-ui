@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
+import com.kiselev.reflection.ui.exception.agent.ClassLoadException;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
@@ -181,7 +182,7 @@ public class InnerClassesCollector {
             try {
                 return Class.forName(fullName);
             } catch (ClassNotFoundException exception) {
-                throw new ByteCodeParserException("Can't load local class: " + fullName, exception);
+                throw new ClassLoadException(String.format("Can't load local class: %s", fullName), exception);
             }
         }
 
@@ -195,7 +196,7 @@ public class InnerClassesCollector {
             classes.setAccessible(true);
             return (Collection<Class<?>>) classes.get(classLoader);
         } catch (ReflectiveOperationException exception) {
-            throw new ByteCodeParserException("Can't get load classes", exception);
+            throw new ClassLoadException("Can't get load classes", exception);
         }
     }
 
@@ -203,8 +204,8 @@ public class InnerClassesCollector {
         String name = ClassNameUtils.getSimpleName(clazz) + Constants.Symbols.DOLLAR;
 
         return getPattern(name).matcher(className).matches() &&
-                !isNumber(className.replace(name, "")) &&
-                !className.replace(name, "").contains(Constants.Symbols.DOLLAR);
+                !isNumber(ClassStringUtils.delete(className, name)) &&
+                !ClassStringUtils.delete(className, name).contains(Constants.Symbols.DOLLAR);
     }
 
     private static boolean isNumber(String line) {

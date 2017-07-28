@@ -1,5 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration;
 
+import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 
 import java.util.HashMap;
@@ -167,7 +168,7 @@ public class FernflowerBuilderConfiguration {
             return this;
         }
 
-        public FernflowerConfiguration setLogLevel(LogLevel level) {
+        public FernflowerConfiguration setLogLevel(IFernflowerLogger.Severity level) {
             configuration.put("log", level.name());
             return this;
         }

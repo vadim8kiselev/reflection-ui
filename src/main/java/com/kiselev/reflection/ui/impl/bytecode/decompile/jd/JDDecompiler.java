@@ -51,6 +51,9 @@ public final class JDDecompiler implements Decompiler {
     @Override
     public String decompile(byte[] byteCode) {
         try {
+            if (this.utils == null) {
+                this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+            }
             Loader loader = new JDLoader(byteCode);
 
             String className = ClassNameUtils.getClassName(byteCode);
@@ -72,7 +75,10 @@ public final class JDDecompiler implements Decompiler {
 
             return jdPrinter.getSource();
         } catch (ClassFormatException | NullPointerException exception) {
-            throw new DecompilationException("JD can't decompile class: " + ClassNameUtils.getClassName(byteCode), exception);
+            String className = ClassNameUtils.getClassName(byteCode);
+            String exceptionMessage = String.format("JD can't decompile class: %s", className);
+
+            throw new DecompilationException(exceptionMessage, exception);
         } catch (LoaderException | FileNotFoundException exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
         }
@@ -81,6 +87,7 @@ public final class JDDecompiler implements Decompiler {
     @Override
     public void setConfiguration(Configuration configuration) {
         this.configuration.putAll(configuration.getConfiguration());
+        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
     @Override
@@ -105,7 +112,7 @@ public final class JDDecompiler implements Decompiler {
         while (iterator.hasNext()) {
             ClassFile innerClass = iterator.next();
             String innerClassName = ClassNameUtils.normalizeSimpleName(innerClass.getThisClassName());
-            if (!innerClassName.replace(className, "").contains(Constants.Symbols.DOLLAR)) {
+            if (!ClassStringUtils.delete(innerClassName, className).contains(Constants.Symbols.DOLLAR)) {
                 innerClass.setOuterClass(classFile);
                 currentInnerClasses.add(innerClass);
                 iterator.remove();
@@ -122,26 +129,14 @@ public final class JDDecompiler implements Decompiler {
     }
 
     private CommonPreferences getCommonPreferences() {
-        loadConfiguration();
-
-        return new CommonPreferences(utils.getConfig("shc", Boolean.class),
+        return new CommonPreferences(
+                utils.getConfig("shc", Boolean.class),
                 utils.getConfig("rln", Boolean.class),
                 utils.getConfig("spt", Boolean.class),
                 utils.getConfig("mel", Boolean.class),
                 utils.getConfig("uce", Boolean.class),
-                utils.getConfig("sln", Boolean.class));
-    }
-
-    private void loadConfiguration() {
-        if (configuration == null) {
-            this.configuration = getDefaultConfiguration();
-        } else {
-            Map<String, Object> newConfiguration = getDefaultConfiguration();
-            newConfiguration.putAll(configuration);
-            this.configuration = newConfiguration;
-        }
-
-        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+                utils.getConfig("sln", Boolean.class)
+        );
     }
 
     private Map<String, Object> getDefaultConfiguration() {
