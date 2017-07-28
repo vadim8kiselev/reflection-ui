@@ -1,6 +1,5 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
-import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.exception.agent.ClassLoadException;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
@@ -11,9 +10,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;

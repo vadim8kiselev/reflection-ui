@@ -10,7 +10,10 @@ import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.saver.ByteCodeSaver;
 import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vadim Kiselev on 6/26/2017.
@@ -36,7 +39,7 @@ public class BytecodeParser implements ReflectionUI {
 
         boolean isDecompileIC = StateManager.getConfiguration().isDecompileInnerClasses();
 
-        Collection<Class<?>> collection =  isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
+        Collection<Class<?>> collection = isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
         List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
 
         for (Class<?> innerClass : collection) {
