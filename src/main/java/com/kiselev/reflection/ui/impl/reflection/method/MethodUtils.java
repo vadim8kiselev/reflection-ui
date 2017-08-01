@@ -73,8 +73,9 @@ public class MethodUtils {
         String body = isMethodRealization(method) ? " {" + lineSeparator + indent
                 + oneIndent + "/* Compiled code */" + lineSeparator + indent + "}" : ";";
 
-        methodSignature += annotations + indent + modifiers + generics + returnType
-                + " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
+        methodSignature += annotations + indent + modifiers + generics + returnType;
+
+        methodSignature += " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
 
         return methodSignature;
     }

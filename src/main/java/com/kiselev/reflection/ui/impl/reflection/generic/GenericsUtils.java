@@ -265,7 +265,7 @@ public class GenericsUtils {
     }
 
     private AnnotatedType ifEmpty(AnnotatedType[] annotatedTypes, int index) {
-        return annotatedTypes == null || annotatedTypes.length == 0 ? null : annotatedTypes[index];
+        return annotatedTypes != null && annotatedTypes.length > 0 ? annotatedTypes[index] : null;
     }
 
     private AnnotatedType[] ifNullUpper(AnnotatedWildcardType type) {

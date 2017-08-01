@@ -20,34 +20,14 @@ import java.util.Map;
  */
 public class BytecodeParser implements ReflectionUI {
 
+    private ByteCodeCollector byteCodeCollector = new DefaultByteCodeCollector();
+
     @Override
     public String parseClass(Class<?> clazz) {
-        if (clazz.isPrimitive()) {
-            throw new InvalidRetransformClass("Primitive types can not be decompiled");
-        }
+       checkToCorrectClass(clazz);
 
-        if (clazz.isArray()) {
-            throw new InvalidRetransformClass("Array type can not be decompiled");
-        }
-
-        ByteCodeCollector collector = new DefaultByteCodeCollector();
-
-        byte[] byteCode = collector.getByteCode(clazz);
-        if (byteCode == null) {
-            throw new NullPointerException(String.format("Byte code of class: %s is not found!", clazz.getName()));
-        }
-
-        boolean isDecompileIC = StateManager.getConfiguration().isDecompileInnerClasses();
-
-        Collection<Class<?>> collection = isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
-        List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
-
-        for (Class<?> innerClass : collection) {
-            byte[] byteCodeOfInnerClass = collector.getByteCode(innerClass);
-            if (byteCodeOfInnerClass != null) {
-                bytecodeOfInnerClasses.add(byteCodeOfInnerClass);
-            }
-        }
+        byte[] byteCode = getByteCodeOfClass(clazz);
+        List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz);
 
         Decompiler decompiler = StateManager.getConfiguration().getDecompiler();
         Configuration configuration = StateManager.getConfiguration().getCustomDecompilerConfiguration();
@@ -65,6 +45,42 @@ public class BytecodeParser implements ReflectionUI {
         }
 
         return decompiler.decompile(byteCode, bytecodeOfInnerClasses);
+    }
+
+    private List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
+        boolean isDecompileIC = StateManager.getConfiguration().isDecompileInnerClasses();
+
+        Collection<Class<?>> collection = isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
+        List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
+
+        for (Class<?> innerClass : collection) {
+            byte[] byteCodeOfInnerClass = byteCodeCollector.getByteCode(innerClass);
+            if (byteCodeOfInnerClass != null) {
+                bytecodeOfInnerClasses.add(byteCodeOfInnerClass);
+            }
+        }
+
+        return bytecodeOfInnerClasses;
+    }
+
+    private byte[] getByteCodeOfClass(Class<?> clazz) {
+        byte[] byteCode = byteCodeCollector.getByteCode(clazz);
+
+        if (byteCode == null) {
+            throw new NullPointerException(String.format("Byte code of class: %s is not found!", clazz.getName()));
+        }
+
+        return byteCode;
+    }
+
+    private void checkToCorrectClass(Class<?> clazz) {
+        if (clazz.isPrimitive()) {
+            throw new InvalidRetransformClass("Primitive types can not be decompiled");
+        }
+
+        if (clazz.isArray()) {
+            throw new InvalidRetransformClass("Array type can not be decompiled");
+        }
     }
 
     @Override

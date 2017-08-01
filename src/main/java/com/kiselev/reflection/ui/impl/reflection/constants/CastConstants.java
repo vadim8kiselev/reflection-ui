@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
 /**
- * Created by Aleksei Makarov on 01.08.2017.
+ * Created by Aleksei Makarov on 08/01/2017.
  */
 public interface CastConstants {
 
