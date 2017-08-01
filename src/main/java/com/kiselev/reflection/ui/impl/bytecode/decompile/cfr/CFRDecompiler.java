@@ -86,10 +86,11 @@ public final class CFRDecompiler implements Decompiler {
         @Override
         protected void write(String data) {
             if (data.equals("implements ") || data.equals("extends ")) {
-                builder.deleteCharAt(ClassStringUtils.getNumberOfLineSeparator(builder) - 1);
-                builder.delete(ClassStringUtils.getFirstNonSpaceNumber(builder), builder.length());
+                builder.deleteCharAt(ClassStringUtils.getNumberLeftOfLineSeparator(builder) - 1);
+                builder.delete(ClassStringUtils.getFirstLeftNonCharNumber(builder, ' '), builder.length());
                 builder.append(" ");
-            } else if (data.equals("\n") && builder.charAt(ClassStringUtils.getFirstNonSpaceNumber(builder)) == ',') {
+            } else if (data.equals("\n")
+                    && builder.charAt(ClassStringUtils.getFirstLeftNonCharNumber(builder, ' ')) == ',') {
                 builder.append(" ");
                 return;
             } else if (data.equals("{") && builder.charAt(builder.length() - 1) != ' ') {

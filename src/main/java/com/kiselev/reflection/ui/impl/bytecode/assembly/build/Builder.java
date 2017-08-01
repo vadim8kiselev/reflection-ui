@@ -19,12 +19,12 @@ public interface Builder {
 
     /**
      * Add jar manifest
-     * @param manifestName - path to manifest
+     * @param manifestPath - path to manifest
      * <p>
      * if manifest is not found
      * append default manifest
      */
-    Builder addManifest(String manifestName);
+    Builder addManifest(String manifestPath);
 
     /**
      * Add agent class

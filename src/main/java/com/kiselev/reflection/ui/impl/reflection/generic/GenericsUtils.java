@@ -1,24 +1,33 @@
 package com.kiselev.reflection.ui.impl.reflection.generic;
 
-import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
+import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
 import com.kiselev.reflection.ui.impl.reflection.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
-import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
 
-import java.lang.reflect.AnnotatedArrayType;
-import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.AnnotatedWildcardType;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.AnnotatedArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.WildcardType;
+import java.lang.reflect.AnnotatedWildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATED_ARRAY_TYPE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.CLASS;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.TYPE_VARIABLE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.PARAMETERIZED_TYPE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATED_PARAMETERIZED_TYPE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.GENERIC_ARRAY_TYPE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.WILDCARD_TYPE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATED_WILDCARD_TYPE;
+
 
 public class GenericsUtils {
 
@@ -48,10 +57,10 @@ public class GenericsUtils {
         }
 
         if (type instanceof Class) {
-            Class clazz = Class.class.cast(type);
+            Class clazz = CLASS.cast(type);
 
             if (clazz.isArray()) {
-                AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
+                AnnotatedArrayType annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedType);
                 boundType = resolveType(clazz.getComponentType(), annotatedArrayType);
                 AnnotatedType annotatedForArrayType = getAnnotatedTypeForArray(clazz, annotatedArrayType);
                 boundType += new AnnotationUtils().getInlineAnnotations(annotatedForArrayType) + "[]";
@@ -74,29 +83,31 @@ public class GenericsUtils {
             }
 
         } else if (type instanceof TypeVariable) {
-            TypeVariable typeVariable = TypeVariable.class.cast(type);
+            TypeVariable typeVariable = TYPE_VARIABLE.cast(type);
             boundType = typeVariable.getName();
 
         } else if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = ParameterizedType.class.cast(type);
-            if (isNeedNameForInnerClass(Class.class.cast(parameterizedType.getRawType()))) {
-
+            ParameterizedType parameterizedType = PARAMETERIZED_TYPE.cast(type);
+            if (isNeedNameForInnerClass(CLASS.cast(parameterizedType.getRawType()))) {
                 // Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
                 AnnotatedParameterizedType annotatedOwnerParametrizedType = null;
-                boundType = resolveType(parameterizedType.getOwnerType(),
-                        annotatedOwnerParametrizedType) + "." + getCorrectAnnotations(annotations);
+                String correctAnnotations = getCorrectAnnotations(annotations);
+                Type ownerType = parameterizedType.getOwnerType();
+                boundType = resolveType(ownerType, annotatedOwnerParametrizedType) + "." + correctAnnotations;
                 annotations = "";
             }
 
             String genericArguments = "";
 
-            Class<?> clazz = Class.class.cast(parameterizedType.getRawType());
+            Class<?> clazz = CLASS.cast(parameterizedType.getRawType());
 
             String parametrizedRawTypeName = new NameUtils().getTypeName(clazz);
 
-            AnnotatedParameterizedType apType = AnnotatedParameterizedType.class.cast(getAnnotatedType(annotatedType));
+            annotatedType = getAnnotatedType(annotatedType);
 
-            List<String> innerGenericTypes = getGenericArguments(parameterizedType, apType);
+            AnnotatedParameterizedType annotatedParameterizedType = ANNOTATED_PARAMETERIZED_TYPE.cast(annotatedType);
+
+            List<String> innerGenericTypes = getGenericArguments(parameterizedType, annotatedParameterizedType);
 
             if (!innerGenericTypes.isEmpty()) {
                 genericArguments = "<" + String.join(", ", innerGenericTypes) + ">";
@@ -104,8 +115,8 @@ public class GenericsUtils {
             boundType += parametrizedRawTypeName + genericArguments;
 
         } else if (type instanceof GenericArrayType) {
-            GenericArrayType genericArrayType = GenericArrayType.class.cast(type);
-            AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
+            GenericArrayType genericArrayType = GENERIC_ARRAY_TYPE.cast(type);
+            AnnotatedArrayType annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType);
             AnnotatedType annotatedTypeForArray = getAnnotatedTypeForArray(genericArrayType, annotatedArrayType);
             boundType += new AnnotationUtils().getInlineAnnotations(annotatedTypeForArray) + "[]";
@@ -147,7 +158,7 @@ public class GenericsUtils {
     private AnnotatedType getAnnotatedTypeForArray(GenericArrayType array, AnnotatedArrayType annotatedType) {
         int dimensionIndex = 0;
         while (array.getGenericComponentType() instanceof GenericArrayType) {
-            array = GenericArrayType.class.cast(array.getGenericComponentType());
+            array = GENERIC_ARRAY_TYPE.cast(array.getGenericComponentType());
             dimensionIndex++;
         }
 
@@ -156,7 +167,7 @@ public class GenericsUtils {
 
     private AnnotatedType getAnnotatedType(AnnotatedArrayType annotatedType, int countIncludes) {
         for (int index = 0; index < countIncludes; index++) {
-            annotatedType = AnnotatedArrayType.class.cast(annotatedType.getAnnotatedGenericComponentType());
+            annotatedType = ANNOTATED_ARRAY_TYPE.cast(annotatedType.getAnnotatedGenericComponentType());
         }
 
         return annotatedType;
@@ -166,7 +177,7 @@ public class GenericsUtils {
         if (annotatedType instanceof AnnotatedArrayType) {
             AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
             while (annotatedArrayType.getAnnotatedGenericComponentType() instanceof AnnotatedArrayType) {
-                annotatedArrayType = AnnotatedArrayType.class.cast(annotatedArrayType.getAnnotatedGenericComponentType());
+                annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedArrayType.getAnnotatedGenericComponentType());
             }
             annotatedType = annotatedArrayType.getAnnotatedGenericComponentType();
         }
@@ -174,7 +185,8 @@ public class GenericsUtils {
         return annotatedType;
     }
 
-    private List<String> getGenericArguments(ParameterizedType parameterizedType, AnnotatedParameterizedType annotatedParameterizedType) {
+    private List<String> getGenericArguments(ParameterizedType parameterizedType,
+                                             AnnotatedParameterizedType annotatedParameterizedType) {
         List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
@@ -182,15 +194,21 @@ public class GenericsUtils {
 
         for (int index = 0; index < actualTypeArguments.length; index++) {
             if (actualTypeArguments[index] instanceof WildcardType) {
-                WildcardType wildcardType = WildcardType.class.cast(actualTypeArguments[index]);
-                AnnotatedWildcardType annotatedWildcardType = AnnotatedWildcardType.class.cast(ifEmpty(annotatedActualTypeArguments, index));
-                String wildcard = getCorrectAnnotations(new AnnotationUtils().getInlineAnnotations(annotatedWildcardType)) + "?";
+                WildcardType wildcardType = WILDCARD_TYPE.cast(actualTypeArguments[index]);
+                AnnotatedType annotatedType = ifEmpty(annotatedActualTypeArguments, index);
+                AnnotatedWildcardType annotatedWildcardType = ANNOTATED_WILDCARD_TYPE.cast(annotatedType);
+                String annotations = new AnnotationUtils().getInlineAnnotations(annotatedWildcardType);
+                String wildcard = getCorrectAnnotations(annotations) + "?";
 
-                wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends", ifNullUpper(annotatedWildcardType));
-                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super", ifNullLover(annotatedWildcardType));
+                AnnotatedType[] upper = ifNullUpper(annotatedWildcardType);
+                AnnotatedType[] lover = ifNullLover(annotatedWildcardType);
+
+                wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends", upper);
+                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super", lover);
                 genericArguments.add(wildcard);
             } else {
-                genericArguments.add(resolveType(actualTypeArguments[index], ifEmpty(annotatedActualTypeArguments, index)));
+                AnnotatedType annotatedType = ifEmpty(annotatedActualTypeArguments, index);
+                genericArguments.add(resolveType(actualTypeArguments[index], annotatedType));
             }
         }
 

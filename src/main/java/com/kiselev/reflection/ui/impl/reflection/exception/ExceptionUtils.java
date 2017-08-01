@@ -23,7 +23,9 @@ public class ExceptionUtils {
         for (int index = 0; index < genericExceptionTypes.length; index++) {
             String exceptionType;
             if (StateManager.getConfiguration().isShowAnnotationTypes()) {
-                exceptionType = new GenericsUtils().resolveType(genericExceptionTypes[index], annotatedExceptionTypes[index]);
+                Type genericExceptionType = genericExceptionTypes[index];
+                AnnotatedType annotatedExceptionType = annotatedExceptionTypes[index];
+                exceptionType = new GenericsUtils().resolveType(genericExceptionType, annotatedExceptionType);
             } else {
                 exceptionType = new GenericsUtils().resolveType(genericExceptionTypes[index], null);
             }

@@ -8,6 +8,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATION;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.CLASS;
+
 public class ValueUtils {
 
     public String getValue(Object object) {
@@ -33,8 +36,8 @@ public class ValueUtils {
             if (object instanceof String) return "\"" + object + "\"";
             if (object instanceof Character) return "\'" + object + "\'";
             if (object instanceof Number || object instanceof Boolean) return object.toString();
-            if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(Annotation.class.cast(object));
-            if (object instanceof Class) return new GenericsUtils().resolveType(Class.class.cast(object)) + ".class";
+            if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(ANNOTATION.cast(object));
+            if (object instanceof Class) return new GenericsUtils().resolveType(CLASS.cast(object)) + ".class";
             return "";
         }
 

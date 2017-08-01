@@ -5,6 +5,7 @@ import com.kiselev.reflection.ui.exception.DecompilationException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
@@ -109,7 +110,9 @@ public final class FernflowerDecompiler implements Decompiler {
             unit.addClass(structClass, structClass.qualifiedName + Constants.Suffix.CLASS_FILE_SUFFIX);
             units.put(structClass.qualifiedName, unit);
         } catch (Exception exception) {
-            throw new DecompilationException("Can't upload bytecode to fernflower", exception);
+            String className = ClassNameUtils.getClassName(byteCode);
+            String exceptionMessage = String.format("Can't upload bytecode of class: %s to fernflower", className);
+            throw new DecompilationException(exceptionMessage, exception);
         }
     }
 
@@ -156,31 +159,31 @@ public final class FernflowerDecompiler implements Decompiler {
         }
 
         @Override
-        public void createArchive(String s, String s1, Manifest manifest) {
+        public void createArchive(String dummy, String dummyTwo, Manifest manifest) {
         }
 
         @Override
-        public void saveDirEntry(String s, String s1, String s2) {
+        public void saveDirEntry(String dummy, String dummyTwo, String dummyThree) {
         }
 
         @Override
-        public void copyEntry(String s, String s1, String s2, String s3) {
+        public void copyEntry(String dummy, String dummyTwo, String dummyThree, String dummyFour) {
         }
 
         @Override
-        public void saveClassEntry(String s, String s1, String s2, String s3, String s4) {
+        public void saveClassEntry(String dummy, String dummyTwo, String dummyThree, String dummyFour, String dummyFive) {
         }
 
         @Override
-        public void closeArchive(String s, String s1) {
+        public void closeArchive(String dummy, String dummyTwo) {
         }
 
         @Override
-        public void saveFolder(String s) {
+        public void saveFolder(String dummy) {
         }
 
         @Override
-        public void copyFile(String s, String s1, String s2) {
+        public void copyFile(String dummy, String dummyTwo, String dummyThree) {
         }
     }
 }

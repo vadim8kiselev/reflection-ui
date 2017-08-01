@@ -14,23 +14,19 @@ public class AgentAssembler {
     private static boolean assembled = false;
 
     public void assembly() {
-        try {
-            if (!assembled) {
-                // Build agent jar
-                String agentPath = AgentBuilder.getBuilder()
-                        .addAgentName(getAgentJarName())
-                        .addAgentClass(getAgentClass())
-                        .addManifest(getManifestFileName())
-                        .addClasses(getAgentJarClasses())
-                        .build();
+        if (!assembled) {
+            // Build agent jar
+            String agentPath = AgentBuilder.getBuilder()
+                    .addAgentName(getAgentJarName())
+                    .addAgentClass(getAgentClass())
+                    .addManifest(getManifestFileName())
+                    .addClasses(getAgentJarClasses())
+                    .build();
 
-                // Attach agent.jar to current process
-                AgentAttacher.attach(agentPath);
+            // Attach agent.jar to current process
+            AgentAttacher.attach(agentPath);
 
-                assembled = true;
-            }
-        } catch (Exception exception) {
-            throw new AgentAttachException("Failed agent jar creating", exception);
+            assembled = true;
         }
     }
 

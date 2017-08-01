@@ -21,7 +21,7 @@ public class NameUtils {
     }
 
     public String getName(Class<?> clazz) {
-        if (clazz.isMemberClass()) {
+        if (clazz.isMemberClass() || clazz == StateManager.getParsedClass()) {
             return getSimpleName(clazz);
         } else {
             return clazz.getName();

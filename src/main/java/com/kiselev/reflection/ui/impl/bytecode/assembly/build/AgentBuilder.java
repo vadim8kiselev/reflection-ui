@@ -58,8 +58,8 @@ public final class AgentBuilder {
             return this;
         }
 
-        public AgentJarBuilder addManifest(String manifestName) {
-            this.manifestName = appendSuffixIfNeeded(manifestName, Constants.Suffix.MANIFEST_SUFFIX);
+        public AgentJarBuilder addManifest(String manifestPath) {
+            this.manifestName = appendSuffixIfNeeded(manifestPath, Constants.Suffix.MANIFEST_SUFFIX);
             return this;
         }
 

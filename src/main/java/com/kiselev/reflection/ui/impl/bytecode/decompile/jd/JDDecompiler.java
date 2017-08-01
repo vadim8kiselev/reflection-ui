@@ -193,8 +193,8 @@ public final class JDDecompiler implements Decompiler {
 
         @Override
         public PrintStream append(CharSequence csq) {
-            if (ClassStringUtils.isContainsOpenBlock(csq)) {
-                int index = ClassStringUtils.getFirstNonSpaceNumber(builder);
+            if (ClassStringUtils.contains(csq)) {
+                int index = ClassStringUtils.getFirstLeftNonCharNumber(builder, ' ');
                 if (builder.charAt(index) == '\n') {
                     builder.deleteCharAt(index);
                 }
@@ -202,8 +202,8 @@ public final class JDDecompiler implements Decompiler {
                 builder.append(indent);
                 return STUB;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
-                builder.deleteCharAt(ClassStringUtils.getNumberOfLineSeparator(builder));
-                builder.delete(ClassStringUtils.getFirstNonSpaceNumber(builder), builder.length() - 1);
+                builder.deleteCharAt(ClassStringUtils.getNumberLeftOfLineSeparator(builder));
+                builder.delete(ClassStringUtils.getFirstLeftNonCharNumber(builder, ' '), builder.length() - 1);
             }
             builder.append(csq);
             return STUB;
