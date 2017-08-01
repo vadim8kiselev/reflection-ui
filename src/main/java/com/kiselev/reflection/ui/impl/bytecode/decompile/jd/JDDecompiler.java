@@ -50,10 +50,16 @@ public final class JDDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode) {
+        return decompile(byteCode, new ArrayList<>());
+    }
+
+    @Override
+    public String decompile(byte[] byteCode, Collection<byte[]> classes) {
         try {
             if (this.utils == null) {
                 this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
             }
+            appendAdditionalClasses(classes);
             Loader loader = new JDLoader(byteCode);
 
             String className = ClassNameUtils.getClassName(byteCode);
@@ -90,8 +96,7 @@ public final class JDDecompiler implements Decompiler {
         this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
-    @Override
-    public void appendAdditionalClasses(Collection<byte[]> classes) {
+    private void appendAdditionalClasses(Collection<byte[]> classes) {
         ArrayList<ClassFile> innerClasses = new ArrayList<>();
         for (byte[] bytecode : classes) {
             try {

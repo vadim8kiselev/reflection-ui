@@ -54,12 +54,8 @@ public class ConfigurationManager {
         return utils.getConfig("dvf", Boolean.class);
     }
 
-    public boolean isDisplayImports() {
+    public boolean isEnabledImports() {
         return utils.getConfig("dim", Boolean.class);
-    }
-
-    public boolean isShowClassFullName() {
-        return utils.getConfig("cfn", Boolean.class);
     }
 
     public String getIndentSpaces() {
@@ -80,8 +76,7 @@ public class ConfigurationManager {
                 .displayValueForFields(true)
                 .showGenericSignatures(true)
                 .showVarArgs(true)
-                .displayImports(true)
-                .showClassFullName(false)
+                .enableImports(true)
                 .setCountIndentSpaces(4)
                 .defineLineSeparator(chooseSystemNewLineCharacter())
                 .getConfiguration();

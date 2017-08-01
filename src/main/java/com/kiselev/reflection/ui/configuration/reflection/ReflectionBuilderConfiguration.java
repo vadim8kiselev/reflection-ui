@@ -64,14 +64,8 @@ public class ReflectionBuilderConfiguration {
         }
 
         @Override
-        public ReflectionConfiguration displayImports(boolean flag) {
+        public ReflectionConfiguration enableImports(boolean flag) {
             configuration.put("dim", flag);
-            return this;
-        }
-
-        @Override
-        public ReflectionConfiguration showClassFullName(boolean flag) {
-            configuration.put("cfn", flag);
             return this;
         }
 

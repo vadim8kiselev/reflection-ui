@@ -41,7 +41,13 @@ public final class CFRDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode) {
+        return decompile(byteCode, new ArrayList<>());
+    }
+
+    @Override
+    public String decompile(byte[] byteCode, Collection<byte[]> classes) {
         String className = ClassNameUtils.getClassName(byteCode);
+        this.innerClasses = classes;
 
         GetOptParser getOptParser = new GetOptParser();
         Options options = getOptParser.parse(getDefaultOptions(className), OptionsImpl.getFactory());
@@ -68,12 +74,6 @@ public final class CFRDecompiler implements Decompiler {
     public void setConfiguration(Configuration configuration) {
         this.configuration.putAll(configuration.getConfiguration());
     }
-
-    @Override
-    public void appendAdditionalClasses(Collection<byte[]> classes) {
-        this.innerClasses = classes;
-    }
-
     private class CFRBuilderDumper extends StdIODumper {
 
         private StringBuilder builder = new StringBuilder();

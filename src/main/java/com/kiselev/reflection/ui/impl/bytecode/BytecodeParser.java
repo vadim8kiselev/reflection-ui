@@ -54,7 +54,6 @@ public class BytecodeParser implements ReflectionUI {
         if (configuration != null) {
             decompiler.setConfiguration(configuration);
         }
-        decompiler.appendAdditionalClasses(bytecodeOfInnerClasses);
 
         if (StateManager.getConfiguration().isSaveToFile()) {
             ByteCodeSaver saver = new ByteCodeSaver();
@@ -65,7 +64,7 @@ public class BytecodeParser implements ReflectionUI {
             }
         }
 
-        return decompiler.decompile(byteCode);
+        return decompiler.decompile(byteCode, bytecodeOfInnerClasses);
     }
 
     @Override

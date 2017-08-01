@@ -13,9 +13,18 @@ public interface Decompiler {
      * Process of decompiling bytecode
      * <p>
      * @param byteCode - bytecode of class
-     * @return pseudo source code
+     * @return decompiling bytecode
      * */
     String decompile(byte[] byteCode);
+
+    /**
+     * Process of decompiling bytecode with inner classes
+     * <p>
+     * @param byteCode - bytecode of class
+     * @param classes - bytecode of inner classes
+     * @return decompiling bytecode
+     * */
+    String decompile(byte[] byteCode, Collection<byte[]> classes);
 
     /**
      * Set decompiler configuration
@@ -23,11 +32,4 @@ public interface Decompiler {
      * @param configuration - decompiler configuration
      * */
     void setConfiguration(Configuration configuration);
-
-    /**
-     * Add inner classes for current decompiling class
-     * <p>
-     * @param classes - bytecode of inner classes
-     * */
-    void appendAdditionalClasses(Collection<byte[]> classes);
 }

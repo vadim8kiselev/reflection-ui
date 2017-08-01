@@ -1,5 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
+import java.util.Objects;
+
 /**
  * Created by Aleksei Makarov on 07/27/2017.
  */
@@ -24,7 +26,7 @@ public class ClassStringUtils {
 
     public static int getFirstNonSpaceNumber(StringBuilder line, int number) {
         for (int i = number - 1; i > 0; i--) {
-            if (line.charAt(i) != OPEN_BLOCK) {
+            if (line.charAt(i) != ' ') {
                 return i;
             }
         }

@@ -28,7 +28,7 @@ public class ImportUtils {
 
         classForImport = resolveClass(classForImport);
 
-        if (isNeedFullName(classForImport) || StateManager.getConfiguration().isShowClassFullName()) {
+        if (isNeedFullName(classForImport) || !StateManager.getConfiguration().isEnabledImports()) {
             return false;
         } else {
             classesForImport.add(classForImport);

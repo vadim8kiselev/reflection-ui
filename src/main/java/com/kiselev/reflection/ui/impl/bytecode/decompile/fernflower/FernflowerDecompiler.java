@@ -30,8 +30,6 @@ public final class FernflowerDecompiler implements Decompiler {
 
     private Map<String, Object> configuration = getDefaultConfiguration();
 
-    private List<byte[]> additionalClasses = new ArrayList<>();
-
     private FernflowerResultSaver saver = new FernflowerResultSaver();
 
     private static final int CLASS_TYPE = 1;
@@ -40,13 +38,18 @@ public final class FernflowerDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode) {
+        return decompile(byteCode, new ArrayList<>());
+    }
+
+    @Override
+    public String decompile(byte[] byteCode, Collection<byte[]> classes) {
         if (configuration == null) {
             configuration = getDefaultConfiguration();
         }
 
         IFernflowerLogger logger = new PrintStreamLogger(System.out);
         BaseDecompiler decompiler = new BaseDecompiler(null, saver, configuration, logger);
-        for (byte[] nestedClass : additionalClasses) {
+        for (byte[] nestedClass : classes) {
             uploadBytecode(decompiler, nestedClass);
         }
         uploadBytecode(decompiler, byteCode);
@@ -58,11 +61,6 @@ public final class FernflowerDecompiler implements Decompiler {
     @Override
     public void setConfiguration(Configuration configuration) {
         this.configuration.putAll(configuration.getConfiguration());
-    }
-
-    @Override
-    public void appendAdditionalClasses(Collection<byte[]> classes) {
-        this.additionalClasses.addAll(classes);
     }
 
     private Map<String, Object> getDefaultConfiguration() {

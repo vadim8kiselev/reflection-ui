@@ -62,18 +62,11 @@ public interface ReflectionConfiguration extends Configuration {
     ReflectionConfiguration displayValueForFields(boolean flag);
 
     /**
-     * Display imports
+     * Enable imports
      * <p>
      * Default value: true
      */
-    ReflectionConfiguration displayImports(boolean flag);
-
-    /**
-     * Show full name for classes
-     * <p>
-     * Default value: false
-     */
-    ReflectionConfiguration showClassFullName(boolean flag);
+    ReflectionConfiguration enableImports(boolean flag);
 
     /**
      * Indentation string

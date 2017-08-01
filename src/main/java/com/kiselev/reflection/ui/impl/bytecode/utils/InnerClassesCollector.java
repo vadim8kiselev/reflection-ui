@@ -115,7 +115,7 @@ public class InnerClassesCollector {
         Collection<Class<?>> classes = getLoadedClasses(loader);
         for (Class<?> loadedClass : classes) {
             String className = ClassNameUtils.getSimpleName(loadedClass);
-            if (isLocalClass(clazz, className)) {
+            if (loadedClass.isLocalClass() && isLocalClass(clazz, className)) {
                 addLocalClass(loadedClass, localClasses);
             }
         }
@@ -195,7 +195,7 @@ public class InnerClassesCollector {
             classes.setAccessible(true);
             return (Collection<Class<?>>) classes.get(classLoader);
         } catch (ReflectiveOperationException exception) {
-            throw new ClassLoadException("Can't get load classes", exception);
+            throw new ClassLoadException("Can't get loaded classes", exception);
         }
     }
 

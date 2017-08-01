@@ -91,6 +91,7 @@ public class ConfigurationManager {
                 .enableClassFileByteCodeCollector(true)
                 .enableRetransformClassByteCodeCollector(true)
                 .saveByteCodeToFile(false)
+                .setDecompilerConfiguration(null)
                 .addCustomByteCodeCollector(null)
                 .enableCustomByteCodeCollector(false)
                 .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")

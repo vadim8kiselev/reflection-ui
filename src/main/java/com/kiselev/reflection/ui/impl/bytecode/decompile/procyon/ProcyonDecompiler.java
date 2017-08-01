@@ -23,6 +23,7 @@ import com.strobel.decompiler.languages.java.BraceStyle;
 import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 import com.strobel.decompiler.languages.java.JavaLanguage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,12 +43,18 @@ public final class ProcyonDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode) {
+        return decompile(byteCode, new ArrayList<>());
+    }
+
+    @Override
+    public String decompile(byte[] byteCode, Collection<byte[]> classes) {
         this.byteCode = byteCode;
         if (this.utils == null) {
             this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
         }
         String className = ClassNameUtils.getClassName(byteCode);
         byteCodeMap.put(className, byteCode);
+        appendAdditionalClasses(classes);
 
         PlainTextOutput output = new PlainTextOutput();
         DecompilerSettings settings = getDecompilerSettings();
@@ -76,8 +83,7 @@ public final class ProcyonDecompiler implements Decompiler {
         this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
-    @Override
-    public void appendAdditionalClasses(Collection<byte[]> classes) {
+    private void appendAdditionalClasses(Collection<byte[]> classes) {
         for (byte[] byteCode : classes) {
             byteCodeMap.put(ClassNameUtils.getClassName(byteCode), byteCode);
         }
