@@ -35,7 +35,7 @@ public class ValueUtils {
             if (clazz.isEnum()) return new GenericsUtils().resolveType(clazz) + "." + object;
             if (object instanceof String) return "\"" + object + "\"";
             if (object instanceof Character) return "\'" + object + "\'";
-            if (object instanceof Number || object instanceof Boolean) return object.toString();
+            if (object instanceof Number || object instanceof Boolean) return object.toString() + getLiteral(object);
             if (object instanceof Annotation) return new AnnotationUtils().getAnnotation(ANNOTATION.cast(object));
             if (object instanceof Class) return new GenericsUtils().resolveType(CLASS.cast(object)) + ".class";
             return "";
@@ -56,5 +56,12 @@ public class ValueUtils {
             }
         }
         return objects;
+    }
+
+    private String getLiteral(Object object) {
+        if (object instanceof Long) return "L";
+        if (object instanceof Float) return "f";
+        if (object instanceof Double) return "d";
+        return "";
     }
 }

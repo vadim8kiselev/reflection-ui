@@ -66,7 +66,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
 
             return byteStream.toByteArray();
         } catch (IOException exception) {
-            throw new ReadFileException(String.format("Can't read file from stream: %s", stream), exception);
+            throw new ReadFileException("Can't read bytes from stream", exception);
         }
     }
 }
