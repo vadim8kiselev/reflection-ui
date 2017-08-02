@@ -48,11 +48,12 @@ public class GenericsUtils {
         return typeParameters.length != 0 ? "<" + String.join(", ", generics) + "> " : whitespace;
     }
 
-    // If type is inner nested class then "use type" annotations is invisible :(
+    @SuppressWarnings("ConstantConditions")
     public String resolveType(Type type, AnnotatedType annotatedType) {
         String annotations = "";
         String boundType = "";
         if (annotatedType != null && !isArray(type)) {
+            // If type is inner nested class then "use type" annotations is invisible :(
             annotations = new AnnotationUtils().getInlineAnnotations(getAnnotatedType(annotatedType));
         }
 
@@ -74,7 +75,6 @@ public class GenericsUtils {
                 boundType += new NameUtils().getTypeName(clazz);
 
                 if (!clazz.isMemberClass() && boundType.contains(".") && !annotations.isEmpty()) {
-
                     String packageName = new PackageUtils().getPackageName(clazz);
                     String simpleName = new NameUtils().getSimpleName(clazz);
                     boundType = packageName + "." + annotations + " " + simpleName;
@@ -98,17 +98,12 @@ public class GenericsUtils {
             }
 
             String genericArguments = "";
-
             Class<?> clazz = CLASS.cast(parameterizedType.getRawType());
-
             String parametrizedRawTypeName = new NameUtils().getTypeName(clazz);
-
             annotatedType = getAnnotatedType(annotatedType);
-
             AnnotatedParameterizedType annotatedParameterizedType = ANNOTATED_PARAMETERIZED_TYPE.cast(annotatedType);
 
             List<String> innerGenericTypes = getGenericArguments(parameterizedType, annotatedParameterizedType);
-
             if (!innerGenericTypes.isEmpty()) {
                 genericArguments = "<" + String.join(", ", innerGenericTypes) + ">";
             }
@@ -257,7 +252,7 @@ public class GenericsUtils {
     }
 
     private boolean isArray(Type type) {
-        return type instanceof Class && ((Class) type).isArray() || type instanceof GenericArrayType;
+        return type instanceof Class && CLASS.cast(type).isArray() || type instanceof GenericArrayType;
     }
 
     private AnnotatedType[] ifNull(AnnotatedParameterizedType type) {

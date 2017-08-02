@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Aleksei Makarov on 07/12/2017.
  */
-public class RetransformClassByteCodeCollector implements ByteCodeCollector {
+public class FromJVMByteCodeCollector implements ByteCodeCollector {
 
     @Override
     public byte[] getByteCode(Class<?> clazz) {

@@ -9,6 +9,7 @@ import com.kiselev.reflection.ui.impl.reflection.value.ValueUtils;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ArrayList;
@@ -95,8 +96,8 @@ public class AnnotationUtils {
                 }
             }
         } catch (Exception exception) {
-            String message = "Can't get default annotation value for annotation: "
-                    + annotation.annotationType().getName();
+            String annotationName = annotation.annotationType().getName();
+            String message = String.format("Can't get default annotation value for annotation: %s", annotationName);
             throw new ReflectionParserException(message, exception);
         }
 
@@ -153,8 +154,8 @@ public class AnnotationUtils {
                 annotations.addAll(Arrays.asList(retrievedAnnotations));
             }
         } catch (ReflectiveOperationException exception) {
-            String message = "Can't get default annotation value for annotation: "
-                    + annotation.annotationType().getName();
+            String annotationName = annotation.annotationType().getName();
+            String message = String.format("Can't get default annotation value for annotation: %s", annotationName);
             throw new ReflectionParserException(message, exception);
         }
 
@@ -169,7 +170,23 @@ public class AnnotationUtils {
         if (!value.getClass().isArray()) {
             return value.equals(defaultValue);
         } else {
-            return Arrays.equals((Object[])value, (Object[])defaultValue);
+            Object[] arrayValue = getArray(value);
+            Object[] arrayDefaultValue = getArray(defaultValue);
+            return Arrays.equals(arrayValue, arrayDefaultValue);
         }
+    }
+
+    private Object[] getArray(Object array) {
+        Object[] newArray = new Object[0];
+
+        if (array.getClass().isArray()) {
+            int length = Array.getLength(array);
+            newArray = new Object[length];
+            for (int i = 0; i < length; i++) {
+                newArray[i] = Array.get(array, i);
+            }
+        }
+
+        return newArray;
     }
 }

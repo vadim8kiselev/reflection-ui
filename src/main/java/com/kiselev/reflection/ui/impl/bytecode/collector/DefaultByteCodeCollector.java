@@ -23,7 +23,7 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
         }
 
         if (StateManager.getConfiguration().isEnableRetransformClassByteCodeCollector()) {
-            collectors.add(new RetransformClassByteCodeCollector());
+            collectors.add(new FromJVMByteCodeCollector());
         }
     }
 
