@@ -27,4 +27,8 @@ public interface CastConstants {
     Class<Member> MEMBER = Member.class;
 
     Class<Annotation> ANNOTATION = Annotation.class;
+
+    Class<Field> FIELD = Field.class;
+
+    Class<Method> METHOD  = Method.class;
 }

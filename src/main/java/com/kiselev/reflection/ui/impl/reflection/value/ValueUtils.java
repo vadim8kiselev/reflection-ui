@@ -1,19 +1,34 @@
 package com.kiselev.reflection.ui.impl.reflection.value;
 
+import com.kiselev.reflection.ui.exception.ReflectionParserException;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.FIELD;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.METHOD;
 import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATION;
 import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.CLASS;
 
 public class ValueUtils {
 
     public String getValue(Object object) {
+        if (object instanceof Field && FIELD.cast(object).getDeclaringClass() == StateManager.getCurrentClass()) {
+            return getFieldValue(FIELD.cast(object));
+        }
+
+        if (object instanceof Method && METHOD.cast(object).getDeclaringClass() == StateManager.getCurrentClass()) {
+            return getDefaultAnnotationValue(METHOD.cast(object));
+        }
+
         if (object != null) {
             Class<?> clazz = object.getClass();
             if (clazz.isArray()) {
@@ -62,6 +77,36 @@ public class ValueUtils {
         if (object instanceof Long) return "L";
         if (object instanceof Float) return "f";
         if (object instanceof Double) return "d";
+        return "";
+    }
+
+    private String getDefaultAnnotationValue(Method method) {
+        String defaultAnnotationValue = "";
+
+        if (method.getDeclaringClass().isAnnotation()) {
+            String defaultValue = new ValueUtils().getValue(method.getDefaultValue());
+
+            if (defaultValue != null) {
+                defaultAnnotationValue += " default " + defaultValue;
+            }
+        }
+
+        return defaultAnnotationValue;
+    }
+
+    private String getFieldValue(Field field) {
+        if (Modifier.isStatic(field.getModifiers())) {
+            try {
+                field.setAccessible(true);
+                String fieldValue = new ValueUtils().getValue(field.get(null));
+                if (!"".equals(fieldValue)) {
+                    return " = " + fieldValue;
+                }
+            } catch (IllegalAccessException exception) {
+                throw new ReflectionParserException("Can't get value of field: " + field.getName(), exception);
+            }
+        }
+
         return "";
     }
 }

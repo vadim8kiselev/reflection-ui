@@ -56,26 +56,12 @@ public class FieldUtils {
 
         String fieldName = new NameUtils().getMemberName(field);
 
-        String fieldValue = StateManager.getConfiguration().isDisplayFieldValue() ? getFieldValue(field) : "";
+        boolean isDisplayFiledValue = StateManager.getConfiguration().isDisplayFieldValue();
+
+        String fieldValue = isDisplayFiledValue ? new ValueUtils().getValue(field) : "";
 
         fieldSignature += annotations + indent + modifiers + type + " " + fieldName + fieldValue + ";";
 
         return fieldSignature;
-    }
-
-    private String getFieldValue(Field field) {
-        if (Modifier.isStatic(field.getModifiers())) {
-            try {
-                field.setAccessible(true);
-                String fieldValue = new ValueUtils().getValue(field.get(null));
-                if (!"".equals(fieldValue)) {
-                    return " = " + fieldValue;
-                }
-            } catch (IllegalAccessException exception) {
-                throw new ReflectionParserException("Can't get value of field: " + field.getName(), exception);
-            }
-        }
-
-        return "";
     }
 }

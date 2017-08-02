@@ -64,35 +64,22 @@ public class MethodUtils {
 
         String arguments = new ArgumentUtils().getArguments(method);
 
-        String defaultAnnotationValue = getDefaultAnnotationValue(method);
+        String defaultAnnotationValue = new ValueUtils().getValue(method);
 
         String exceptions = new ExceptionUtils().getExceptions(method);
 
         String oneIndent = StateManager.getConfiguration().getIndentSpaces();
 
-        String body = isMethodRealization(method) ? " {" + lineSeparator + indent
-                + oneIndent + "/* Compiled code */" + lineSeparator + indent + "}" : ";";
+        String body = "";
+        if (isMethodRealization(method)) {
+            body = " {" + lineSeparator + indent + oneIndent + "/* Compiled code */" + lineSeparator + indent + "}";
+        }
 
         methodSignature += annotations + indent + modifiers + generics + returnType;
 
         methodSignature += " " + methodName + arguments + defaultAnnotationValue + exceptions + body;
 
         return methodSignature;
-    }
-
-    // TODO : Move to *Utils
-    private String getDefaultAnnotationValue(Method method) {
-        String defaultAnnotationValue = "";
-
-        if (method.getDeclaringClass().isAnnotation()) {
-            String defaultValue = new ValueUtils().getValue(method.getDefaultValue());
-
-            if (defaultValue != null) {
-                defaultAnnotationValue += " default " + defaultValue;
-            }
-        }
-
-        return defaultAnnotationValue;
     }
 
     private boolean isMethodRealization(Method method) {
