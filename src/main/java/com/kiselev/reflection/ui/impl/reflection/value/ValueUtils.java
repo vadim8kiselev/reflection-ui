@@ -21,11 +21,11 @@ import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.
 public class ValueUtils {
 
     public String getValue(Object object) {
-        if (object instanceof Field && FIELD.cast(object).getDeclaringClass() == StateManager.getCurrentClass()) {
+        if (isField(object)) {
             return getFieldValue(FIELD.cast(object));
         }
 
-        if (object instanceof Method && METHOD.cast(object).getDeclaringClass() == StateManager.getCurrentClass()) {
+        if (isMethod(object)) {
             return getDefaultAnnotationValue(METHOD.cast(object));
         }
 
@@ -98,9 +98,12 @@ public class ValueUtils {
         if (Modifier.isStatic(field.getModifiers())) {
             try {
                 field.setAccessible(true);
-                String fieldValue = new ValueUtils().getValue(field.get(null));
-                if (!"".equals(fieldValue)) {
-                    return " = " + fieldValue;
+                Object value = field.get(null);
+                if (!isField(value)) {
+                    String fieldValue = new ValueUtils().getValue(value);
+                    if (!"".equals(fieldValue)) {
+                        return " = " + fieldValue;
+                    }
                 }
             } catch (IllegalAccessException exception) {
                 throw new ReflectionParserException("Can't get value of field: " + field.getName(), exception);
@@ -108,5 +111,13 @@ public class ValueUtils {
         }
 
         return "";
+    }
+
+    private boolean isField(Object object) {
+        return object instanceof Field && FIELD.cast(object).getDeclaringClass() == StateManager.getCurrentClass();
+    }
+
+    private boolean isMethod(Object object) {
+        return object instanceof Method && METHOD.cast(object).getDeclaringClass() == StateManager.getCurrentClass();
     }
 }
