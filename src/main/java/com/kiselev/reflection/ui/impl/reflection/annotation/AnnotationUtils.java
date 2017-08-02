@@ -170,23 +170,9 @@ public class AnnotationUtils {
         if (!value.getClass().isArray()) {
             return value.equals(defaultValue);
         } else {
-            Object[] arrayValue = getArray(value);
-            Object[] arrayDefaultValue = getArray(defaultValue);
+            Object[] arrayValue = new ValueUtils().getArrayValues(value);
+            Object[] arrayDefaultValue = new ValueUtils().getArrayValues(defaultValue);
             return Arrays.equals(arrayValue, arrayDefaultValue);
         }
-    }
-
-    private Object[] getArray(Object array) {
-        Object[] newArray = new Object[0];
-
-        if (array.getClass().isArray()) {
-            int length = Array.getLength(array);
-            newArray = new Object[length];
-            for (int i = 0; i < length; i++) {
-                newArray[i] = Array.get(array, i);
-            }
-        }
-
-        return newArray;
     }
 }

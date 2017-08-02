@@ -63,13 +63,17 @@ public class ValueUtils {
         return object != null && !(object instanceof String) && object.toString().isEmpty();
     }
 
-    private List<Object> getArrayValues(Object object) {
-        List<Object> objects = new ArrayList<>();
+    public Object[] getArrayValues(Object object) {
+        Object[] objects = new Object[0];
         if (object.getClass().isArray()) {
+            int length = Array.getLength(object);
+            object = new Object[length];
+
             for (int i = 0; i < Array.getLength(object); i++) {
-                objects.add(Array.get(object, i));
+                objects[i] = Array.get(object, i);
             }
         }
+
         return objects;
     }
 
@@ -84,7 +88,7 @@ public class ValueUtils {
         String defaultAnnotationValue = "";
 
         if (method.getDeclaringClass().isAnnotation()) {
-            String defaultValue = new ValueUtils().getValue(method.getDefaultValue());
+            String defaultValue = getValue(method.getDefaultValue());
 
             if (defaultValue != null) {
                 defaultAnnotationValue += " default " + defaultValue;
@@ -100,7 +104,7 @@ public class ValueUtils {
                 field.setAccessible(true);
                 Object value = field.get(null);
                 if (!isField(value)) {
-                    String fieldValue = new ValueUtils().getValue(value);
+                    String fieldValue = getValue(value);
                     if (!"".equals(fieldValue)) {
                         return " = " + fieldValue;
                     }
