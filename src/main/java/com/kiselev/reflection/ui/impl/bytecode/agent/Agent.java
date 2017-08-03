@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
 import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
+import com.kiselev.reflection.ui.impl.bytecode.assembly.AgentAssembler;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 
 import java.lang.instrument.Instrumentation;
@@ -16,6 +17,8 @@ public final class Agent implements JavaAgent {
     private static Instrumentation instrumentation;
 
     private static Map<String, byte[]> byteCodeMap = new HashMap<>();
+
+    private static final AgentAssembler agentAssembler = new AgentAssembler();
 
     public static void agentmain(String args, Instrumentation instrumentation) {
         Agent.instrumentation = instrumentation;
@@ -33,6 +36,7 @@ public final class Agent implements JavaAgent {
 
     @Override
     public byte[] getByteCode(Class<?> clazz) {
+        initialize();
         try {
             if (instrumentation != null) {
                 instrumentation.retransformClasses(clazz);
@@ -45,5 +49,11 @@ public final class Agent implements JavaAgent {
         String javaBasedClassName = ClassNameUtils.getJavaBasedClassName(clazz);
 
         return byteCodeMap.get(javaBasedClassName);
+    }
+
+    private void initialize() {
+        if (!agentAssembler.isAssembled()) {
+            agentAssembler.assembly();
+        }
     }
 }

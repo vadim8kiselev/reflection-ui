@@ -25,7 +25,7 @@ public class InnerClassesCollector {
 
     private static final String POSITIVE_NUMBER_PATTERN = "\\d+";
 
-    private static final JavaAgent agent = new Agent();
+    private static final JavaAgent agent = StateManager.getConfiguration().getAgent();
 
     public static Collection<Class<?>> getInnerClasses(Class<?> clazz) {
         Set<Class<?>> innerClasses = new HashSet<>();

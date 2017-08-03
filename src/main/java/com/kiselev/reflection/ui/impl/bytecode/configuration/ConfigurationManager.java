@@ -3,6 +3,8 @@ package com.kiselev.reflection.ui.impl.bytecode.configuration;
 import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.configuration.bytecode.ByteCodeBuilderConfiguration;
 import com.kiselev.reflection.ui.configuration.util.ConfigurationUtils;
+import com.kiselev.reflection.ui.impl.bytecode.agent.Agent;
+import com.kiselev.reflection.ui.impl.bytecode.agent.JavaAgent;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
@@ -79,6 +81,10 @@ public class ConfigurationManager {
         return utils.getConfig("cbc", Boolean.class);
     }
 
+    public JavaAgent getAgent() {
+        return utils.getConfig("jaa", JavaAgent.class);
+    }
+
     private static Map<String, Object> getDefaultConfiguration() {
         final String HOME_DIR = System.getProperty(Constants.Properties.HOME_DIR);
         return ByteCodeBuilderConfiguration
@@ -95,6 +101,7 @@ public class ConfigurationManager {
                 .addCustomByteCodeCollector(null)
                 .enableCustomByteCodeCollector(false)
                 .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")
+                .setAgentClass(new Agent())
                 .getConfiguration();
     }
 }

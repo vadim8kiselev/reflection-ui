@@ -1,6 +1,7 @@
 package com.kiselev.reflection.ui.configuration.bytecode;
 
 import com.kiselev.reflection.ui.configuration.Configuration;
+import com.kiselev.reflection.ui.impl.bytecode.agent.JavaAgent;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 
@@ -95,5 +96,11 @@ public class ByteCodeBuilderConfiguration {
             configuration.put("cbc", flag);
             return this;
         }
+
+        public ByteCodeConfiguration setAgentClass(JavaAgent agent) {
+            configuration.put("jaa", agent);
+            return this;
+        }
+
     }
 }
