@@ -174,6 +174,7 @@ public final class ProcyonDecompiler implements Decompiler {
         JavaFormattingOptions options = JavaFormattingOptions.createDefault();
         options.ClassBraceStyle = BraceStyle.EndOfLine;
         options.InterfaceBraceStyle = BraceStyle.EndOfLine;
+        options.EnumBraceStyle = BraceStyle.EndOfLine;
 
         return ProcyonBuilderConfiguration
                 .getBuilderConfiguration()

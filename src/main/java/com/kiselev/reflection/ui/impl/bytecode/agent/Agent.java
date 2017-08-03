@@ -20,6 +20,10 @@ public final class Agent implements JavaAgent {
 
     private static final AgentAssembler agentAssembler = new AgentAssembler();
 
+    public Agent() {
+        initialize();
+    }
+
     public static void agentmain(String args, Instrumentation instrumentation) {
         Agent.instrumentation = instrumentation;
         instrumentation.addTransformer(new Transformer(), true);
@@ -36,7 +40,6 @@ public final class Agent implements JavaAgent {
 
     @Override
     public byte[] getByteCode(Class<?> clazz) {
-        initialize();
         try {
             if (instrumentation != null) {
                 instrumentation.retransformClasses(clazz);

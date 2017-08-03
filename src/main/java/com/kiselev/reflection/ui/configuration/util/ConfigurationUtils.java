@@ -18,8 +18,8 @@ public class ConfigurationUtils {
         this.defaultConfiguration = defaultConfiguration;
     }
 
-    private boolean isInstance(Object object, Class<?> clazz) {
-        return clazz.isInstance(object);
+    private <T> boolean isInstance(Object object, Class<T> type) {
+        return type.isInstance(object);
     }
 
     public <T> T getConfig(String config, Class<T> type) {

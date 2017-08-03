@@ -13,7 +13,6 @@ public class IndentUtils {
         Class<?> declaringClass;
 
         if (object instanceof Member) {
-
             Member member = CastConstants.MEMBER.cast(object);
             declaringClass = member.getDeclaringClass();
 

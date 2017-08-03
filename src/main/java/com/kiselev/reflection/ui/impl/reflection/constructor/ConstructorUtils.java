@@ -34,6 +34,7 @@ public class ConstructorUtils {
 
     private String getConstructor(Constructor constructor) {
         String constructorSignature = "";
+
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         String annotations = new AnnotationUtils().getAnnotations(constructor);

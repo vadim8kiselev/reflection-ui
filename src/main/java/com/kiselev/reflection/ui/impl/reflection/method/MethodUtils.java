@@ -38,6 +38,7 @@ public class MethodUtils {
 
     private String getMethod(Method method) {
         String methodSignature = "";
+
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         String annotations = new AnnotationUtils().getAnnotations(method);

@@ -22,6 +22,7 @@ public class InheritancesUtils {
 
     private String getSuperClass(Class<?> clazz) {
         boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+
         AnnotatedType annotatedType = isShowTypeAnnotation ? clazz.getAnnotatedSuperclass() : null;
 
         String superClass;
@@ -30,6 +31,7 @@ public class InheritancesUtils {
         } else {
             superClass = getSingleParentType(clazz.getSuperclass(), annotatedType);
         }
+
         return (!superClass.isEmpty()) ? "extends " + superClass + " " : "";
     }
 

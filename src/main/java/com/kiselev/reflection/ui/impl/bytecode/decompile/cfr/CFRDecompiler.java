@@ -59,7 +59,7 @@ public final class CFRDecompiler implements Decompiler {
         ClassFile classFile = dcCommonState.getClassFileMaybePath(path);
         TypeUsageCollector collectingDumper = new TypeUsageCollector(classFile);
         IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get(options);
-        Dumper dumper = new CFRBuilderDumper(collectingDumper.getTypeUsageInformation(),options,illegalIdentifierDump);
+        Dumper dumper = new CFRBuilderDumper(collectingDumper.getTypeUsageInformation(), options, illegalIdentifierDump);
         dcCommonState.configureWith(classFile);
         classFile.loadInnerClasses(dcCommonState);
         classFile.analyseTop(dcCommonState);
@@ -74,6 +74,7 @@ public final class CFRDecompiler implements Decompiler {
     public void setConfiguration(Configuration configuration) {
         this.configuration.putAll(configuration.getConfiguration());
     }
+
     private class CFRBuilderDumper extends StdIODumper {
 
         private StringBuilder builder = new StringBuilder();
