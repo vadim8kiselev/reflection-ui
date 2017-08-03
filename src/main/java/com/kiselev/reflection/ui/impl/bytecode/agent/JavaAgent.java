@@ -9,5 +9,10 @@ import java.lang.instrument.Instrumentation;
  */
 public interface JavaAgent extends ByteCodeCollector {
 
+    /**
+     * Getting instrumentation from agent premain or agentmain method
+     *
+     * @return Instrumentation instance
+     * */
     Instrumentation getInstrumentation();
 }

@@ -25,7 +25,7 @@ public class ValueUtils {
             return getFieldValue(FIELD.cast(object));
         }
 
-        if (isMethod(object)) {
+        if (isAnnotationMethod(object)) {
             return getDefaultAnnotationValue(METHOD.cast(object));
         }
 
@@ -87,12 +87,10 @@ public class ValueUtils {
     private String getDefaultAnnotationValue(Method method) {
         String defaultAnnotationValue = "";
 
-        if (method.getDeclaringClass().isAnnotation()) {
-            String defaultValue = getValue(method.getDefaultValue());
+        String defaultValue = getValue(method.getDefaultValue());
 
-            if (defaultValue != null) {
-                defaultAnnotationValue += " default " + defaultValue;
-            }
+        if (defaultValue != null) {
+            defaultAnnotationValue += " default " + defaultValue;
         }
 
         return defaultAnnotationValue;
@@ -121,7 +119,7 @@ public class ValueUtils {
         return object instanceof Field && FIELD.cast(object).getDeclaringClass() == StateManager.getCurrentClass();
     }
 
-    private boolean isMethod(Object object) {
-        return object instanceof Method && METHOD.cast(object).getDeclaringClass() == StateManager.getCurrentClass();
+    private boolean isAnnotationMethod(Object object) {
+        return object instanceof Method && METHOD.cast(object).getDeclaringClass().isAnnotation();
     }
 }

@@ -201,9 +201,6 @@ public class InnerClassesCollector {
                 throw new ClassLoadException("Can't get loaded classes", exception);
             }
         } else {
-            for (Class aClass : instrumentation.getInitiatedClasses(classLoader)) {
-                System.out.println(aClass.getName());
-            }
             return Arrays.asList(instrumentation.getInitiatedClasses(classLoader));
         }
     }
