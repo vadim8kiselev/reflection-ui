@@ -14,6 +14,7 @@ public class StateManager {
         if (manager == null) {
             configurationLocalMap.set(new ConfigurationManager(configuration));
         }
+        configurationLocalMap.get().isEnableClassFileByteCodeCollector();
     }
 
     public static ConfigurationManager getConfiguration() {

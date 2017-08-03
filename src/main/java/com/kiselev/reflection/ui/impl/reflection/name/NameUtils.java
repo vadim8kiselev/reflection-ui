@@ -1,6 +1,5 @@
 package com.kiselev.reflection.ui.impl.reflection.name;
 
-import com.kiselev.reflection.ui.impl.reflection.imports.ImportUtils;
 import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
 import java.lang.reflect.Member;
@@ -8,8 +7,7 @@ import java.lang.reflect.Member;
 public class NameUtils {
 
     public String getTypeName(Class<?> clazz) {
-        ImportUtils importUtils = StateManager.getImportUtils();
-        return importUtils.addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
+        return StateManager.getImportUtils().addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
     }
 
     public String getSimpleName(Class<?> clazz) {

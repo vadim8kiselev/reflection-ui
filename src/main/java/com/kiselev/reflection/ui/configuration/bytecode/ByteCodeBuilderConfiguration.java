@@ -85,7 +85,7 @@ public class ByteCodeBuilderConfiguration {
         }
 
         @Override
-        public ByteCodeConfiguration enableRetransformClassByteCodeCollector(boolean flag) {
+        public ByteCodeConfiguration enableFromJVMClassByteCodeCollector(boolean flag) {
             configuration.put("rcc", flag);
             return this;
         }

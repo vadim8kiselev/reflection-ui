@@ -2,17 +2,16 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 import com.kiselev.reflection.ui.exception.agent.ClassLoadException;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
+import com.kiselev.reflection.ui.impl.bytecode.agent.Agent;
+import com.kiselev.reflection.ui.impl.bytecode.agent.JavaAgent;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
@@ -25,6 +24,8 @@ public class InnerClassesCollector {
     private static final String LOCAL_CLASS_PATTERN = "[\\d]+.*";
 
     private static final String POSITIVE_NUMBER_PATTERN = "\\d+";
+
+    private static final JavaAgent agent = new Agent();
 
     public static Collection<Class<?>> getInnerClasses(Class<?> clazz) {
         Set<Class<?>> innerClasses = new HashSet<>();
@@ -190,12 +191,20 @@ public class InnerClassesCollector {
 
     @SuppressWarnings("unchecked")
     private static Collection<Class<?>> getLoadedClasses(ClassLoader classLoader) {
-        try {
-            Field classes = ClassLoader.class.getDeclaredField("classes");
-            classes.setAccessible(true);
-            return (Collection<Class<?>>) classes.get(classLoader);
-        } catch (ReflectiveOperationException exception) {
-            throw new ClassLoadException("Can't get loaded classes", exception);
+        Instrumentation instrumentation = agent.getInstrumentation();
+        if (instrumentation == null) {
+            try {
+                Field classes = ClassLoader.class.getDeclaredField("classes");
+                classes.setAccessible(true);
+                return (Collection<Class<?>>) classes.get(classLoader);
+            } catch (ReflectiveOperationException exception) {
+                throw new ClassLoadException("Can't get loaded classes", exception);
+            }
+        } else {
+            for (Class aClass : instrumentation.getInitiatedClasses(classLoader)) {
+                System.out.println(aClass.getName());
+            }
+            return Arrays.asList(instrumentation.getInitiatedClasses(classLoader));
         }
     }
 

@@ -89,7 +89,7 @@ public class ConfigurationManager {
                 .decompileLocalClasses(true)
                 .setDecompiler(new FernflowerDecompiler())
                 .enableClassFileByteCodeCollector(true)
-                .enableRetransformClassByteCodeCollector(true)
+                .enableFromJVMClassByteCodeCollector(true)
                 .saveByteCodeToFile(false)
                 .setDecompilerConfiguration(null)
                 .addCustomByteCodeCollector(null)

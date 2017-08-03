@@ -20,11 +20,12 @@ import java.util.Map;
  */
 public class BytecodeParser implements ReflectionUI {
 
-    private ByteCodeCollector byteCodeCollector = new DefaultByteCodeCollector();
+    private ByteCodeCollector byteCodeCollector;
 
     @Override
     public String parseClass(Class<?> clazz) {
-       checkToCorrectClass(clazz);
+        byteCodeCollector = new DefaultByteCodeCollector();
+        checkToCorrectClass(clazz);
 
         byte[] byteCode = getByteCodeOfClass(clazz);
         List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz);

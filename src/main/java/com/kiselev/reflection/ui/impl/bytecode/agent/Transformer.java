@@ -1,7 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -18,14 +17,13 @@ public final class Transformer implements ClassFileTransformer {
                                   Class<?> classBeingRedefined,
                                   ProtectionDomain protectionDomain,
                                   byte[] byteCode) throws IllegalClassFormatException {
-
         uploadByteCodeOfClassToHolder(className, byteCode);
         return byteCode;
     }
 
     private void uploadByteCodeOfClassToHolder(String className, byte[] byteCode) {
         String javaBasedClassName = transformClassName(className);
-        ByteCodeHolder.uploadByteCodeForClass(javaBasedClassName, byteCode);
+        Agent.uploadByteCode(javaBasedClassName, byteCode);
     }
 
     private String transformClassName(String canonicalClassName) {

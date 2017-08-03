@@ -91,7 +91,7 @@ public interface ByteCodeConfiguration extends Configuration {
      * <p>
      * Default value: true
      */
-    ByteCodeConfiguration enableRetransformClassByteCodeCollector(boolean flag);
+    ByteCodeConfiguration enableFromJVMClassByteCodeCollector(boolean flag);
 
     /**
      * Enable custom collect of bytecode
