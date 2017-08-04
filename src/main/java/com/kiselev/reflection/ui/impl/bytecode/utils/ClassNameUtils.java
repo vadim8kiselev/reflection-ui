@@ -2,7 +2,6 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
-import jd.core.process.deserializer.ClassFormatException;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 import org.jetbrains.java.decompiler.util.DataInputFullStream;
@@ -56,7 +55,7 @@ public class ClassNameUtils {
     public static String getClassName(byte[] bytecode) {
         try (DataInputFullStream stream = new DataInputFullStream(bytecode)) {
             if(stream.readInt() != MAGIC) {
-                throw new ClassFormatException("Invalid java bytecode of class");
+                throw new ClassFormatError("Invalid java bytecode of class");
             }
 
             stream.discard(4);

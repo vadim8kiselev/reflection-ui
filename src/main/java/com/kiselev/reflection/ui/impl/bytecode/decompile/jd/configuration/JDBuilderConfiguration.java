@@ -16,6 +16,9 @@ public class JDBuilderConfiguration {
 
         private Map<String, Object> configuration = new HashMap<>();
 
+        private Builder() {
+        }
+
         @Override
         public Map<String, Object> getConfiguration() {
             return configuration;

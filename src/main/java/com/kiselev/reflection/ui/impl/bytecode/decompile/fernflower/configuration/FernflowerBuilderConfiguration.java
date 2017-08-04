@@ -23,6 +23,9 @@ public class FernflowerBuilderConfiguration {
 
         private Map<String, Object> configuration = new HashMap<>();
 
+        private Builder() {
+        }
+
         public Map<String, Object> getConfiguration() {
             return configuration;
         }

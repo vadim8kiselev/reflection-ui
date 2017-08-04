@@ -30,6 +30,8 @@ import java.util.Map;
 
 /**
  * Created by Aleksei Makarov on 07/25/2017.
+ * <p>
+ * This decompiler can't show local classes
  */
 public final class CFRDecompiler implements Decompiler {
 
