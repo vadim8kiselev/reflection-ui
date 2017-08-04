@@ -9,6 +9,7 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler;
+import com.kiselev.reflection.ui.impl.bytecode.holder.DefaultByteCodeHolder;
 
 import java.io.File;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class ConfigurationManager {
                 .addCustomByteCodeCollector(null)
                 .enableCustomByteCodeCollector(false)
                 .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")
-                .setAgentClass(new Agent())
+                .setAgentClass(new Agent(new DefaultByteCodeHolder()))
                 .getConfiguration();
     }
 }

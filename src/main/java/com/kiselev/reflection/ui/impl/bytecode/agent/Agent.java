@@ -1,13 +1,9 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
-import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.AgentAssembler;
-import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
+import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
 
 import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Vadim Kiselev on 6/12/2017.
@@ -16,21 +12,18 @@ public final class Agent implements JavaAgent {
 
     private static Instrumentation instrumentation;
 
-    private static Map<String, byte[]> byteCodeMap = new HashMap<>();
-
     private static final AgentAssembler agentAssembler = new AgentAssembler();
 
-    public Agent() {
+    private static ByteCodeHolder holder;
+
+    public Agent(ByteCodeHolder holder) {
+        Agent.holder = holder;
         initialize();
     }
 
     public static void agentmain(String args, Instrumentation instrumentation) {
         Agent.instrumentation = instrumentation;
-        instrumentation.addTransformer(new Transformer(), true);
-    }
-
-    static void uploadByteCode(String className, byte[] bytecode) {
-        byteCodeMap.put(className, bytecode);
+        instrumentation.addTransformer(new Transformer(holder), true);
     }
 
     @Override
@@ -38,25 +31,14 @@ public final class Agent implements JavaAgent {
         return instrumentation;
     }
 
-    @Override
-    public byte[] getByteCode(Class<?> clazz) {
-        try {
-            if (instrumentation != null) {
-                instrumentation.retransformClasses(clazz);
-            }
-        } catch (UnmodifiableClassException exception) {
-            String message = String.format("Class: %s is can't retransform", clazz.getName());
-            throw new InvalidRetransformClass(message, exception);
-        }
-
-        String javaBasedClassName = ClassNameUtils.getJavaBasedClassName(clazz);
-
-        return byteCodeMap.get(javaBasedClassName);
-    }
-
     private void initialize() {
         if (!agentAssembler.isAssembled()) {
             agentAssembler.assembly();
         }
+    }
+
+    @Override
+    public ByteCodeHolder getByteCodeHolder() {
+        return holder;
     }
 }

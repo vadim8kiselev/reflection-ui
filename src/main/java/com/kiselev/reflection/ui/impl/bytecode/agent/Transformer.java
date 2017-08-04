@@ -1,6 +1,8 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
+import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -10,6 +12,12 @@ import java.security.ProtectionDomain;
  * Created by Vadim Kiselev on 6/12/2017.
  */
 public final class Transformer implements ClassFileTransformer {
+
+    private ByteCodeHolder holder;
+
+    public Transformer(ByteCodeHolder holder) {
+        this.holder = holder;
+    }
 
     @Override
     public final byte[] transform(ClassLoader loader,
@@ -22,11 +30,7 @@ public final class Transformer implements ClassFileTransformer {
     }
 
     private void uploadByteCodeOfClassToHolder(String className, byte[] byteCode) {
-        String javaBasedClassName = transformClassName(className);
-        Agent.uploadByteCode(javaBasedClassName, byteCode);
-    }
-
-    private String transformClassName(String canonicalClassName) {
-        return canonicalClassName.replace(Constants.Symbols.SLASH, Constants.Symbols.DOT);
+        String javaBasedClassName = ClassNameUtils.normalizeFullName(className);
+        holder.put(javaBasedClassName, byteCode);
     }
 }
