@@ -4,7 +4,7 @@ import com.kiselev.reflection.ui.api.ReflectionUI;
 import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
-import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
+import com.kiselev.reflection.ui.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.saver.ByteCodeSaver;
@@ -24,7 +24,7 @@ public class BytecodeParser implements ReflectionUI {
 
     @Override
     public String parseClass(Class<?> clazz) {
-        byteCodeCollector = new DefaultByteCodeCollector();
+        byteCodeCollector = new ChainByteCodeCollector();
         checkToCorrectClass(clazz);
 
         byte[] byteCode = getByteCodeOfClass(clazz);

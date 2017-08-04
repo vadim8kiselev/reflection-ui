@@ -4,7 +4,7 @@ import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.configuration.util.ConfigurationUtils;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
-import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
+import com.kiselev.reflection.ui.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.procyon.configuration.ProcyonBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
@@ -134,7 +134,7 @@ public final class ProcyonDecompiler implements Decompiler {
             Class<?> clazz = loadClass(className);
 
             if (clazz != null) {
-                ByteCodeCollector collector = new DefaultByteCodeCollector();
+                ByteCodeCollector collector = new ChainByteCodeCollector();
                 byteCode = collector.getByteCode(clazz);
 
                 if (byteCode != null) {

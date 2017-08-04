@@ -3,7 +3,7 @@ package com.kiselev.reflection.ui.impl.bytecode.decompile.cfr;
 import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
-import com.kiselev.reflection.ui.impl.bytecode.collector.DefaultByteCodeCollector;
+import com.kiselev.reflection.ui.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.cfr.configuration.CFRBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
@@ -20,9 +20,7 @@ import org.benf.cfr.reader.util.bytestream.ByteData;
 import org.benf.cfr.reader.util.getopt.GetOptParser;
 import org.benf.cfr.reader.util.getopt.Options;
 import org.benf.cfr.reader.util.getopt.OptionsImpl;
-import org.benf.cfr.reader.util.output.Dumper;
-import org.benf.cfr.reader.util.output.IllegalIdentifierDump;
-import org.benf.cfr.reader.util.output.StdIODumper;
+import org.benf.cfr.reader.util.output.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -34,6 +32,8 @@ import java.util.Map;
  * Created by Aleksei Makarov on 07/25/2017.
  */
 public final class CFRDecompiler implements Decompiler {
+
+    public static final String DECOMPILER_INFO = "/\\*\n \\* Decompiled with CFR.\n \\*/\n";
 
     private Collection<byte[]> innerClasses = new ArrayList<>();
 
@@ -59,14 +59,15 @@ public final class CFRDecompiler implements Decompiler {
         ClassFile classFile = dcCommonState.getClassFileMaybePath(path);
         TypeUsageCollector collectingDumper = new TypeUsageCollector(classFile);
         IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get(options);
-        Dumper dumper = new CFRBuilderDumper(collectingDumper.getTypeUsageInformation(), options, illegalIdentifierDump);
         dcCommonState.configureWith(classFile);
+
         classFile.loadInnerClasses(dcCommonState);
         classFile.analyseTop(dcCommonState);
-
         classFile.collectTypeUsages(collectingDumper);
 
+        Dumper dumper = new CFRBuilderDumper(collectingDumper.getTypeUsageInformation(), options, illegalIdentifierDump);
         classFile.dump(dumper);
+
         return dumper.toString();
     }
 
@@ -103,12 +104,12 @@ public final class CFRDecompiler implements Decompiler {
 
         @Override
         public String toString() {
-            return builder.toString();
+            return ClassStringUtils.delete(builder.toString(), DECOMPILER_INFO);
         }
     }
 
     private class CFRDCCommonState extends DCCommonState {
-        private ByteCodeCollector codeCollector = new DefaultByteCodeCollector();
+        private ByteCodeCollector codeCollector = new ChainByteCodeCollector();
 
         private Map<String, ClassFile> classFileMap = new HashMap<>();
 

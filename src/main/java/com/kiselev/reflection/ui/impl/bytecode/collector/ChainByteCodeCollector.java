@@ -8,11 +8,11 @@ import java.util.List;
 /**
  * Created by Алексей on 07/13/2017.
  */
-public class DefaultByteCodeCollector implements ByteCodeCollector {
+public class ChainByteCodeCollector implements ByteCodeCollector {
 
     List<ByteCodeCollector> collectors = new ArrayList<>();
 
-    public DefaultByteCodeCollector() {
+    public ChainByteCodeCollector() {
         ByteCodeCollector customByteCodeCollector = StateManager.getConfiguration().getCustomByteCodeCollector();
         if (customByteCodeCollector != null && StateManager.getConfiguration().isEnableCustomByteCodeCollector()) {
             collectors.add(customByteCodeCollector);
@@ -31,6 +31,7 @@ public class DefaultByteCodeCollector implements ByteCodeCollector {
     public byte[] getByteCode(Class<?> clazz) {
         for (ByteCodeCollector collector : collectors) {
             byte[] byteCode = collector.getByteCode(clazz);
+
             if (byteCode != null) {
                 return byteCode;
             }
