@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public final class CFRDecompiler implements Decompiler {
 
-    public static final String DECOMPILER_INFO = "/\\*\n \\* Decompiled with CFR.\n \\*/\n";
+    private static final String DECOMPILER_INFO = "/\\*\n \\* Decompiled with CFR.\n \\*/\n";
 
     private Collection<byte[]> innerClasses = new ArrayList<>();
 
@@ -105,6 +105,11 @@ public final class CFRDecompiler implements Decompiler {
         @Override
         public String toString() {
             return ClassStringUtils.delete(builder.toString(), DECOMPILER_INFO);
+        }
+
+        @Override
+        public void close() {
+            builder.delete(0, builder.length());
         }
     }
 
@@ -222,6 +227,8 @@ public final class CFRDecompiler implements Decompiler {
                 .removeSupportCodeForMonitors(false)
                 .replaceMonitorWithComments(false)
                 .lenientSituationsWhereThrowException(true)
+                .dumpClassPathForDebuggingPurposes(true)
+                .showDecompilerMessages(true)
                 .getConfiguration();
     }
 }

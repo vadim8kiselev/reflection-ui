@@ -2,7 +2,6 @@ package com.kiselev.reflection.ui.impl.bytecode.utils;
 
 import com.kiselev.reflection.ui.exception.agent.ClassLoadException;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
-import com.kiselev.reflection.ui.impl.bytecode.agent.Agent;
 import com.kiselev.reflection.ui.impl.bytecode.agent.JavaAgent;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;

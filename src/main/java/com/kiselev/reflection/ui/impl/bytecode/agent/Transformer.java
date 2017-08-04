@@ -1,6 +1,5 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
-import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 
