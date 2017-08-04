@@ -114,6 +114,7 @@ public final class CFRDecompiler implements Decompiler {
     }
 
     private class CFRDCCommonState extends DCCommonState {
+
         private ByteCodeCollector codeCollector = new ChainByteCodeCollector();
 
         private Map<String, ClassFile> classFileMap = new HashMap<>();
@@ -137,21 +138,21 @@ public final class CFRDecompiler implements Decompiler {
             return loadClassFileAtPath(path);
         }
 
-        private ClassFile loadClassFileAtPath(String path) {
-            if (path.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX)) {
-                path = path.substring(0, path.lastIndexOf(Constants.Suffix.CLASS_FILE_SUFFIX));
+        private ClassFile loadClassFileAtPath(String className) {
+            if (className.endsWith(Constants.Suffix.CLASS_FILE_SUFFIX)) {
+                className = className.substring(0, className.lastIndexOf(Constants.Suffix.CLASS_FILE_SUFFIX));
             }
 
-            ClassFile classFile = classFileMap.get(path);
+            ClassFile classFile = classFileMap.get(className);
             if (classFile != null) {
                 return classFile;
             }
 
-            if (path.contains(outerClassName + Constants.Symbols.DOLLAR)) {
+            if (className.contains(outerClassName + Constants.Symbols.DOLLAR)) {
                 throw new CannotLoadClassException(EMPTY_MESSAGE, null);
             }
 
-            String name = ClassNameUtils.normalizeFullName(path);
+            String name = ClassNameUtils.normalizeFullName(className);
             return loadClassFile(getByteCode(name));
         }
 

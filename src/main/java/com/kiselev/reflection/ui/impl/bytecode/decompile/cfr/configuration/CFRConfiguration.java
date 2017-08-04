@@ -178,14 +178,14 @@ public interface CFRConfiguration extends Configuration {
     /**
      * Dump class path for debugging purposes
      * <p>
-     * Default value: ?
+     * Default value: true
      */
     CFRConfiguration dumpClassPathForDebuggingPurposes(boolean flag);
 
     /**
      * Output comments describing decompiler status, fallback flags etc
      * <p>
-     * Default value: ?
+     * Default value: true
      */
     CFRConfiguration showDecompilerMessages(boolean flag);
 

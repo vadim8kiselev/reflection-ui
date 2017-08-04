@@ -11,13 +11,13 @@ import java.util.Map;
  */
 public class ConfigurationManager {
 
-    private Map<String, Object> configuration = new HashMap<>();
+    private Map<String, Object> configuration;
 
     private ConfigurationUtils utils;
 
     public ConfigurationManager() {
-        this.configuration.putAll(getDefaultConfiguration());
-        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+        this.configuration = getDefaultConfiguration();
+        this.utils = new ConfigurationUtils(configuration, configuration);
     }
 
     public ConfigurationManager(Map<String, Object> configuration) {

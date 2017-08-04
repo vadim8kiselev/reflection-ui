@@ -25,7 +25,7 @@ public class ConfigurationManager {
 
     public ConfigurationManager() {
         this.configuration = getDefaultConfiguration();
-        this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+        this.utils = new ConfigurationUtils(configuration, configuration);
     }
 
     public ConfigurationManager(Map<String, Object> configuration) {
