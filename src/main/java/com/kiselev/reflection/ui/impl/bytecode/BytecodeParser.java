@@ -49,19 +49,20 @@ public class BytecodeParser implements ReflectionUI {
     }
 
     private List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
-        boolean isDecompileIC = StateManager.getConfiguration().isDecompileInnerClasses();
+        if (StateManager.getConfiguration().isDecompileInnerClasses()) {
+            List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
 
-        Collection<Class<?>> collection = isDecompileIC ? InnerClassesCollector.getInnerClasses(clazz) : new ArrayList<>();
-        List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
-
-        for (Class<?> innerClass : collection) {
-            byte[] byteCodeOfInnerClass = byteCodeCollector.getByteCode(innerClass);
-            if (byteCodeOfInnerClass != null) {
-                bytecodeOfInnerClasses.add(byteCodeOfInnerClass);
+            for (Class<?> innerClass : InnerClassesCollector.getInnerClasses(clazz)) {
+                byte[] byteCodeOfInnerClass = byteCodeCollector.getByteCode(innerClass);
+                if (byteCodeOfInnerClass != null) {
+                    bytecodeOfInnerClasses.add(byteCodeOfInnerClass);
+                }
             }
-        }
 
-        return bytecodeOfInnerClasses;
+            return bytecodeOfInnerClasses;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     private byte[] getByteCodeOfClass(Class<?> clazz) {

@@ -170,7 +170,7 @@ public class GenericsUtils {
 
     private AnnotatedType getAnnotatedType(AnnotatedType annotatedType) {
         if (annotatedType instanceof AnnotatedArrayType) {
-            AnnotatedArrayType annotatedArrayType = AnnotatedArrayType.class.cast(annotatedType);
+            AnnotatedArrayType annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             while (annotatedArrayType.getAnnotatedGenericComponentType() instanceof AnnotatedArrayType) {
                 annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedArrayType.getAnnotatedGenericComponentType());
             }

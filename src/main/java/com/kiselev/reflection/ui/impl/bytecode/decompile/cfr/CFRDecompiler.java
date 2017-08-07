@@ -35,8 +35,6 @@ import java.util.Map;
  */
 public final class CFRDecompiler implements Decompiler {
 
-    private static final String DECOMPILER_INFO = "/\\*\n \\* Decompiled with CFR.\n \\*/\n";
-
     private Collection<byte[]> innerClasses = new ArrayList<>();
 
     private Map<String, Object> configuration = getDefaultConfiguration();
@@ -81,6 +79,8 @@ public final class CFRDecompiler implements Decompiler {
     private class CFRBuilderDumper extends StdIODumper {
 
         private StringBuilder builder = new StringBuilder();
+
+        private static final String DECOMPILER_INFO = "/\\*\n \\* Decompiled with CFR.\n \\*/\n";
 
         public CFRBuilderDumper(TypeUsageInformation typeUsageInformation, Options options,
                                 IllegalIdentifierDump illegalIdentifierDump) {
