@@ -53,7 +53,7 @@ public class GenericsUtils {
         String annotations = "";
         String boundType = "";
         if (annotatedType != null && !isArray(type)) {
-            // If type is inner nested class then "use type" annotations is invisible :(
+            // If type is inner nested class then "use type" annotations for parametrized type is invisible :(
             annotations = new AnnotationUtils().getInlineAnnotations(getAnnotatedType(annotatedType));
         }
 
@@ -196,10 +196,10 @@ public class GenericsUtils {
                 String wildcard = getCorrectAnnotations(annotations) + "?";
 
                 AnnotatedType[] upper = ifNullUpper(annotatedWildcardType);
-                AnnotatedType[] lover = ifNullLover(annotatedWildcardType);
+                AnnotatedType[] lower = ifNullLower(annotatedWildcardType);
 
                 wildcard += getWildCardsBound(wildcardType.getUpperBounds(), "extends", upper);
-                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super", lover);
+                wildcard += getWildCardsBound(wildcardType.getLowerBounds(), "super", lower);
                 genericArguments.add(wildcard);
             } else {
                 AnnotatedType annotatedType = ifEmpty(annotatedActualTypeArguments, index);
@@ -267,7 +267,7 @@ public class GenericsUtils {
         return type != null ? type.getAnnotatedUpperBounds() : null;
     }
 
-    private AnnotatedType[] ifNullLover(AnnotatedWildcardType type) {
+    private AnnotatedType[] ifNullLower(AnnotatedWildcardType type) {
         return type != null ? type.getAnnotatedLowerBounds() : null;
     }
 }

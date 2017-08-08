@@ -51,12 +51,9 @@ public final class CFRDecompiler implements Decompiler {
 
         GetOptParser getOptParser = new GetOptParser();
         Options options = getOptParser.parse(getDefaultOptions(className), OptionsImpl.getFactory());
+        DCCommonState dcCommonState = new CFRDCCommonState(options, new ClassFileSourceImpl(options), byteCode);
 
-        ClassFileSource classFileSource = new ClassFileSourceImpl(options);
-        DCCommonState dcCommonState = new CFRDCCommonState(options, classFileSource, byteCode);
-        String path = options.getOption(OptionsImpl.FILENAME);
-
-        ClassFile classFile = dcCommonState.getClassFileMaybePath(path);
+        ClassFile classFile = dcCommonState.getClassFileMaybePath(className);
         TypeUsageCollector collectingDumper = new TypeUsageCollector(classFile);
         IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get(options);
         dcCommonState.configureWith(classFile);
@@ -73,14 +70,14 @@ public final class CFRDecompiler implements Decompiler {
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        this.configuration.putAll(configuration.getConfiguration());
+        //this.configuration.putAll(configuration.getConfiguration());
     }
 
     private class CFRBuilderDumper extends StdIODumper {
 
         private StringBuilder builder = new StringBuilder();
 
-        private static final String DECOMPILER_INFO = "/\\*\n \\* Decompiled with CFR.\n \\*/\n";
+        private boolean skipLineSeparator = false;
 
         public CFRBuilderDumper(TypeUsageInformation typeUsageInformation, Options options,
                                 IllegalIdentifierDump illegalIdentifierDump) {
@@ -89,29 +86,53 @@ public final class CFRDecompiler implements Decompiler {
 
         @Override
         protected void write(String data) {
-            if (data.equals("implements ") || data.equals("extends ")) {
-                builder.deleteCharAt(ClassStringUtils.getNumberLeftOfLineSeparator(builder) - 1);
-                builder.delete(ClassStringUtils.getFirstLeftNonCharNumber(builder, ' '), builder.length());
-                builder.append(" ");
-            } else if (data.equals("\n")
-                    && builder.charAt(ClassStringUtils.getFirstLeftNonCharNumber(builder, ' ')) == ',') {
-                builder.append(" ");
-                return;
-            } else if (data.equals("{") && builder.charAt(builder.length() - 1) != ' ') {
-                builder.append(" ");
+            data = getCorrectData(data);
+            builder.append(data);
+        }
+
+        public String getCorrectData(String data) {
+            if (data.equals("class ") && !skipLineSeparator) {
+                skipLineSeparator = true;
             }
 
-            builder.append(data);
+            if (data.equals("{")) {
+                skipLineSeparator = false;
+            }
+
+            if (skipLineSeparator && data.contains("    ")) {
+                data = "";
+            }
+
+            if (skipLineSeparator && data.contains("\n")) {
+                data = " ";
+            }
+
+            return data;
         }
 
         @Override
         public String toString() {
-            return ClassStringUtils.delete(builder.toString(), DECOMPILER_INFO);
+            return correctCode(builder);
         }
 
         @Override
         public void close() {
             builder.delete(0, builder.length());
+        }
+
+
+        private String correctCode(StringBuilder builder) {
+            builder.delete(0, builder.indexOf("*/") + 3);
+
+            int index = 0;
+            while (index < builder.length()) {
+                if (builder.charAt(index) == '{' && builder.charAt(index - 1) != ' ') {
+                    builder.insert(index, ' ');
+                }
+                index++;
+            }
+
+            return builder.toString();
         }
     }
 
@@ -196,7 +217,7 @@ public final class CFRDecompiler implements Decompiler {
 
         options.add(className);
 
-        for (Map.Entry<String, Object> entry : getDefaultConfiguration().entrySet()) {
+        for (Map.Entry<String, Object> entry : configuration.entrySet()) {
             options.add("--" + entry.getKey());
             options.add(entry.getValue().toString());
         }

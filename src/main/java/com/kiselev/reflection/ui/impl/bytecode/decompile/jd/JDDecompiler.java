@@ -85,8 +85,10 @@ public final class JDDecompiler implements Decompiler {
             String exceptionMessage = String.format("JD can't decompile class: %s", className);
 
             throw new DecompilationException(exceptionMessage, exception);
-        } catch (LoaderException | FileNotFoundException exception) {
+        } catch (LoaderException | FileNotFoundException  exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
+        } catch (Throwable throwable) {
+            throw new DecompilationException("Some shit happens with JD decompiler", throwable);
         }
     }
 

@@ -30,22 +30,30 @@ public class BytecodeParser implements ReflectionUI {
         byte[] byteCode = getByteCodeOfClass(clazz);
         List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz);
 
+        saveByteCodeToFile(byteCode, bytecodeOfInnerClasses);
+
         Decompiler decompiler = StateManager.getConfiguration().getDecompiler();
         Configuration configuration = StateManager.getConfiguration().getCustomDecompilerConfiguration();
         if (configuration != null) {
             decompiler.setConfiguration(configuration);
         }
 
-        if (StateManager.getConfiguration().isSaveToFile()) {
-            ByteCodeSaver saver = new ByteCodeSaver();
-
-            saver.saveToFile(byteCode);
-            for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
-                saver.saveToFile(bytecodeOfInnerClass);
-            }
-        }
-
         return decompiler.decompile(byteCode, bytecodeOfInnerClasses);
+    }
+
+    private void saveByteCodeToFile(byte[] byteCode, List<byte[]> bytecodeOfInnerClasses) {
+        if (StateManager.getConfiguration().isSaveToFile()) {
+            Thread thread = new Thread(
+                    () -> {
+                        ByteCodeSaver saver = new ByteCodeSaver();
+
+                        saver.saveToFile(byteCode);
+                        for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
+                            saver.saveToFile(bytecodeOfInnerClass);
+                        }
+                    });
+            thread.start();
+        }
     }
 
     private List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
@@ -77,11 +85,11 @@ public class BytecodeParser implements ReflectionUI {
 
     private void checkToCorrectClass(Class<?> clazz) {
         if (clazz.isPrimitive()) {
-            throw new InvalidRetransformClass("Primitive types can not be decompiled");
+            throw new InvalidRetransformClass(String.format("Primitive type: %s can not be decompiled", clazz.getName()));
         }
 
         if (clazz.isArray()) {
-            throw new InvalidRetransformClass("Array type can not be decompiled");
+            throw new InvalidRetransformClass(String.format("Array type: %s can not be decompiled", clazz.getName()));
         }
     }
 
