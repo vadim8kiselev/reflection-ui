@@ -1,11 +1,11 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly;
 
 import com.kiselev.reflection.ui.impl.bytecode.agent.Agent;
+import com.kiselev.reflection.ui.impl.bytecode.agent.ByteCodeHolder;
 import com.kiselev.reflection.ui.impl.bytecode.agent.JavaAgent;
 import com.kiselev.reflection.ui.impl.bytecode.agent.Transformer;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.attach.AgentAttacher;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.AgentBuilder;
-import com.kiselev.reflection.ui.exception.agent.AgentAttachException;
 
 /**
  * Created by Vadim Kiselev on 6/13/2017.
@@ -44,7 +44,7 @@ public class AgentAssembler {
     }
 
     protected Class<?>[] getAgentJarClasses() {
-        return new Class<?>[]{Transformer.class, JavaAgent.class};
+        return new Class<?>[]{Transformer.class, JavaAgent.class, ByteCodeHolder.class};
     }
 
     public boolean isAssembled() {

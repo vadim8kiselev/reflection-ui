@@ -1,12 +1,12 @@
 package com.kiselev.reflection.ui.impl.bytecode.assembly.build;
 
 import com.kiselev.reflection.ui.exception.agent.ClassLoadException;
+import com.kiselev.reflection.ui.exception.agent.InvalidAgentClassException;
+import com.kiselev.reflection.ui.exception.file.CreateFileException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ClassFileByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
-import com.kiselev.reflection.ui.exception.agent.InvalidAgentClassException;
-import com.kiselev.reflection.ui.exception.file.CreateFileException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -107,7 +107,7 @@ public final class AgentBuilder {
 
         private Method getAgentMethod(Class<?> clazz, String methodName) {
             try {
-               return clazz.getDeclaredMethod(methodName, String.class, Instrumentation.class);
+                return clazz.getDeclaredMethod(methodName, String.class, Instrumentation.class);
             } catch (NoSuchMethodException exception) {
                 return null;
             }

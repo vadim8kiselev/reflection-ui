@@ -54,7 +54,7 @@ public class ClassNameUtils {
 
     public static String getClassName(byte[] bytecode) {
         try (DataInputFullStream stream = new DataInputFullStream(bytecode)) {
-            if(stream.readInt() != MAGIC) {
+            if (stream.readInt() != MAGIC) {
                 throw new ClassFormatError("Invalid java bytecode of class");
             }
 

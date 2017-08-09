@@ -4,8 +4,9 @@ import com.kiselev.reflection.ui.configuration.Configuration;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.
- *
+ * <p>
  * Builder configuration for
+ *
  * @see com.kiselev.reflection.ui.impl.bytecode.decompile.jd.JDDecompiler
  */
 public interface JDConfiguration extends Configuration {

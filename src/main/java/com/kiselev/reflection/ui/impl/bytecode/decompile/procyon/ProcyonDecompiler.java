@@ -8,13 +8,12 @@ import com.kiselev.reflection.ui.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.procyon.configuration.ProcyonBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
-
+import com.strobel.assembler.metadata.Buffer;
+import com.strobel.assembler.metadata.DeobfuscationUtilities;
 import com.strobel.assembler.metadata.ITypeLoader;
 import com.strobel.assembler.metadata.MetadataSystem;
 import com.strobel.assembler.metadata.TypeDefinition;
 import com.strobel.assembler.metadata.TypeReference;
-import com.strobel.assembler.metadata.DeobfuscationUtilities;
-import com.strobel.assembler.metadata.Buffer;
 import com.strobel.decompiler.DecompilationOptions;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
@@ -89,63 +88,6 @@ public final class ProcyonDecompiler implements Decompiler {
         }
     }
 
-    private class ProcyonTypeLoader implements ITypeLoader {
-
-        private String outerClassName = ClassNameUtils.getClassName(ProcyonDecompiler.this.byteCode);
-
-        private boolean isLoadReferenceOnClass = utils.getConfig("ucr", Boolean.class);
-
-        private static final int START_POSITION = 0;
-
-        @Override
-        public boolean tryLoadType(String baseClassName, Buffer buffer) {
-            byte[] byteCode = byteCodeMap.get(baseClassName);
-
-            if (byteCode == null) {
-                if (isLoadReferenceOnClass) {
-                    if (baseClassName.contains(outerClassName + Constants.Symbols.DOLLAR)) {
-                        return false;
-                    }
-
-                    byteCode = loadByteCode(ClassNameUtils.normalizeFullName(baseClassName));
-                    if (byteCode == null) {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            }
-
-            buffer.putByteArray(byteCode, START_POSITION, byteCode.length);
-            buffer.position(START_POSITION);
-
-            return true;
-        }
-
-        private Class<?> loadClass(String className) {
-            try {
-                return Class.forName(className);
-            } catch (ClassNotFoundException exception) {
-                return null;
-            }
-        }
-
-        private byte[] loadByteCode(String className) {
-            Class<?> clazz = loadClass(className);
-
-            if (clazz != null) {
-                ByteCodeCollector collector = new ChainByteCodeCollector();
-                byteCode = collector.getByteCode(clazz);
-
-                if (byteCode != null) {
-                    return byteCode;
-                }
-            }
-
-            return null;
-        }
-    }
-
     private DecompilerSettings getDecompilerSettings() {
         DecompilerSettings settings = new DecompilerSettings();
 
@@ -197,5 +139,60 @@ public final class ProcyonDecompiler implements Decompiler {
                 .simplifyMemberReferences(true)
                 .disableForEachTransforms(false)
                 .getConfiguration();
+    }
+
+    private class ProcyonTypeLoader implements ITypeLoader {
+
+        private static final int START_POSITION = 0;
+        private String outerClassName = ClassNameUtils.getClassName(byteCode);
+        private boolean isLoadReferenceOnClass = utils.getConfig("ucr", Boolean.class);
+
+        @Override
+        public boolean tryLoadType(String baseClassName, Buffer buffer) {
+            byte[] byteCode = byteCodeMap.get(baseClassName);
+
+            if (byteCode == null) {
+                if (isLoadReferenceOnClass) {
+                    if (baseClassName.contains(outerClassName + Constants.Symbols.DOLLAR)) {
+                        return false;
+                    }
+
+                    byteCode = loadByteCode(ClassNameUtils.normalizeFullName(baseClassName));
+                    if (byteCode == null) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+            buffer.putByteArray(byteCode, START_POSITION, byteCode.length);
+            buffer.position(START_POSITION);
+
+            return true;
+        }
+
+        private Class<?> loadClass(String className) {
+            try {
+                return Class.forName(className);
+            } catch (ClassNotFoundException exception) {
+                return null;
+            }
+        }
+
+        private byte[] loadByteCode(String className) {
+            Class<?> clazz = loadClass(className);
+
+            if (clazz != null) {
+                ByteCodeCollector collector = new ChainByteCodeCollector();
+                byte[] byteCode = collector.getByteCode(clazz);
+
+                if (byteCode != null) {
+                    return byteCode;
+                }
+            }
+
+            return null;
+        }
     }
 }

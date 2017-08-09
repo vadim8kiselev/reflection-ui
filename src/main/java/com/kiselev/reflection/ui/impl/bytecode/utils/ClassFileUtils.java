@@ -1,9 +1,8 @@
 package com.kiselev.reflection.ui.impl.bytecode.utils;
 
-import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.exception.ByteCodeParserException;
+import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -12,9 +11,8 @@ import java.net.URL;
  */
 public class ClassFileUtils {
 
+    public static final String EMPTY_PATH = "";
     private static final String SHIELDED_SPACE = "%20";
-
-    private static final String EMPTY_PATH = "";
 
     public static String getFilePath(Class<?> clazz) {
         ClassLoader loader = getClassLoader(clazz);

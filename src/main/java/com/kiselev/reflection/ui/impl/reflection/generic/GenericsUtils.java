@@ -5,29 +5,28 @@ import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
 import com.kiselev.reflection.ui.impl.reflection.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
+import java.lang.reflect.AnnotatedArrayType;
+import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.AnnotatedWildcardType;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.lang.reflect.AnnotatedArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.AnnotatedParameterizedType;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.WildcardType;
-import java.lang.reflect.AnnotatedWildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATED_ARRAY_TYPE;
-import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.CLASS;
-import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.TYPE_VARIABLE;
-import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.PARAMETERIZED_TYPE;
 import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATED_PARAMETERIZED_TYPE;
-import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.GENERIC_ARRAY_TYPE;
-import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.WILDCARD_TYPE;
 import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATED_WILDCARD_TYPE;
-
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.CLASS;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.GENERIC_ARRAY_TYPE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.PARAMETERIZED_TYPE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.TYPE_VARIABLE;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.WILDCARD_TYPE;
 
 public class GenericsUtils {
 

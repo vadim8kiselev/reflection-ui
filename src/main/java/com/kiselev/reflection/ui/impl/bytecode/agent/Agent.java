@@ -1,7 +1,6 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
 import com.kiselev.reflection.ui.impl.bytecode.assembly.AgentAssembler;
-import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
 
 import java.lang.instrument.Instrumentation;
 
@@ -10,20 +9,19 @@ import java.lang.instrument.Instrumentation;
  */
 public final class Agent implements JavaAgent {
 
-    private static Instrumentation instrumentation;
-
     private static final AgentAssembler agentAssembler = new AgentAssembler();
 
-    private static ByteCodeHolder holder;
+    private static Instrumentation instrumentation;
 
-    public Agent(ByteCodeHolder holder) {
-        Agent.holder = holder;
+    private static Transformer transformer = new Transformer();
+
+    public Agent() {
         initialize();
     }
 
     public static void agentmain(String args, Instrumentation instrumentation) {
         Agent.instrumentation = instrumentation;
-        instrumentation.addTransformer(new Transformer(holder), true);
+        instrumentation.addTransformer(transformer, true);
     }
 
     @Override
@@ -39,6 +37,6 @@ public final class Agent implements JavaAgent {
 
     @Override
     public ByteCodeHolder getByteCodeHolder() {
-        return holder;
+        return transformer;
     }
 }

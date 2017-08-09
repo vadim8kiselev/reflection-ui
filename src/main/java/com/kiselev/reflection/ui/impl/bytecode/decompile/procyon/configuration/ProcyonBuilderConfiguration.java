@@ -19,8 +19,6 @@ public class ProcyonBuilderConfiguration {
 
         private Map<String, Object> configuration = new HashMap<>();
 
-
-
         @Override
         public Map<String, Object> getConfiguration() {
             return configuration;

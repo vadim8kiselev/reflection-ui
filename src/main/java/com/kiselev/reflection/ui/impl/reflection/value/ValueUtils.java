@@ -13,10 +13,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.FIELD;
-import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.METHOD;
 import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.ANNOTATION;
 import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.CLASS;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.FIELD;
+import static com.kiselev.reflection.ui.impl.reflection.constants.CastConstants.METHOD;
 
 public class ValueUtils {
 

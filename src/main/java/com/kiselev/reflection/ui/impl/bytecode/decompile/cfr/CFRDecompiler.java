@@ -7,7 +7,6 @@ import com.kiselev.reflection.ui.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.cfr.configuration.CFRBuilderConfiguration;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
-import com.kiselev.reflection.ui.impl.bytecode.utils.ClassStringUtils;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
@@ -20,12 +19,14 @@ import org.benf.cfr.reader.util.bytestream.ByteData;
 import org.benf.cfr.reader.util.getopt.GetOptParser;
 import org.benf.cfr.reader.util.getopt.Options;
 import org.benf.cfr.reader.util.getopt.OptionsImpl;
-import org.benf.cfr.reader.util.output.*;
+import org.benf.cfr.reader.util.output.Dumper;
+import org.benf.cfr.reader.util.output.IllegalIdentifierDump;
+import org.benf.cfr.reader.util.output.StdIODumper;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,7 +71,51 @@ public final class CFRDecompiler implements Decompiler {
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        //this.configuration.putAll(configuration.getConfiguration());
+        this.configuration.putAll(configuration.getConfiguration());
+    }
+
+    private String[] getDefaultOptions(String className) {
+        List<String> options = new ArrayList<>();
+
+        options.add(className);
+
+        for (Map.Entry<String, Object> entry : configuration.entrySet()) {
+            options.add("--" + entry.getKey());
+            options.add(entry.getValue().toString());
+        }
+
+        return options.toArray(new String[options.size()]);
+    }
+
+    private Map<String, Object> getDefaultConfiguration() {
+        return CFRBuilderConfiguration
+                .getBuilderConfiguration()
+                .replaceStringConcatToStringBuilder(false)
+                .decompileSugarEnumInSwitch(true)
+                .decompileSugarInEnums(true)
+                .decompileSugarStringInEnums(true)
+                .decompileSugarInArrayIteration(true)
+                .decompileSugarInCollectionIteration(true)
+                .decompileLambdaFunctions(true)
+                .decompileInnerClasses(true)
+                .hideUTF8Characters(true)
+                .hideVeryLongStrings(false)
+                .removeBoilerplateFunctions(true)
+                .removeInnerClassesSynthetics(true)
+                .hideBridgeMethods(true)
+                .liftInitialisationToAllConstructors(true)
+                .removeDeadMethods(false)
+                .removeBadGenerics(false)
+                .decompileSugarInAsserts(true)
+                .decompileBoxing(true)
+                .showCFRVersion(false)
+                .decompileSugarInFinally(true)
+                .removeSupportCodeForMonitors(false)
+                .replaceMonitorWithComments(false)
+                .lenientSituationsWhereThrowException(true)
+                .dumpClassPathForDebuggingPurposes(true)
+                .showDecompilerMessages(true)
+                .getConfiguration();
     }
 
     private class CFRBuilderDumper extends StdIODumper {
@@ -91,7 +136,10 @@ public final class CFRDecompiler implements Decompiler {
         }
 
         public String getCorrectData(String data) {
-            if (data.equals("class ") && !skipLineSeparator) {
+            if ((data.equals("class ") ||
+                    data.equals("interface ") ||
+                    data.equals("enum ") ||
+                    data.equals("@interface ")) && !skipLineSeparator) {
                 skipLineSeparator = true;
             }
 
@@ -120,7 +168,6 @@ public final class CFRDecompiler implements Decompiler {
             builder.delete(0, builder.length());
         }
 
-
         private String correctCode(StringBuilder builder) {
             builder.delete(0, builder.indexOf("*/") + 3);
 
@@ -138,13 +185,10 @@ public final class CFRDecompiler implements Decompiler {
 
     private class CFRDCCommonState extends DCCommonState {
 
-        private ByteCodeCollector codeCollector = new ChainByteCodeCollector();
-
-        private Map<String, ClassFile> classFileMap = new HashMap<>();
-
         private static final String EMPTY_MESSAGE = "";
-
         private final String outerClassName;
+        private ByteCodeCollector codeCollector = new ChainByteCodeCollector();
+        private Map<String, ClassFile> classFileMap = new HashMap<>();
 
         public CFRDCCommonState(Options options, ClassFileSource classFileSource, byte[] byteCode) {
             super(options, classFileSource);
@@ -210,49 +254,5 @@ public final class CFRDecompiler implements Decompiler {
             classFileMap.put(className, classFile);
             return classFile;
         }
-    }
-
-    private String[] getDefaultOptions(String className) {
-        List<String> options = new ArrayList<>();
-
-        options.add(className);
-
-        for (Map.Entry<String, Object> entry : configuration.entrySet()) {
-            options.add("--" + entry.getKey());
-            options.add(entry.getValue().toString());
-        }
-
-        return options.toArray(new String[options.size()]);
-    }
-
-    private Map<String, Object> getDefaultConfiguration() {
-        return CFRBuilderConfiguration
-                .getBuilderConfiguration()
-                .replaceStringConcatToStringBuilder(false)
-                .decompileSugarEnumInSwitch(true)
-                .decompileSugarInEnums(true)
-                .decompileSugarStringInEnums(true)
-                .decompileSugarInArrayIteration(true)
-                .decompileSugarInCollectionIteration(true)
-                .decompileLambdaFunctions(true)
-                .decompileInnerClasses(true)
-                .hideUTF8Characters(true)
-                .hideVeryLongStrings(false)
-                .removeBoilerplateFunctions(true)
-                .removeInnerClassesSynthetics(true)
-                .hideBridgeMethods(true)
-                .liftInitialisationToAllConstructors(true)
-                .removeDeadMethods(false)
-                .removeBadGenerics(false)
-                .decompileSugarInAsserts(true)
-                .decompileBoxing(true)
-                .showCFRVersion(false)
-                .decompileSugarInFinally(true)
-                .removeSupportCodeForMonitors(false)
-                .replaceMonitorWithComments(false)
-                .lenientSituationsWhereThrowException(true)
-                .dumpClassPathForDebuggingPurposes(true)
-                .showDecompilerMessages(true)
-                .getConfiguration();
     }
 }

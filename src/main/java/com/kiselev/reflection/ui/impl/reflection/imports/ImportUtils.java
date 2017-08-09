@@ -4,11 +4,11 @@ import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
 import com.kiselev.reflection.ui.impl.reflection.packages.PackageUtils;
 import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Aleksei Makarov on 06/18/2017.

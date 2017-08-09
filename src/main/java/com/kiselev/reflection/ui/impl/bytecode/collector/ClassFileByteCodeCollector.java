@@ -1,15 +1,12 @@
 package com.kiselev.reflection.ui.impl.bytecode.collector;
 
-import com.kiselev.reflection.ui.impl.bytecode.utils.ClassFileUtils;
-import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
 import com.kiselev.reflection.ui.exception.file.ReadFileException;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassFileUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 

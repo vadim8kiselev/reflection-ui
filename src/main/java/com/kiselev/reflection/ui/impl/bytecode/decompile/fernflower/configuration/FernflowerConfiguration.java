@@ -6,8 +6,9 @@ import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 
 /**
  * Created by Aleksei Makarov on 06/24/2017.
- *
+ * <p>
  * Builder configuration for
+ *
  * @see com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler
  */
 public interface FernflowerConfiguration extends Configuration {
@@ -165,6 +166,7 @@ public interface FernflowerConfiguration extends Configuration {
      * new identifier names (see "Renaming identifiers")
      * <p>
      * Default value:
+     *
      * @see org.jetbrains.java.decompiler.modules.renamer.ConverterHelper
      */
     FernflowerConfiguration setNewIIdentifierRenamer(Class<? extends IIdentifierRenamer> renamer);

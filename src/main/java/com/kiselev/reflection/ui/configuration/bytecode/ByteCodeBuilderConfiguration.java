@@ -16,6 +16,7 @@ public class ByteCodeBuilderConfiguration {
     public static ByteCodeConfiguration configure() {
         return new Builder();
     }
+
     private static class Builder implements ByteCodeConfiguration {
 
         private HashMap<String, Object> configuration = new HashMap<>();

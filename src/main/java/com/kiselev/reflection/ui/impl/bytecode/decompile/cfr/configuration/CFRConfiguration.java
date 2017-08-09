@@ -4,8 +4,9 @@ import com.kiselev.reflection.ui.configuration.Configuration;
 
 /**
  * Created by Aleksei Makarov on 07/26/2017.
- *
+ * <p>
  * Builder configuration for
+ *
  * @see com.kiselev.reflection.ui.impl.bytecode.decompile.cfr.CFRDecompiler
  */
 public interface CFRConfiguration extends Configuration {

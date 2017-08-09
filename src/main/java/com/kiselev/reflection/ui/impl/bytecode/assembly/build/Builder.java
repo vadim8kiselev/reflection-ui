@@ -2,7 +2,7 @@ package com.kiselev.reflection.ui.impl.bytecode.assembly.build;
 
 /**
  * Created by Aleksei Makarov on 06/13/2017.
- *
+ * <p>
  * Interface for creating agent jar files
  */
 public interface Builder {
@@ -19,22 +19,26 @@ public interface Builder {
 
     /**
      * Add jar manifest
-     * @param manifestPath - path to manifest
      * <p>
      * if manifest is not found
      * append default manifest
+     * </p>
+     *
+     * @param manifestPath - path to manifest
      */
     Builder addManifest(String manifestPath);
 
     /**
      * Add agent class
-     * @param agentClass - agent class
      * <p>
      * Agent class need contains method
      * with signature
      * static void agentmain(String args, Instrumentation instrumentation)
      * or
      * static void premain(String args, Instrumentation instrumentation)
+     * </p>
+     *
+     * @param agentClass - agent class
      */
     Builder addAgentClass(Class<?> agentClass);
 

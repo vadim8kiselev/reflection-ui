@@ -9,7 +9,6 @@ import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler;
-import com.kiselev.reflection.ui.impl.bytecode.holder.DefaultByteCodeHolder;
 
 import java.io.File;
 import java.util.Map;
@@ -32,6 +31,26 @@ public class ConfigurationManager {
         this();
         this.configuration.putAll(configuration);
         this.utils.appendConfiguration(configuration);
+    }
+
+    private static Map<String, Object> getDefaultConfiguration() {
+        final String HOME_DIR = System.getProperty(Constants.Properties.HOME_DIR);
+        return ByteCodeBuilderConfiguration
+                .configure()
+                .decompileInnerClasses(true)
+                .decompileInnerAndNestedClasses(true)
+                .decompileAnonymousClasses(true)
+                .decompileLocalClasses(true)
+                .setDecompiler(new FernflowerDecompiler())
+                .enableClassFileByteCodeCollector(true)
+                .enableFromJVMClassByteCodeCollector(true)
+                .saveByteCodeToFile(false)
+                .setDecompilerConfiguration(null)
+                .addCustomByteCodeCollector(null)
+                .enableCustomByteCodeCollector(false)
+                .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")
+                .setAgentClass(new Agent())
+                .getConfiguration();
     }
 
     public boolean isDecompileInnerClasses() {
@@ -75,7 +94,7 @@ public class ConfigurationManager {
     }
 
     public boolean isEnableRetransformClassByteCodeCollector() {
-        return utils.getConfig("rcc",  Boolean.class);
+        return utils.getConfig("rcc", Boolean.class);
     }
 
     public boolean isEnableCustomByteCodeCollector() {
@@ -84,25 +103,5 @@ public class ConfigurationManager {
 
     public JavaAgent getAgent() {
         return utils.getConfig("jaa", JavaAgent.class);
-    }
-
-    private static Map<String, Object> getDefaultConfiguration() {
-        final String HOME_DIR = System.getProperty(Constants.Properties.HOME_DIR);
-        return ByteCodeBuilderConfiguration
-                .configure()
-                .decompileInnerClasses(true)
-                .decompileInnerAndNestedClasses(true)
-                .decompileAnonymousClasses(true)
-                .decompileLocalClasses(true)
-                .setDecompiler(new FernflowerDecompiler())
-                .enableClassFileByteCodeCollector(true)
-                .enableFromJVMClassByteCodeCollector(true)
-                .saveByteCodeToFile(false)
-                .setDecompilerConfiguration(null)
-                .addCustomByteCodeCollector(null)
-                .enableCustomByteCodeCollector(false)
-                .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")
-                .setAgentClass(new Agent(new DefaultByteCodeHolder()))
-                .getConfiguration();
     }
 }

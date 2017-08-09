@@ -30,5 +30,5 @@ public interface CastConstants {
 
     Class<Field> FIELD = Field.class;
 
-    Class<Method> METHOD  = Method.class;
+    Class<Method> METHOD = Method.class;
 }

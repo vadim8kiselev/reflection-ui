@@ -11,7 +11,6 @@ import com.kiselev.reflection.ui.impl.bytecode.saver.ByteCodeSaver;
 import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 

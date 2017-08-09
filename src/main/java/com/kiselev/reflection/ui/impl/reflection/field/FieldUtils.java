@@ -1,6 +1,5 @@
 package com.kiselev.reflection.ui.impl.reflection.field;
 
-import com.kiselev.reflection.ui.exception.ReflectionParserException;
 import com.kiselev.reflection.ui.impl.reflection.annotation.AnnotationUtils;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
@@ -11,7 +10,6 @@ import com.kiselev.reflection.ui.impl.reflection.value.ValueUtils;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;

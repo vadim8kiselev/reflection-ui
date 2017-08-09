@@ -1,9 +1,9 @@
 package com.kiselev.reflection.ui.impl.bytecode.saver;
 
+import com.kiselev.reflection.ui.exception.file.CreateFileException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
-import com.kiselev.reflection.ui.exception.file.CreateFileException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,12 +16,6 @@ import java.nio.file.Paths;
  * Created by Aleksei Makarov on 07/12/2017.
  */
 public class ByteCodeSaver {
-
-    public void saveToFile(byte[] byteCode) {
-        if (byteCode != null) {
-            writeByteCodeToFile(getClassFileName(byteCode), byteCode);
-        }
-    }
 
     private static void writeByteCodeToFile(String fileName, byte[] byteCode) {
         try (FileOutputStream stream = new FileOutputStream(fileName)) {
@@ -46,6 +40,12 @@ public class ByteCodeSaver {
             Files.createDirectories(directoryPath).toFile();
         } catch (IOException exception) {
             throw new CreateFileException(String.format("Directory: %s can't created", path), exception);
+        }
+    }
+
+    public void saveToFile(byte[] byteCode) {
+        if (byteCode != null) {
+            writeByteCodeToFile(getClassFileName(byteCode), byteCode);
         }
     }
 }

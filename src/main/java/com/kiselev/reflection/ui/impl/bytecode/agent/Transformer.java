@@ -1,22 +1,19 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
-import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Vadim Kiselev on 6/12/2017.
  */
-public final class Transformer implements ClassFileTransformer {
+public final class Transformer implements ClassFileTransformer, ByteCodeHolder {
 
-    private ByteCodeHolder holder;
-
-    public Transformer(ByteCodeHolder holder) {
-        this.holder = holder;
-    }
+    private Map<String, byte[]> bytecodeMap = new HashMap<>();
 
     @Override
     public final byte[] transform(ClassLoader loader,
@@ -30,6 +27,13 @@ public final class Transformer implements ClassFileTransformer {
 
     private void uploadByteCodeOfClassToHolder(String className, byte[] byteCode) {
         String javaBasedClassName = ClassNameUtils.normalizeFullName(className);
-        holder.put(javaBasedClassName, byteCode);
+        bytecodeMap.put(javaBasedClassName, byteCode);
+    }
+
+    @Override
+    public byte[] get(String className) {
+        byte[] byteCode = bytecodeMap.get(className);
+        bytecodeMap.remove(className);
+        return byteCode;
     }
 }

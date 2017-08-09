@@ -9,9 +9,9 @@ import java.util.Map;
  */
 public class ConfigurationUtils {
 
-    private Map<String, Object> configuration;
-
     private final Map<String, Object> defaultConfiguration;
+
+    private Map<String, Object> configuration;
 
     public ConfigurationUtils(Map<String, Object> configuration, Map<String, Object> defaultConfiguration) {
         this.configuration = configuration;

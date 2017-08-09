@@ -4,8 +4,9 @@ import com.kiselev.reflection.ui.configuration.Configuration;
 
 /**
  * Created by Алексей on 07/14/2017.
- *
+ * <p>
  * Builder configuration for class
+ *
  * @see com.kiselev.reflection.ui.impl.reflection.ReflectionParser
  */
 public interface ReflectionConfiguration extends Configuration {

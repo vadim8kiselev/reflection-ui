@@ -6,13 +6,13 @@ import com.kiselev.reflection.ui.impl.reflection.classes.ClassUtils;
 import com.kiselev.reflection.ui.impl.reflection.constructor.ConstructorUtils;
 import com.kiselev.reflection.ui.impl.reflection.field.FieldUtils;
 import com.kiselev.reflection.ui.impl.reflection.generic.GenericsUtils;
-import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 import com.kiselev.reflection.ui.impl.reflection.indent.IndentUtils;
 import com.kiselev.reflection.ui.impl.reflection.inheritance.InheritancesUtils;
 import com.kiselev.reflection.ui.impl.reflection.method.MethodUtils;
 import com.kiselev.reflection.ui.impl.reflection.modifier.ModifiersUtils;
 import com.kiselev.reflection.ui.impl.reflection.name.NameUtils;
 import com.kiselev.reflection.ui.impl.reflection.packages.PackageUtils;
+import com.kiselev.reflection.ui.impl.reflection.state.StateManager;
 import com.kiselev.reflection.ui.impl.reflection.type.TypeUtils;
 
 import java.util.ArrayList;

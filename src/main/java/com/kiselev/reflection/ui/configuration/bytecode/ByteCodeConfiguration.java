@@ -7,8 +7,9 @@ import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 
 /**
  * Created by Алексей on 07/14/2017.
- *
+ * <p>
  * Builder configuration for class
+ *
  * @see com.kiselev.reflection.ui.impl.bytecode.BytecodeParser
  */
 public interface ByteCodeConfiguration extends Configuration {
@@ -76,6 +77,7 @@ public interface ByteCodeConfiguration extends Configuration {
      * Set decompiler
      * <p>
      * Default value:
+     *
      * @see com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.FernflowerDecompiler
      */
     ByteCodeConfiguration setDecompiler(Decompiler decompiler);
@@ -105,6 +107,7 @@ public interface ByteCodeConfiguration extends Configuration {
      * Set custom agent class
      * <p>
      * Default value:
+     *
      * @see com.kiselev.reflection.ui.impl.bytecode.agent.Agent
      */
     ByteCodeConfiguration setAgentClass(JavaAgent agent);

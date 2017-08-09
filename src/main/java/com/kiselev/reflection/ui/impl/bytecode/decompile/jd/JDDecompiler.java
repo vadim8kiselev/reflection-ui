@@ -27,13 +27,13 @@ import jd.core.process.writer.ClassFileWriter;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.
@@ -85,7 +85,7 @@ public final class JDDecompiler implements Decompiler {
             String exceptionMessage = String.format("JD can't decompile class: %s", className);
 
             throw new DecompilationException(exceptionMessage, exception);
-        } catch (LoaderException | FileNotFoundException  exception) {
+        } catch (LoaderException | FileNotFoundException exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
         } catch (Throwable throwable) {
             throw new DecompilationException("Some shit happens with JD decompiler", throwable);
@@ -180,13 +180,10 @@ public final class JDDecompiler implements Decompiler {
 
     private class JDPrinter extends PrintStream {
 
-        private StringBuilder builder = new StringBuilder();
-
-        private String indent;
-
         private static final String JD_INDENT = "  ";
-
         private final PrintStream STUB = null;
+        private StringBuilder builder = new StringBuilder();
+        private String indent;
 
         public JDPrinter(OutputStream stream) throws FileNotFoundException {
             super(stream);

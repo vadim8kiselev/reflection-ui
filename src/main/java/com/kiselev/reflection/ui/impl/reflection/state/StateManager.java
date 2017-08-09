@@ -49,12 +49,12 @@ public class StateManager {
         return parsedClass.get();
     }
 
-    public static void setCurrentClass(Class<?> currentClass) {
-        StateManager.currentClass.set(currentClass);
-    }
-
     public static Class<?> getCurrentClass() {
         return currentClass.get();
+    }
+
+    public static void setCurrentClass(Class<?> currentClass) {
+        StateManager.currentClass.set(currentClass);
     }
 
     public static void popCurrentClass() {

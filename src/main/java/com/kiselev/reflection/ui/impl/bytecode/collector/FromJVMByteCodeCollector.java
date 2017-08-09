@@ -1,15 +1,13 @@
 package com.kiselev.reflection.ui.impl.bytecode.collector;
 
 import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
+import com.kiselev.reflection.ui.impl.bytecode.agent.ByteCodeHolder;
 import com.kiselev.reflection.ui.impl.bytecode.agent.JavaAgent;
 import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
-import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Aleksei Makarov on 07/12/2017.

@@ -5,6 +5,7 @@ import com.kiselev.reflection.ui.exception.DecompilationException;
 import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassFileUtils;
 import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
@@ -28,13 +29,10 @@ import java.util.jar.Manifest;
  */
 public final class FernflowerDecompiler implements Decompiler {
 
-    private Map<String, Object> configuration = getDefaultConfiguration();
-
-    private FernflowerResultSaver saver = new FernflowerResultSaver();
-
     private static final int CLASS_TYPE = 1;
-
     private static final int CLASS_FILE_TYPE = 0;
+    private Map<String, Object> configuration = getDefaultConfiguration();
+    private FernflowerResultSaver saver = new FernflowerResultSaver();
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -43,10 +41,6 @@ public final class FernflowerDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
-        if (configuration == null) {
-            configuration = getDefaultConfiguration();
-        }
-
         IFernflowerLogger logger = new PrintStreamLogger(System.out);
         BaseDecompiler decompiler = new BaseDecompiler(null, saver, configuration, logger);
         for (byte[] nestedClass : classes) {
@@ -141,7 +135,8 @@ public final class FernflowerDecompiler implements Decompiler {
     }
 
     private ContextUnit createFalseContextUnit(Fernflower fernflower) {
-        return new ContextUnit(CLASS_FILE_TYPE, "", "", true, saver, fernflower);
+        final String EMPTY_PATH = ClassFileUtils.EMPTY_PATH;
+        return new ContextUnit(CLASS_FILE_TYPE, EMPTY_PATH, EMPTY_PATH, true, saver, fernflower);
     }
 
     private static class FernflowerResultSaver implements IResultSaver {

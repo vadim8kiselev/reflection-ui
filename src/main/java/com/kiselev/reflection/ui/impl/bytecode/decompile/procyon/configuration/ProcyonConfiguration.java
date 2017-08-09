@@ -6,8 +6,9 @@ import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 
 /**
  * Created by Aleksei Makarov on 07/21/2017.
- *
+ * <p>
  * Builder configuration for
+ *
  * @see com.kiselev.reflection.ui.impl.bytecode.decompile.procyon.ProcyonDecompiler
  */
 public interface ProcyonConfiguration extends Configuration {

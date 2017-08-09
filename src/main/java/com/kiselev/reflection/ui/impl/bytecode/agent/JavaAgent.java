@@ -1,7 +1,5 @@
 package com.kiselev.reflection.ui.impl.bytecode.agent;
 
-import com.kiselev.reflection.ui.impl.bytecode.holder.ByteCodeHolder;
-
 import java.lang.instrument.Instrumentation;
 
 /**
@@ -13,13 +11,13 @@ public interface JavaAgent {
      * Getting instrumentation from agent premain or agentmain method
      *
      * @return Instrumentation instance
-     * */
+     */
     Instrumentation getInstrumentation();
 
     /**
      * Getting bytecode holder which contains bytecode of retransform classes
      *
      * @return ByteCodeHolder instance
-     * */
+     */
     ByteCodeHolder getByteCodeHolder();
 }

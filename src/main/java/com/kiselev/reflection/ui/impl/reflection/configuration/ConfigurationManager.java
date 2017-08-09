@@ -3,7 +3,6 @@ package com.kiselev.reflection.ui.impl.reflection.configuration;
 import com.kiselev.reflection.ui.configuration.reflection.ReflectionBuilderConfiguration;
 import com.kiselev.reflection.ui.configuration.util.ConfigurationUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,6 +23,30 @@ public class ConfigurationManager {
         this();
         this.configuration.putAll(configuration);
         this.utils.appendConfiguration(configuration);
+    }
+
+    private static Map<String, Object> getDefaultConfiguration() {
+        return ReflectionBuilderConfiguration
+                .configure()
+                .showAnnotationTypes(true)
+                .showInnerClasses(true)
+                .showNonJavaModifiers(false)
+                .showDefaultValueInAnnotation(false)
+                .displayValueForFields(true)
+                .showGenericSignatures(true)
+                .showVarArgs(true)
+                .enableImports(true)
+                .setCountIndentSpaces(4)
+                .defineLineSeparator(chooseSystemNewLineCharacter())
+                .getConfiguration();
+    }
+
+    private static String chooseSystemNewLineCharacter() {
+        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+            return "\n\r";
+        } else {
+            return "\n";
+        }
     }
 
     public boolean isShowAnnotationTypes() {
@@ -64,29 +87,5 @@ public class ConfigurationManager {
 
     public String getLineSeparator() {
         return utils.getConfig("nlc", String.class);
-    }
-
-    private static Map<String, Object> getDefaultConfiguration() {
-        return ReflectionBuilderConfiguration
-                .configure()
-                .showAnnotationTypes(true)
-                .showInnerClasses(true)
-                .showNonJavaModifiers(false)
-                .showDefaultValueInAnnotation(false)
-                .displayValueForFields(true)
-                .showGenericSignatures(true)
-                .showVarArgs(true)
-                .enableImports(true)
-                .setCountIndentSpaces(4)
-                .defineLineSeparator(chooseSystemNewLineCharacter())
-                .getConfiguration();
-    }
-
-    private static String chooseSystemNewLineCharacter() {
-        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
-            return "\n\r";
-        } else {
-            return "\n";
-        }
     }
 }
