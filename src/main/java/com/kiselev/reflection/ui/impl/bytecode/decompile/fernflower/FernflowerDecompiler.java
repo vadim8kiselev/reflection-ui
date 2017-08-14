@@ -30,8 +30,11 @@ import java.util.jar.Manifest;
 public final class FernflowerDecompiler implements Decompiler {
 
     private static final int CLASS_TYPE = 1;
+
     private static final int CLASS_FILE_TYPE = 0;
+
     private Map<String, Object> configuration = getDefaultConfiguration();
+
     private FernflowerResultSaver saver = new FernflowerResultSaver();
 
     @Override
@@ -99,7 +102,7 @@ public final class FernflowerDecompiler implements Decompiler {
 
             Map<String, ContextUnit> units = getContextUnit(structContext);
 
-            ContextUnit unit = createFalseContextUnit(fernflower);
+            ContextUnit unit = createFakeContextUnit(fernflower);
             unit.addClass(structClass, structClass.qualifiedName + Constants.Suffix.CLASS_FILE_SUFFIX);
             units.put(structClass.qualifiedName, unit);
         } catch (Exception exception) {
@@ -126,15 +129,14 @@ public final class FernflowerDecompiler implements Decompiler {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, ContextUnit> getContextUnit(StructContext context)
-            throws NoSuchFieldException, IllegalAccessException {
+    private Map<String, ContextUnit> getContextUnit(StructContext context) throws NoSuchFieldException, IllegalAccessException {
         Field fieldUnits = StructContext.class.getDeclaredField("units");
         fieldUnits.setAccessible(true);
 
         return (Map<String, ContextUnit>) fieldUnits.get(context);
     }
 
-    private ContextUnit createFalseContextUnit(Fernflower fernflower) {
+    private ContextUnit createFakeContextUnit(Fernflower fernflower) {
         final String EMPTY_PATH = ClassFileUtils.EMPTY_PATH;
         return new ContextUnit(CLASS_FILE_TYPE, EMPTY_PATH, EMPTY_PATH, true, saver, fernflower);
     }

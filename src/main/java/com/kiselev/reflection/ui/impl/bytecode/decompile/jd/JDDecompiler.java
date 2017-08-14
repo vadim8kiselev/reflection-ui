@@ -48,6 +48,8 @@ public final class JDDecompiler implements Decompiler {
 
     private ConfigurationUtils utils;
 
+    private static final int INITIAL_CAPACITY = 1024;
+
     @Override
     public String decompile(byte[] byteCode) {
         return decompile(byteCode, new ArrayList<>());
@@ -74,10 +76,13 @@ public final class JDDecompiler implements Decompiler {
             JDPrinter jdPrinter = new JDPrinter(System.out);
             Printer printer = new InstructionPrinter(new PlainTextPrinter(preferences, jdPrinter));
 
-            ArrayList<LayoutBlock> layoutBlockList = new ArrayList<>(1024);
+            ArrayList<LayoutBlock> layoutBlockList = new ArrayList<>(INITIAL_CAPACITY);
+
             int maxLineNumber = ClassFileLayouter.Layout(preferences, referenceMap, classFile, layoutBlockList);
-            ClassFileWriter.Write(loader, printer, referenceMap, maxLineNumber,
-                    classFile.getMajorVersion(), classFile.getMinorVersion(), layoutBlockList);
+            int minorVersion = classFile.getMinorVersion();
+            int majorVersion = classFile.getMajorVersion();
+
+            ClassFileWriter.Write(loader, printer, referenceMap, maxLineNumber, majorVersion, minorVersion, layoutBlockList);
 
             return jdPrinter.getSource();
         } catch (ClassFormatException | NullPointerException exception) {

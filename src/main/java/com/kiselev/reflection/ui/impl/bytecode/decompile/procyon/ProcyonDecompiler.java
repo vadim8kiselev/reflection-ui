@@ -144,8 +144,12 @@ public final class ProcyonDecompiler implements Decompiler {
     private class ProcyonTypeLoader implements ITypeLoader {
 
         private static final int START_POSITION = 0;
+
         private String outerClassName = ClassNameUtils.getClassName(byteCode);
+
         private boolean isLoadReferenceOnClass = utils.getConfig("ucr", Boolean.class);
+
+        private ByteCodeCollector collector = new ChainByteCodeCollector();
 
         @Override
         public boolean tryLoadType(String baseClassName, Buffer buffer) {
@@ -184,7 +188,6 @@ public final class ProcyonDecompiler implements Decompiler {
             Class<?> clazz = loadClass(className);
 
             if (clazz != null) {
-                ByteCodeCollector collector = new ChainByteCodeCollector();
                 byte[] byteCode = collector.getByteCode(clazz);
 
                 if (byteCode != null) {

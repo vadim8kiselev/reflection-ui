@@ -29,11 +29,13 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
 
     @Override
     public byte[] getByteCode(Class<?> clazz) {
-        for (ByteCodeCollector collector : collectors) {
-            byte[] byteCode = collector.getByteCode(clazz);
+        if (clazz != null) {
+            for (ByteCodeCollector collector : collectors) {
+                byte[] byteCode = collector.getByteCode(clazz);
 
-            if (byteCode != null) {
-                return byteCode;
+                if (byteCode != null) {
+                    return byteCode;
+                }
             }
         }
 

@@ -22,17 +22,21 @@ public class FromJVMByteCodeCollector implements ByteCodeCollector {
 
     @Override
     public byte[] getByteCode(Class<?> clazz) {
-        try {
-            if (instrumentation != null) {
-                instrumentation.retransformClasses(clazz);
+        if (clazz != null) {
+            try {
+                if (instrumentation != null && instrumentation.isModifiableClass(clazz)) {
+                    instrumentation.retransformClasses(clazz);
+                }
+            } catch (UnmodifiableClassException exception) {
+                String message = String.format("Class: %s is can't retransform", clazz.getName());
+                throw new InvalidRetransformClass(message, exception);
             }
-        } catch (UnmodifiableClassException exception) {
-            String message = String.format("Class: %s is can't retransform", clazz.getName());
-            throw new InvalidRetransformClass(message, exception);
+
+            String javaBasedClassName = ClassNameUtils.getJavaBasedClassName(clazz);
+
+            return holder.get(javaBasedClassName);
+        } else {
+            return null;
         }
-
-        String javaBasedClassName = ClassNameUtils.getJavaBasedClassName(clazz);
-
-        return holder.get(javaBasedClassName);
     }
 }

@@ -3,11 +3,13 @@ package com.kiselev.reflection.ui.impl.bytecode;
 import com.kiselev.reflection.ui.api.ReflectionUI;
 import com.kiselev.reflection.ui.configuration.Configuration;
 import com.kiselev.reflection.ui.exception.agent.InvalidRetransformClass;
+import com.kiselev.reflection.ui.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.reflection.ui.impl.bytecode.configuration.StateManager;
 import com.kiselev.reflection.ui.impl.bytecode.decompile.Decompiler;
 import com.kiselev.reflection.ui.impl.bytecode.saver.ByteCodeSaver;
+import com.kiselev.reflection.ui.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.reflection.ui.impl.bytecode.utils.InnerClassesCollector;
 
 import java.util.ArrayList;
@@ -83,12 +85,16 @@ public class BytecodeParser implements ReflectionUI {
     }
 
     private void checkToCorrectClass(Class<?> clazz) {
+        if (clazz == null) {
+            throw new NullPointerException("Class can't be a null!");
+        }
+
         if (clazz.isPrimitive()) {
             throw new InvalidRetransformClass(String.format("Primitive type: %s can not be decompiled", clazz.getName()));
         }
 
         if (clazz.isArray()) {
-            throw new InvalidRetransformClass(String.format("Array type: %s can not be decompiled", clazz.getName()));
+            throw new InvalidRetransformClass(String.format("Array type: %s can not be decompiled", clazz.getSimpleName()));
         }
     }
 

@@ -17,7 +17,7 @@ public class ClassFileUtils {
     public static String getFilePath(Class<?> clazz) {
         ClassLoader loader = getClassLoader(clazz);
 
-        if (loader != null) {
+        if (loader != null && clazz != null) {
             URL resource = loader.getResource(ClassNameUtils.getClassToFileName(clazz));
             if (resource != null) {
                 return resource.getFile();
@@ -28,12 +28,16 @@ public class ClassFileUtils {
     }
 
     public static ClassLoader getClassLoader(Class<?> clazz) {
-        ClassLoader loader = clazz.getClassLoader();
+        ClassLoader loader = null;
 
-        if (loader == null) {
-            loader = ClassLoader.getSystemClassLoader();
-            while (loader != null && loader.getParent() != null) {
-                loader = loader.getParent();
+        if (clazz != null) {
+            loader = clazz.getClassLoader();
+
+            if (loader == null) {
+                loader = ClassLoader.getSystemClassLoader();
+                while (loader != null && loader.getParent() != null) {
+                    loader = loader.getParent();
+                }
             }
         }
 
