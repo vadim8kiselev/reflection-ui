@@ -4,59 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.kiselev.reflection</groupId>
-    <artifactId>reflection-ui</artifactId>
+    <groupId>com.kiselev.classparser</groupId>
+    <artifactId>classparser-core</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>internal.repo</id>
-            <name>Temporary Staging Repository</name>
-            <url>file://https://github.com/java-decompiler/mvn-repo</url>
-        </repository>
-    </distributionManagement>
-
-    <dependencies>
-        <!-- FernFlower Decompiler -->
-        <dependency>
-            <groupId>com.github.fesh0r</groupId>
-            <artifactId>fernflower</artifactId>
-            <version>adbf29f8ce</version>
-        </dependency>
-
-        <!-- Agent loader -->
-        <dependency>
-            <groupId>com.github.electronicarts</groupId>
-            <artifactId>ea-agent-loader</artifactId>
-            <version>v1.0.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.clojars.razum2um</groupId>
-            <artifactId>jd-core-java</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <!-- Java Decompiler -->
-        <dependency>
-            <groupId>jd</groupId>
-            <artifactId>jd-core</artifactId>
-            <version>0.7.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jd</groupId>
-            <artifactId>jd-common</artifactId>
-            <version>0.7.1</version>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>classparser-reflection</module>
+        <module>classparser-bytecode</module>
+    </modules>
 
     <build>
         <plugins>
@@ -67,13 +23,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.1</version>
-                <configuration>
-                    <altDeploymentRepository>internal.repo::default::file://https://github.com/java-decompiler/mvn-repo</altDeploymentRepository>
                 </configuration>
             </plugin>
             <plugin>

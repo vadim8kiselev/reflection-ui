@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Can-Redefine-Classes: true
-Can-Retransform-Classes: true
-Agent-Class: com.kiselev.reflection.ui.impl.bytecode.agent.Agent
