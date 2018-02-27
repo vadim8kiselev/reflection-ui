@@ -1,10 +1,13 @@
 package com.kiselev.classparser.impl.reflection.field;
 
 import com.kiselev.classparser.impl.reflection.annotation.AnnotationUtils;
+import com.kiselev.classparser.impl.reflection.argument.ArgumentUtils;
+import com.kiselev.classparser.impl.reflection.exception.ExceptionUtils;
 import com.kiselev.classparser.impl.reflection.generic.GenericsUtils;
 import com.kiselev.classparser.impl.reflection.indent.IndentUtils;
 import com.kiselev.classparser.impl.reflection.modifier.ModifiersUtils;
 import com.kiselev.classparser.impl.reflection.name.NameUtils;
+import com.kiselev.classparser.impl.reflection.packages.PackageUtils;
 import com.kiselev.classparser.impl.reflection.state.StateManager;
 import com.kiselev.classparser.impl.reflection.value.ValueUtils;
 
@@ -15,6 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FieldUtils {
+
+    private AnnotationUtils annotationUtils = new AnnotationUtils();
+
+    private IndentUtils indentUtils = new IndentUtils();
+
+    private GenericsUtils genericsUtils = new GenericsUtils();
+
+    private NameUtils nameUtils = new NameUtils();
+
+    private ValueUtils valueUtils = new ValueUtils();
+
+    private ModifiersUtils modifiersUtils = new ModifiersUtils();
 
     public String getFields(Class<?> clazz) {
         String fields = "";
@@ -36,11 +51,11 @@ public class FieldUtils {
     private String getField(Field field) {
         String fieldSignature = "";
 
-        String annotations = new AnnotationUtils().getAnnotations(field);
+        String annotations = annotationUtils.getAnnotations(field);
 
-        String indent = new IndentUtils().getIndent(field);
+        String indent = indentUtils.getIndent(field);
 
-        String modifiers = new ModifiersUtils().getModifiers(field.getModifiers());
+        String modifiers = modifiersUtils.getModifiers(field.getModifiers());
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
@@ -50,13 +65,13 @@ public class FieldUtils {
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? field.getAnnotatedType() : null;
 
-        String type = new GenericsUtils().resolveType(fieldType, annotatedType);
+        String type = genericsUtils.resolveType(fieldType, annotatedType);
 
-        String fieldName = new NameUtils().getMemberName(field);
+        String fieldName = nameUtils.getMemberName(field);
 
         boolean isDisplayFiledValue = StateManager.getConfiguration().isDisplayFieldValue();
 
-        String fieldValue = isDisplayFiledValue ? new ValueUtils().getValue(field) : "";
+        String fieldValue = isDisplayFiledValue ? valueUtils.getValue(field) : "";
 
         fieldSignature += annotations + indent + modifiers + type + " " + fieldName + fieldValue + ";";
 

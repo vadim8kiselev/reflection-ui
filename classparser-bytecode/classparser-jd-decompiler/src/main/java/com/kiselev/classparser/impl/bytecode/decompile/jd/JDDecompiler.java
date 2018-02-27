@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public final class JDDecompiler implements Decompiler {
 
-    private ArrayList<ClassFile> innerClasses = new ArrayList<>();
+    private List<ClassFile> innerClasses = new ArrayList<>();
 
     private Map<String, Object> configuration = getDefaultConfiguration();
 
@@ -76,7 +76,7 @@ public final class JDDecompiler implements Decompiler {
             JDPrinter jdPrinter = new JDPrinter(System.out);
             Printer printer = new InstructionPrinter(new PlainTextPrinter(preferences, jdPrinter));
 
-            ArrayList<LayoutBlock> layoutBlockList = new ArrayList<>(INITIAL_CAPACITY);
+            List<LayoutBlock> layoutBlockList = new ArrayList<>(INITIAL_CAPACITY);
 
             int maxLineNumber = ClassFileLayouter.Layout(preferences, referenceMap, classFile, layoutBlockList);
             int minorVersion = classFile.getMinorVersion();
@@ -104,7 +104,7 @@ public final class JDDecompiler implements Decompiler {
     }
 
     private void appendAdditionalClasses(Collection<byte[]> classes) {
-        ArrayList<ClassFile> innerClasses = new ArrayList<>();
+        List<ClassFile> innerClasses = new ArrayList<>();
         for (byte[] bytecode : classes) {
             try {
                 String className = ClassNameUtils.getClassName(bytecode);
@@ -120,7 +120,7 @@ public final class JDDecompiler implements Decompiler {
     private void resolveInnerClasses(ClassFile classFile, List<ClassFile> innerClasses) {
         String className = ClassNameUtils.normalizeSimpleName(classFile.getThisClassName()) + Constants.Symbols.DOLLAR;
         Iterator<ClassFile> iterator = innerClasses.iterator();
-        ArrayList<ClassFile> currentInnerClasses = new ArrayList<>();
+        List<ClassFile> currentInnerClasses = new ArrayList<>();
         while (iterator.hasNext()) {
             ClassFile innerClass = iterator.next();
             String innerClassName = ClassNameUtils.normalizeSimpleName(innerClass.getThisClassName());

@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ExceptionUtils {
 
+    private GenericsUtils genericsUtils = new GenericsUtils();
+
     public String getExceptions(Executable executable) {
         String exceptions = "";
 
@@ -25,9 +27,9 @@ public class ExceptionUtils {
             if (StateManager.getConfiguration().isShowAnnotationTypes()) {
                 Type genericExceptionType = genericExceptionTypes[index];
                 AnnotatedType annotatedExceptionType = annotatedExceptionTypes[index];
-                exceptionType = new GenericsUtils().resolveType(genericExceptionType, annotatedExceptionType);
+                exceptionType = genericsUtils.resolveType(genericExceptionType, annotatedExceptionType);
             } else {
-                exceptionType = new GenericsUtils().resolveType(genericExceptionTypes[index], null);
+                exceptionType = genericsUtils.resolveType(genericExceptionTypes[index], null);
             }
             exceptionTypes.add(exceptionType);
         }

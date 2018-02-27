@@ -33,7 +33,7 @@ public class StateManager {
     public static ImportUtils getImportUtils() {
         ImportUtils importUtils = importUtilsMap.get();
         if (importUtils == null) {
-            throw new ReflectionParserException("Import utils for current thread is not register");
+            throw new ReflectionParserException("Import utils is not register");
         }
 
         return importUtils;

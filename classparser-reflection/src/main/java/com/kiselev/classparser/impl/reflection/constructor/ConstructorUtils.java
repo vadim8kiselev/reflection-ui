@@ -15,6 +15,18 @@ import java.util.List;
 
 public class ConstructorUtils {
 
+    private AnnotationUtils annotationUtils = new AnnotationUtils();
+
+    private IndentUtils indentUtils = new IndentUtils();
+
+    private GenericsUtils genericsUtils = new GenericsUtils();
+
+    private ArgumentUtils argumentUtils = new ArgumentUtils();
+
+    private ExceptionUtils exceptionUtils = new ExceptionUtils();
+
+    private ModifiersUtils modifiersUtils = new ModifiersUtils();
+
     public String getConstructors(Class<?> clazz) {
         String constructors = "";
 
@@ -37,31 +49,33 @@ public class ConstructorUtils {
 
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
-        String annotations = new AnnotationUtils().getAnnotations(constructor);
+        String annotations = annotationUtils.getAnnotations(constructor);
 
-        String indent = new IndentUtils().getIndent(constructor);
+        String indent = indentUtils.getIndent(constructor);
 
-        String modifiers = new ModifiersUtils().getModifiers(constructor.getModifiers());
+        String modifiers = modifiersUtils.getModifiers(constructor.getModifiers());
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        String generics = isShowGeneric ? new GenericsUtils().getGenerics(constructor) : "";
+        String generics = isShowGeneric ? genericsUtils.getGenerics(constructor) : "";
 
         boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? constructor.getAnnotatedReturnType() : null;
 
-        String constructorName = new GenericsUtils().resolveType(constructor.getDeclaringClass(), annotatedType);
+        String constructorName = genericsUtils.resolveType(constructor.getDeclaringClass(), annotatedType);
 
-        String arguments = new ArgumentUtils().getArguments(constructor);
+        String arguments = argumentUtils.getArguments(constructor);
 
-        String exceptions = new ExceptionUtils().getExceptions(constructor);
+        String exceptions = exceptionUtils.getExceptions(constructor);
 
         String oneIndent = StateManager.getConfiguration().getIndentSpaces();
 
-        String body = " {" + lineSeparator + indent + oneIndent + "/* Compiled code */" + lineSeparator + indent + "}";
+        String body = " {" + lineSeparator + indent + oneIndent +
+                "/* Compiled code */" + lineSeparator + indent + "}";
 
-        constructorSignature += annotations + indent + modifiers + generics + constructorName + arguments + exceptions + body;
+        constructorSignature += annotations + indent + modifiers +
+                generics + constructorName + arguments + exceptions + body;
 
         return constructorSignature;
     }

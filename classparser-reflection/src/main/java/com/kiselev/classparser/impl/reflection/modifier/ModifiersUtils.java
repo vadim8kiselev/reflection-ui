@@ -14,27 +14,53 @@ public class ModifiersUtils {
         String modifiers = "";
 
         if (StateManager.getConfiguration().isShowNonJavaModifiers()) {
-            if (isSynthetic(modifierIndex)) modifiers += "synthetic ";
+            if (isSynthetic(modifierIndex)) {
+                modifiers += "synthetic ";
+            }
 
-            if (isImplicit(modifierIndex)) modifiers += "implicit ";
+            if (isImplicit(modifierIndex)) {
+                modifiers += "implicit ";
+            }
         }
 
-        if (Modifier.isPublic(modifierIndex)) modifiers += "public ";
-        if (Modifier.isProtected(modifierIndex)) modifiers += "protected ";
-        if (Modifier.isPrivate(modifierIndex)) modifiers += "private ";
+        if (Modifier.isPublic(modifierIndex)) {
+            modifiers += "public ";
+        }
+        if (Modifier.isProtected(modifierIndex)) {
+            modifiers += "protected ";
+        }
+        if (Modifier.isPrivate(modifierIndex)) {
+            modifiers += "private ";
+        }
 
-        if (Modifier.isAbstract(modifierIndex)) modifiers += "abstract ";
+        if (Modifier.isAbstract(modifierIndex)) {
+            modifiers += "abstract ";
+        }
 
-        if (Modifier.isSynchronized(modifierIndex)) modifiers += "synchronized ";
+        if (Modifier.isSynchronized(modifierIndex)) {
+            modifiers += "synchronized ";
+        }
 
-        if (Modifier.isVolatile(modifierIndex)) modifiers += "volatile ";
-        if (Modifier.isTransient(modifierIndex)) modifiers += "transient ";
-        if (Modifier.isStrict(modifierIndex)) modifiers += "strictfp ";
+        if (Modifier.isVolatile(modifierIndex)) {
+            modifiers += "volatile ";
+        }
+        if (Modifier.isTransient(modifierIndex)) {
+            modifiers += "transient ";
+        }
+        if (Modifier.isStrict(modifierIndex)) {
+            modifiers += "strictfp ";
+        }
 
-        if (Modifier.isStatic(modifierIndex)) modifiers += "static ";
-        if (Modifier.isNative(modifierIndex)) modifiers += "native ";
+        if (Modifier.isStatic(modifierIndex)) {
+            modifiers += "static ";
+        }
+        if (Modifier.isNative(modifierIndex)) {
+            modifiers += "native ";
+        }
 
-        if (Modifier.isFinal(modifierIndex)) modifiers += "final ";
+        if (Modifier.isFinal(modifierIndex)) {
+            modifiers += "final ";
+        }
 
         return modifiers;
     }

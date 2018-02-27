@@ -13,6 +13,12 @@ import java.util.ArrayList;
 
 public class ArgumentUtils {
 
+    private AnnotationUtils annotationUtils = new AnnotationUtils();
+
+    private GenericsUtils genericsUtils = new GenericsUtils();
+
+    private ModifiersUtils modifiersUtils = new ModifiersUtils();
+
     public String getArguments(Executable executable) {
         String arguments = "";
 
@@ -44,11 +50,11 @@ public class ArgumentUtils {
 
         Type type = isShowGeneric ? parameter.getParameterizedType() : parameter.getType();
 
-        String genericType = new GenericsUtils().resolveType(type, annotatedType);
+        String genericType = genericsUtils.resolveType(type, annotatedType);
 
         genericType = parameter.isVarArgs() ? convertToVarArg(genericType) : genericType;
 
-        String modifiers = new ModifiersUtils().getModifiers(parameter.getModifiers());
+        String modifiers = modifiersUtils.getModifiers(parameter.getModifiers());
 
         String parameterName = parameter.getName();
 
@@ -58,7 +64,7 @@ public class ArgumentUtils {
     }
 
     private String getArgumentAnnotations(Parameter parameter) {
-        String annotations = new AnnotationUtils().getInlineAnnotations(parameter);
+        String annotations = annotationUtils.getInlineAnnotations(parameter);
         return !annotations.isEmpty() ? annotations + " " : "";
     }
 

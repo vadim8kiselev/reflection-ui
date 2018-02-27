@@ -5,6 +5,8 @@ import com.kiselev.classparser.impl.reflection.state.StateManager;
 
 public class PackageUtils {
 
+    private AnnotationUtils annotationUtils = new AnnotationUtils();
+
     public String getPackage(Class<?> clazz) {
         String packageName = "";
 
@@ -14,8 +16,9 @@ public class PackageUtils {
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         if (classPackage != null && clazz.equals(parsedClass)) {
-            String packageAnnotations = new AnnotationUtils().getAnnotations(classPackage);
-            packageName += packageAnnotations + "package " + classPackage.getName() + ";" + lineSeparator + lineSeparator;
+            String packageAnnotations = annotationUtils.getAnnotations(classPackage);
+            packageName += packageAnnotations + "package " +
+                    classPackage.getName() + ";" + lineSeparator + lineSeparator;
         }
 
         return packageName;

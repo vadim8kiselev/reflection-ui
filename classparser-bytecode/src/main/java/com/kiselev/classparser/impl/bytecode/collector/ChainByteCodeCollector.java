@@ -10,11 +10,11 @@ import java.util.List;
  */
 public class ChainByteCodeCollector implements ByteCodeCollector {
 
-    List<ByteCodeCollector> collectors = new ArrayList<>();
+    private List<ByteCodeCollector> collectors = new ArrayList<>();
 
     public ChainByteCodeCollector() {
         ByteCodeCollector customByteCodeCollector = StateManager.getConfiguration().getCustomByteCodeCollector();
-        if (customByteCodeCollector != null && StateManager.getConfiguration().isEnableCustomByteCodeCollector()) {
+        if (StateManager.getConfiguration().isEnableCustomByteCodeCollector() && customByteCodeCollector != null) {
             collectors.add(customByteCodeCollector);
         }
 

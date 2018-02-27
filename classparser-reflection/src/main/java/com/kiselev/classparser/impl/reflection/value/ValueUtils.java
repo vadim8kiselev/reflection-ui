@@ -2,7 +2,7 @@ package com.kiselev.classparser.impl.reflection.value;
 
 import com.kiselev.classparser.exception.ReflectionParserException;
 import com.kiselev.classparser.impl.reflection.annotation.AnnotationUtils;
-import com.kiselev.classparser.impl.reflection.constants.CastConstants;
+import com.kiselev.classparser.impl.reflection.constants.Cast;
 import com.kiselev.classparser.impl.reflection.generic.GenericsUtils;
 import com.kiselev.classparser.impl.reflection.state.StateManager;
 
@@ -18,11 +18,11 @@ public class ValueUtils {
 
     public String getValue(Object object) {
         if (isField(object)) {
-            return getFieldValue(CastConstants.FIELD.cast(object));
+            return getFieldValue(Cast.FIELD.cast(object));
         }
 
         if (isAnnotationMethod(object)) {
-            return getDefaultAnnotationValue(CastConstants.METHOD.cast(object));
+            return getDefaultAnnotationValue(Cast.METHOD.cast(object));
         }
 
         if (object != null) {
@@ -43,15 +43,21 @@ public class ValueUtils {
                 }
             }
 
-            if (clazz.isEnum()) return new GenericsUtils().resolveType(clazz) + "." + object;
-            if (object instanceof String) return "\"" + object + "\"";
-            if (object instanceof Character) return "\'" + object + "\'";
-            if (object instanceof Number || object instanceof Boolean) return object.toString() + getLiteral(object);
-            if (object instanceof Annotation)
-                return new AnnotationUtils().getAnnotation(CastConstants.ANNOTATION.cast(object));
-            if (object instanceof Class)
-                return new GenericsUtils().resolveType(CastConstants.CLASS.cast(object)) + ".class";
-            return "";
+            if (clazz.isEnum()) {
+                return new GenericsUtils().resolveType(clazz) + "." + object;
+            } else if (object instanceof String) {
+                return "\"" + object + "\"";
+            } else if (object instanceof Character) {
+                return "\'" + object + "\'";
+            } else if (object instanceof Number || object instanceof Boolean) {
+                return object.toString() + getLiteral(object);
+            } else if (object instanceof Annotation) {
+                return new AnnotationUtils().getAnnotation(Cast.ANNOTATION.cast(object));
+            } else if (object instanceof Class) {
+                return new GenericsUtils().resolveType(Cast.CLASS.cast(object)) + ".class";
+            } else {
+                return "";
+            }
         }
 
         return null;
@@ -76,10 +82,15 @@ public class ValueUtils {
     }
 
     private String getLiteral(Object object) {
-        if (object instanceof Long) return "L";
-        if (object instanceof Float) return "f";
-        if (object instanceof Double) return "d";
-        return "";
+        if (object instanceof Long) {
+            return "L";
+        } else if (object instanceof Float) {
+            return "f";
+        } else if (object instanceof Double) {
+            return "d";
+        } else {
+            return "";
+        }
     }
 
     private String getDefaultAnnotationValue(Method method) {
@@ -114,10 +125,12 @@ public class ValueUtils {
     }
 
     private boolean isField(Object object) {
-        return object instanceof Field && CastConstants.FIELD.cast(object).getDeclaringClass() == StateManager.getCurrentClass();
+        return object instanceof Field &&
+                Cast.FIELD.cast(object).getDeclaringClass() == StateManager.getCurrentClass();
     }
 
     private boolean isAnnotationMethod(Object object) {
-        return object instanceof Method && CastConstants.METHOD.cast(object).getDeclaringClass().isAnnotation();
+        return object instanceof Method &&
+                Cast.METHOD.cast(object).getDeclaringClass().isAnnotation();
     }
 }

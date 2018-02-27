@@ -12,8 +12,4 @@ public final class AgentAttacher {
     public static void attach(String agentPath) {
         AgentLoader.loadAgent(agentPath, EMPTY_OPTIONS);
     }
-
-    public static void attach(String agentPath, String options) {
-        AgentLoader.loadAgent(agentPath, options);
-    }
 }

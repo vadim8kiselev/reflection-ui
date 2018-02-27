@@ -42,15 +42,14 @@ public class BytecodeParser implements ClassParser {
 
     private void saveByteCodeToFile(byte[] byteCode, List<byte[]> bytecodeOfInnerClasses) {
         if (StateManager.getConfiguration().isSaveToFile()) {
-            Thread thread = new Thread(
-                    () -> {
-                        ByteCodeSaver saver = new ByteCodeSaver();
+            Thread thread = new Thread(() -> {
+                ByteCodeSaver saver = new ByteCodeSaver();
 
-                        saver.saveToFile(byteCode);
-                        for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
-                            saver.saveToFile(bytecodeOfInnerClass);
-                        }
-                    });
+                saver.saveToFile(byteCode);
+                for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
+                    saver.saveToFile(bytecodeOfInnerClass);
+                }
+            });
             thread.start();
         }
     }

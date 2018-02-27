@@ -34,13 +34,13 @@ public class ConfigurationManager {
     }
 
     private static Map<String, Object> getDefaultConfiguration() {
-        final String HOME_DIR = System.getProperty(Constants.Properties.HOME_DIR);
+        String HOME_DIR = System.getProperty(Constants.Properties.HOME_DIR);
         return ByteCodeBuilderConfiguration
                 .configure()
                 .decompileInnerClasses(true)
                 .decompileInnerAndNestedClasses(true)
                 .decompileAnonymousClasses(true)
-                .decompileLocalClasses(true)
+                .decompileLocalClasses(false)
                 .setDecompiler(new FernflowerDecompiler())
                 .enableClassFileByteCodeCollector(true)
                 .enableFromJVMClassByteCodeCollector(true)

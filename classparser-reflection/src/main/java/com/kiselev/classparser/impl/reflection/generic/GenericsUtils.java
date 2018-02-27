@@ -1,10 +1,15 @@
 package com.kiselev.classparser.impl.reflection.generic;
 
 import com.kiselev.classparser.impl.reflection.annotation.AnnotationUtils;
-import com.kiselev.classparser.impl.reflection.constants.CastConstants;
+import com.kiselev.classparser.impl.reflection.argument.ArgumentUtils;
+import com.kiselev.classparser.impl.reflection.constants.Cast;
+import com.kiselev.classparser.impl.reflection.exception.ExceptionUtils;
+import com.kiselev.classparser.impl.reflection.indent.IndentUtils;
+import com.kiselev.classparser.impl.reflection.modifier.ModifiersUtils;
 import com.kiselev.classparser.impl.reflection.name.NameUtils;
 import com.kiselev.classparser.impl.reflection.packages.PackageUtils;
 import com.kiselev.classparser.impl.reflection.state.StateManager;
+import com.kiselev.classparser.impl.reflection.value.ValueUtils;
 
 import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -22,6 +27,12 @@ import java.util.List;
 
 public class GenericsUtils {
 
+    private AnnotationUtils annotationUtils = new AnnotationUtils();
+
+    private NameUtils nameUtils = new NameUtils();
+
+    private PackageUtils packageUtils = new PackageUtils();
+
     public String getGenerics(GenericDeclaration genericDeclaration) {
         List<String> generics = new ArrayList<>();
 
@@ -29,7 +40,7 @@ public class GenericsUtils {
 
         TypeVariable<?>[] typeParameters = genericDeclaration.getTypeParameters();
         for (TypeVariable parameter : typeParameters) {
-            String annotations = new AnnotationUtils().getInlineAnnotations(parameter);
+            String annotations = annotationUtils.getInlineAnnotations(parameter);
             String boundTypes = String.join(" & ", getBounds(parameter));
             String bounds = !boundTypes.isEmpty() ? " extends " + boundTypes : "";
 
@@ -45,17 +56,17 @@ public class GenericsUtils {
         String boundType = "";
         if (annotatedType != null && !isArray(type)) {
             // If type is inner nested class then "use type" annotations for parametrized type is invisible :(
-            annotations = new AnnotationUtils().getInlineAnnotations(getAnnotatedType(annotatedType));
+            annotations = annotationUtils.getInlineAnnotations(getAnnotatedType(annotatedType));
         }
 
         if (type instanceof Class) {
-            Class clazz = CastConstants.CLASS.cast(type);
+            Class clazz = Cast.CLASS.cast(type);
 
             if (clazz.isArray()) {
-                AnnotatedArrayType annotatedArrayType = CastConstants.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
+                AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
                 boundType = resolveType(clazz.getComponentType(), annotatedArrayType);
                 AnnotatedType annotatedForArrayType = getAnnotatedTypeForArray(clazz, annotatedArrayType);
-                boundType += new AnnotationUtils().getInlineAnnotations(annotatedForArrayType) + "[]";
+                boundType += annotationUtils.getInlineAnnotations(annotatedForArrayType) + "[]";
             } else {
                 if (isNeedNameForInnerClass(clazz)) {
                     String typeName = resolveType(clazz.getDeclaringClass(), null);
@@ -63,23 +74,23 @@ public class GenericsUtils {
                     annotations = "";
                 }
 
-                boundType += new NameUtils().getTypeName(clazz);
+                boundType += nameUtils.getTypeName(clazz);
 
                 if (!clazz.isMemberClass() && boundType.contains(".") && !annotations.isEmpty()) {
-                    String packageName = new PackageUtils().getPackageName(clazz);
-                    String simpleName = new NameUtils().getSimpleName(clazz);
+                    String packageName = packageUtils.getPackageName(clazz);
+                    String simpleName = nameUtils.getSimpleName(clazz);
                     boundType = packageName + "." + annotations + " " + simpleName;
                     annotations = "";
                 }
             }
 
         } else if (type instanceof TypeVariable) {
-            TypeVariable typeVariable = CastConstants.TYPE_VARIABLE.cast(type);
+            TypeVariable typeVariable = Cast.TYPE_VARIABLE.cast(type);
             boundType = typeVariable.getName();
 
         } else if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = CastConstants.PARAMETERIZED_TYPE.cast(type);
-            if (isNeedNameForInnerClass(CastConstants.CLASS.cast(parameterizedType.getRawType()))) {
+            ParameterizedType parameterizedType = Cast.PARAMETERIZED_TYPE.cast(type);
+            if (isNeedNameForInnerClass(Cast.CLASS.cast(parameterizedType.getRawType()))) {
                 // Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
                 AnnotatedParameterizedType annotatedOwnerParametrizedType = null;
                 String correctAnnotations = getCorrectAnnotations(annotations);
@@ -89,10 +100,10 @@ public class GenericsUtils {
             }
 
             String genericArguments = "";
-            Class<?> clazz = CastConstants.CLASS.cast(parameterizedType.getRawType());
-            String parametrizedRawTypeName = new NameUtils().getTypeName(clazz);
+            Class<?> clazz = Cast.CLASS.cast(parameterizedType.getRawType());
+            String parametrizedRawTypeName = nameUtils.getTypeName(clazz);
             annotatedType = getAnnotatedType(annotatedType);
-            AnnotatedParameterizedType annotatedParameterizedType = CastConstants.ANNOTATED_PARAMETERIZED_TYPE.cast(annotatedType);
+            AnnotatedParameterizedType annotatedParameterizedType = Cast.ANNOTATED_PARAMETERIZED_TYPE.cast(annotatedType);
 
             List<String> innerGenericTypes = getGenericArguments(parameterizedType, annotatedParameterizedType);
             if (!innerGenericTypes.isEmpty()) {
@@ -101,11 +112,11 @@ public class GenericsUtils {
             boundType += parametrizedRawTypeName + genericArguments;
 
         } else if (type instanceof GenericArrayType) {
-            GenericArrayType genericArrayType = CastConstants.GENERIC_ARRAY_TYPE.cast(type);
-            AnnotatedArrayType annotatedArrayType = CastConstants.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
+            GenericArrayType genericArrayType = Cast.GENERIC_ARRAY_TYPE.cast(type);
+            AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType);
             AnnotatedType annotatedTypeForArray = getAnnotatedTypeForArray(genericArrayType, annotatedArrayType);
-            boundType += new AnnotationUtils().getInlineAnnotations(annotatedTypeForArray) + "[]";
+            boundType += annotationUtils.getInlineAnnotations(annotatedTypeForArray) + "[]";
         }
 
         return getCorrectAnnotations(annotations) + boundType;
@@ -121,7 +132,7 @@ public class GenericsUtils {
         AnnotatedType[] annotatedBounds = parameter.getAnnotatedBounds();
 
         for (int index = 0; index < typeBounds.length; index++) {
-            String annotations = new AnnotationUtils().getInlineAnnotations(annotatedBounds[index]);
+            String annotations = annotationUtils.getInlineAnnotations(annotatedBounds[index]);
 
             String boundType = resolveType(typeBounds[index]);
             if (!boundType.isEmpty()) {
@@ -144,7 +155,7 @@ public class GenericsUtils {
     private AnnotatedType getAnnotatedTypeForArray(GenericArrayType array, AnnotatedArrayType annotatedType) {
         int dimensionIndex = 0;
         while (array.getGenericComponentType() instanceof GenericArrayType) {
-            array = CastConstants.GENERIC_ARRAY_TYPE.cast(array.getGenericComponentType());
+            array = Cast.GENERIC_ARRAY_TYPE.cast(array.getGenericComponentType());
             dimensionIndex++;
         }
 
@@ -153,7 +164,7 @@ public class GenericsUtils {
 
     private AnnotatedType getAnnotatedType(AnnotatedArrayType annotatedType, int countIncludes) {
         for (int index = 0; index < countIncludes; index++) {
-            annotatedType = CastConstants.ANNOTATED_ARRAY_TYPE.cast(annotatedType.getAnnotatedGenericComponentType());
+            annotatedType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType.getAnnotatedGenericComponentType());
         }
 
         return annotatedType;
@@ -161,9 +172,10 @@ public class GenericsUtils {
 
     private AnnotatedType getAnnotatedType(AnnotatedType annotatedType) {
         if (annotatedType instanceof AnnotatedArrayType) {
-            AnnotatedArrayType annotatedArrayType = CastConstants.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
+            AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             while (annotatedArrayType.getAnnotatedGenericComponentType() instanceof AnnotatedArrayType) {
-                annotatedArrayType = CastConstants.ANNOTATED_ARRAY_TYPE.cast(annotatedArrayType.getAnnotatedGenericComponentType());
+                annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE
+                        .cast(annotatedArrayType.getAnnotatedGenericComponentType());
             }
             annotatedType = annotatedArrayType.getAnnotatedGenericComponentType();
         }
@@ -180,10 +192,10 @@ public class GenericsUtils {
 
         for (int index = 0; index < actualTypeArguments.length; index++) {
             if (actualTypeArguments[index] instanceof WildcardType) {
-                WildcardType wildcardType = CastConstants.WILDCARD_TYPE.cast(actualTypeArguments[index]);
+                WildcardType wildcardType = Cast.WILDCARD_TYPE.cast(actualTypeArguments[index]);
                 AnnotatedType annotatedType = ifEmpty(annotatedActualTypeArguments, index);
-                AnnotatedWildcardType annotatedWildcardType = CastConstants.ANNOTATED_WILDCARD_TYPE.cast(annotatedType);
-                String annotations = new AnnotationUtils().getInlineAnnotations(annotatedWildcardType);
+                AnnotatedWildcardType annotatedWildcardType = Cast.ANNOTATED_WILDCARD_TYPE.cast(annotatedType);
+                String annotations = annotationUtils.getInlineAnnotations(annotatedWildcardType);
                 String wildcard = getCorrectAnnotations(annotations) + "?";
 
                 AnnotatedType[] upper = ifNullUpper(annotatedWildcardType);
@@ -243,7 +255,9 @@ public class GenericsUtils {
     }
 
     private boolean isArray(Type type) {
-        return type instanceof Class && CastConstants.CLASS.cast(type).isArray() || type instanceof GenericArrayType;
+        return type instanceof Class &&
+                Cast.CLASS.cast(type).isArray() ||
+                type instanceof GenericArrayType;
     }
 
     private AnnotatedType[] ifNull(AnnotatedParameterizedType type) {

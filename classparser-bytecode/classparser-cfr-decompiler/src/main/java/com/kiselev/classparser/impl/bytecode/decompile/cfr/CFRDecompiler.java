@@ -124,7 +124,7 @@ public final class CFRDecompiler implements Decompiler {
 
         private boolean skipLineSeparator = false;
 
-        public CFRBuilderDumper(TypeUsageInformation typeUsageInformation, Options options,
+        private CFRBuilderDumper(TypeUsageInformation typeUsageInformation, Options options,
                                 IllegalIdentifierDump illegalIdentifierDump) {
             super(typeUsageInformation, options, illegalIdentifierDump);
         }
@@ -135,7 +135,7 @@ public final class CFRDecompiler implements Decompiler {
             builder.append(data);
         }
 
-        public String getCorrectData(String data) {
+        private String getCorrectData(String data) {
             if ((data.equals("class ") ||
                     data.equals("interface ") ||
                     data.equals("enum ") ||
@@ -190,7 +190,7 @@ public final class CFRDecompiler implements Decompiler {
         private ByteCodeCollector codeCollector = new ChainByteCodeCollector();
         private Map<String, ClassFile> classFileMap = new HashMap<>();
 
-        public CFRDCCommonState(Options options, ClassFileSource classFileSource, byte[] byteCode) {
+        private CFRDCCommonState(Options options, ClassFileSource classFileSource, byte[] byteCode) {
             super(options, classFileSource);
             this.outerClassName = ClassNameUtils.getClassName(byteCode);
 

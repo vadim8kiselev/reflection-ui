@@ -129,7 +129,8 @@ public final class FernflowerDecompiler implements Decompiler {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, ContextUnit> getContextUnit(StructContext context) throws NoSuchFieldException, IllegalAccessException {
+    private Map<String, ContextUnit> getContextUnit(StructContext context)
+            throws NoSuchFieldException, IllegalAccessException {
         Field fieldUnits = StructContext.class.getDeclaredField("units");
         fieldUnits.setAccessible(true);
 
@@ -150,7 +151,7 @@ public final class FernflowerDecompiler implements Decompiler {
             this.source = source;
         }
 
-        public String getSource() {
+        private String getSource() {
             return source;
         }
 
@@ -167,7 +168,8 @@ public final class FernflowerDecompiler implements Decompiler {
         }
 
         @Override
-        public void saveClassEntry(String dummy, String dummyTwo, String dummyThree, String dummyFour, String dummyFive) {
+        public void saveClassEntry(String dummy, String dummyTwo, String dummyThree,
+                                   String dummyFour, String dummyFive) {
         }
 
         @Override

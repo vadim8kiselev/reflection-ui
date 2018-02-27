@@ -1,6 +1,6 @@
 package com.kiselev.classparser.impl.reflection.indent;
 
-import com.kiselev.classparser.impl.reflection.constants.CastConstants;
+import com.kiselev.classparser.impl.reflection.constants.Cast;
 import com.kiselev.classparser.impl.reflection.state.StateManager;
 
 import java.lang.reflect.Member;
@@ -13,14 +13,14 @@ public class IndentUtils {
         Class<?> declaringClass;
 
         if (object instanceof Member) {
-            Member member = CastConstants.MEMBER.cast(object);
+            Member member = Cast.MEMBER.cast(object);
             declaringClass = member.getDeclaringClass();
 
             if (declaringClass != null) {
                 indent.append(StateManager.getConfiguration().getIndentSpaces());
             }
         } else if (object instanceof Class) {
-            declaringClass = CastConstants.CLASS.cast(object);
+            declaringClass = Cast.CLASS.cast(object);
         } else {
             return "";
         }

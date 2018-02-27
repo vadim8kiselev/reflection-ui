@@ -12,6 +12,7 @@ import java.net.URL;
 public class ClassFileUtils {
 
     public static final String EMPTY_PATH = "";
+
     private static final String SHIELDED_SPACE = "%20";
 
     public static String getFilePath(Class<?> clazz) {
@@ -87,10 +88,18 @@ public class ClassFileUtils {
     }
 
     private static String getArchiveType(String path) {
-        if (path.contains(".jar!")) return "jar";
-        if (path.contains(".war!")) return "war";
-        if (path.contains(".ear!")) return "ear";
-        if (path.contains(".zip!")) return "zip";
+        if (path.contains(".jar!")) {
+            return "jar";
+        }
+        if (path.contains(".war!")) {
+            return "war";
+        }
+        if (path.contains(".ear!")) {
+            return "ear";
+        }
+        if (path.contains(".zip!")) {
+            return "zip";
+        }
 
         return EMPTY_PATH;
     }

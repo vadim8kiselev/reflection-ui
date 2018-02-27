@@ -42,7 +42,7 @@ public final class AgentBuilder {
 
         private Collection<Class<?>> attachedClasses;
 
-        AgentJarBuilder() {
+        private AgentJarBuilder() {
         }
 
         public AgentJarBuilder addAgentName(String agentName) {

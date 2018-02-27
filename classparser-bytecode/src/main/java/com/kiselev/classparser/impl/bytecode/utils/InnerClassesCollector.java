@@ -10,12 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
@@ -60,15 +55,7 @@ public class InnerClassesCollector {
             try {
                 Class<?> foundedClass = Class.forName(clazz.getName() + Constants.Symbols.DOLLAR + classId);
                 anonymousOrSyntheticClasses.add(foundedClass);
-                anonymousOrSyntheticClasses.addAll(getAnonymousOrSyntheticClasses(foundedClass));
-
-                if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
-                    anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
-                }
-
-                if (StateManager.getConfiguration().isDecompileLocalClasses()) {
-                    anonymousOrSyntheticClasses.addAll(getLocalClasses(foundedClass));
-                }
+                anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
             } catch (Exception exception) {
                 break;
             }
@@ -83,10 +70,6 @@ public class InnerClassesCollector {
         for (Class<?> innerOrNestedClass : clazz.getDeclaredClasses()) {
             innerAndNestedClasses.add(innerOrNestedClass);
             innerAndNestedClasses.addAll(getInnerClasses(innerOrNestedClass));
-
-            if (StateManager.getConfiguration().isDecompileLocalClasses()) {
-                innerAndNestedClasses.addAll(getLocalClasses(innerOrNestedClass));
-            }
         }
 
         return innerAndNestedClasses;
@@ -166,15 +149,7 @@ public class InnerClassesCollector {
     private static void addLocalClass(Class<?> localClass, Collection<Class<?>> localClasses) {
         if (localClass != null) {
             localClasses.add(localClass);
-            localClasses.addAll(getLocalClasses(localClass));
-
-            if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
-                localClasses.addAll(getInnerAndNestedClasses(localClass));
-            }
-
-            if (StateManager.getConfiguration().isDecompileAnonymousClasses()) {
-                localClasses.addAll(getAnonymousOrSyntheticClasses(localClass));
-            }
+            localClasses.addAll(getInnerClasses(localClass));
         }
     }
 

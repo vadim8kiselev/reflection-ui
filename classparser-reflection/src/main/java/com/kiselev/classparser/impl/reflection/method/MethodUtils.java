@@ -19,6 +19,22 @@ import java.util.List;
 
 public class MethodUtils {
 
+    private AnnotationUtils annotationUtils = new AnnotationUtils();
+
+    private IndentUtils indentUtils = new IndentUtils();
+
+    private GenericsUtils genericsUtils = new GenericsUtils();
+
+    private NameUtils nameUtils = new NameUtils();
+
+    private ArgumentUtils argumentUtils = new ArgumentUtils();
+
+    private ValueUtils valueUtils = new ValueUtils();
+
+    private ExceptionUtils exceptionUtils = new ExceptionUtils();
+
+    private ModifiersUtils modifiersUtils = new ModifiersUtils();
+
     public String getMethods(Class<?> clazz) {
         String methods = "";
 
@@ -41,9 +57,9 @@ public class MethodUtils {
 
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
-        String annotations = new AnnotationUtils().getAnnotations(method);
+        String annotations = annotationUtils.getAnnotations(method);
 
-        String indent = new IndentUtils().getIndent(method);
+        String indent = indentUtils.getIndent(method);
 
         String isDefault = method.isDefault() ? "default " : "";
 
@@ -51,7 +67,7 @@ public class MethodUtils {
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        String generics = isShowGeneric ? new GenericsUtils().getGenerics(method) : "";
+        String generics = isShowGeneric ? genericsUtils.getGenerics(method) : "";
 
         Type type = isShowGeneric ? method.getGenericReturnType() : method.getReturnType();
 
@@ -59,21 +75,22 @@ public class MethodUtils {
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? method.getAnnotatedReturnType() : null;
 
-        String returnType = new GenericsUtils().resolveType(type, annotatedType);
+        String returnType = genericsUtils.resolveType(type, annotatedType);
 
-        String methodName = new NameUtils().getMemberName(method);
+        String methodName = nameUtils.getMemberName(method);
 
-        String arguments = new ArgumentUtils().getArguments(method);
+        String arguments = argumentUtils.getArguments(method);
 
-        String defaultAnnotationValue = new ValueUtils().getValue(method);
+        String defaultAnnotationValue = valueUtils.getValue(method);
 
-        String exceptions = new ExceptionUtils().getExceptions(method);
+        String exceptions = exceptionUtils.getExceptions(method);
 
         String oneIndent = StateManager.getConfiguration().getIndentSpaces();
 
         String body = "";
         if (isMethodRealization(method)) {
-            body = " {" + lineSeparator + indent + oneIndent + "/* Compiled code */" + lineSeparator + indent + "}";
+            body = " {" + lineSeparator + indent + oneIndent +
+                    "/* Compiled code */" + lineSeparator + indent + "}";
         }
 
         methodSignature += annotations + indent + modifiers + generics + returnType;
@@ -88,7 +105,7 @@ public class MethodUtils {
     }
 
     private String getModifiers(Method method) {
-        String modifiers = new ModifiersUtils().getModifiers(method.getModifiers());
+        String modifiers = modifiersUtils.getModifiers(method.getModifiers());
         modifiers = modifiers.replace("transient ", "");
 
         if (modifiers.contains("volatile")) {

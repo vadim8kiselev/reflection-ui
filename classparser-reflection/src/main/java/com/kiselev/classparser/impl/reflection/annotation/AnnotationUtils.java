@@ -10,19 +10,21 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AnnotationUtils {
+
+    private IndentUtils indentUtils = new IndentUtils();
+
+    private GenericsUtils genericsUtils = new GenericsUtils();
+
+    private ValueUtils valueUtils = new ValueUtils();
 
     public String getInlineAnnotations(AnnotatedElement annotatedElement) {
         List<String> annotations = new ArrayList<>();
 
         if (annotatedElement != null) {
-            String indent = new IndentUtils().getIndent(annotatedElement);
+            String indent = indentUtils.getIndent(annotatedElement);
 
             for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
                 annotations.add(getAnnotation(annotation));
@@ -40,7 +42,7 @@ public class AnnotationUtils {
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         if (annotatedElement != null) {
-            String indent = new IndentUtils().getIndent(annotatedElement);
+            String indent = indentUtils.getIndent(annotatedElement);
 
             for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
                 annotations.append(indent).append(getAnnotation(annotation)).append(lineSeparator);
@@ -55,7 +57,7 @@ public class AnnotationUtils {
 
         String annotationSign = "@";
 
-        String annotationName = new GenericsUtils().resolveType(annotation.annotationType());
+        String annotationName = genericsUtils.resolveType(annotation.annotationType());
 
         String annotationArguments = getAnnotationArguments(annotation);
 
@@ -91,7 +93,7 @@ public class AnnotationUtils {
                 method.setAccessible(true);
                 Object value = method.invoke(annotation);
                 if (!isDefaultValue(value, method.getDefaultValue())) {
-                    map.put(method.getName(), new ValueUtils().getValue(value));
+                    map.put(method.getName(), valueUtils.getValue(value));
                 }
             }
         } catch (Exception exception) {
@@ -169,8 +171,8 @@ public class AnnotationUtils {
         if (!value.getClass().isArray()) {
             return value.equals(defaultValue);
         } else {
-            Object[] arrayValue = new ValueUtils().getArrayValues(value);
-            Object[] arrayDefaultValue = new ValueUtils().getArrayValues(defaultValue);
+            Object[] arrayValue = valueUtils.getArrayValues(value);
+            Object[] arrayDefaultValue = valueUtils.getArrayValues(defaultValue);
             return Arrays.equals(arrayValue, arrayDefaultValue);
         }
     }

@@ -4,11 +4,9 @@ import com.kiselev.classparser.impl.reflection.name.NameUtils;
 import com.kiselev.classparser.impl.reflection.packages.PackageUtils;
 import com.kiselev.classparser.impl.reflection.state.StateManager;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Aleksei Makarov on 06/18/2017.
@@ -37,7 +35,7 @@ public class ImportUtils {
     }
 
     public String getImports() {
-        List<String> imports = new ArrayList<>();
+        Set<String> imports = new TreeSet<>();
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         for (Class<?> className : classesForImport) {
@@ -46,15 +44,13 @@ public class ImportUtils {
             }
         }
 
-        Collections.sort(imports); // TODO : Code style
-
         clearState();
         return !imports.isEmpty() ? String.join("", imports) + lineSeparator : "";
     }
 
     private void clearState() {
         StateManager.clearState();
-        this.classesForImport = new HashSet<>();
+        this.classesForImport.clear();
     }
 
     private boolean isNeedFullName(Class<?> classForImport) {
