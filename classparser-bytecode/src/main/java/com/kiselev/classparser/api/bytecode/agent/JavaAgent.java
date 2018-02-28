@@ -2,9 +2,6 @@ package com.kiselev.classparser.api.bytecode.agent;
 
 import java.lang.instrument.Instrumentation;
 
-/**
- * Created by Aleksei Makarov on 08/03/2017.
- */
 public interface JavaAgent {
 
     /**

@@ -4,9 +4,6 @@ import com.kiselev.classparser.configuration.Configuration;
 
 import java.util.Collection;
 
-/**
- * Created by Aleksei Makarov on 06/24/2017.
- */
 public interface Decompiler {
 
     /**

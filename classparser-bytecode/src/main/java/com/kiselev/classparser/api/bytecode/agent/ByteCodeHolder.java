@@ -1,8 +1,5 @@
 package com.kiselev.classparser.api.bytecode.agent;
 
-/**
- * Created by Aleksei Makarov on 08/04/2017.
- */
 public interface ByteCodeHolder {
 
     /**

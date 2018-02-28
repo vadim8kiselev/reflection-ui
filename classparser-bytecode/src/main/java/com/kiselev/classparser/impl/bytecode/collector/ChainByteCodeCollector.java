@@ -6,9 +6,6 @@ import com.kiselev.classparser.impl.bytecode.configuration.StateManager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Алексей on 07/13/2017.
- */
 public class ChainByteCodeCollector implements ByteCodeCollector {
 
     private List<ByteCodeCollector> collectors = new ArrayList<>();

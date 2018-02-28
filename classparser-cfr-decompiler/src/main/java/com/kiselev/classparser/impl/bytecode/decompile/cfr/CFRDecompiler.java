@@ -7,6 +7,7 @@ import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.classparser.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.decompile.cfr.configuration.CFRBuilderConfiguration;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
+import com.kiselev.classparser.impl.bytecode.utils.RuntimeLibraryUploader;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
@@ -25,16 +26,17 @@ import org.benf.cfr.reader.util.output.StdIODumper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Aleksei Makarov on 07/25/2017.
- * <p>
  * This decompiler can't show local classes
  */
 public final class CFRDecompiler implements Decompiler {
+
+    private static final String DECOMPILER_PATH = "/src/main/resources/cfr_0_125.jar";
 
     private Collection<byte[]> innerClasses = new ArrayList<>();
 
@@ -42,11 +44,12 @@ public final class CFRDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode) {
-        return decompile(byteCode, new ArrayList<>());
+        return decompile(byteCode, Collections.emptyList());
     }
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
+        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_PATH);
         String className = ClassNameUtils.getClassName(byteCode);
         this.innerClasses = classes;
 

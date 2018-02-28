@@ -4,9 +4,6 @@ import com.kiselev.classparser.configuration.util.ConfigurationUtils;
 
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/14/2017.
- */
 public class ConfigurationManager {
 
     private Map<String, Object> configuration;

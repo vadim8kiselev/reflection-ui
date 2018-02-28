@@ -4,11 +4,10 @@ import com.kiselev.classparser.api.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.api.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.configuration.Configuration;
+import com.kiselev.classparser.impl.bytecode.BytecodeParser;
 
 /**
- * Created by Алексей on 07/14/2017.
- * <p>
- * Builder configuration for class: com.kiselev.classparser.impl.bytecode.BytecodeParser
+ * Builder configuration for class: {@link BytecodeParser}
  */
 public interface ByteCodeConfiguration extends Configuration {
 

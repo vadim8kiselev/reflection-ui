@@ -9,9 +9,6 @@ import org.jetbrains.java.decompiler.util.DataInputFullStream;
 import java.io.IOException;
 import java.util.Collections;
 
-/**
- * Created by Aleksei Makarov on 07/12/2017.
- */
 public class ClassNameUtils {
 
     public static final int MAGIC = 0xCAFEBABE;

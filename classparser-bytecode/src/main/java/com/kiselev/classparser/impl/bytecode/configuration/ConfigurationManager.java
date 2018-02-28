@@ -12,9 +12,6 @@ import com.kiselev.classparser.impl.bytecode.decompile.fernflower.FernflowerDeco
 import java.io.File;
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/18/2017.
- */
 public class ConfigurationManager {
 
     private Map<String, Object> configuration;

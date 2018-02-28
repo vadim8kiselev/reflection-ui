@@ -8,6 +8,7 @@ import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.classparser.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.decompile.procyon.configuration.ProcyonBuilderConfiguration;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
+import com.kiselev.classparser.impl.bytecode.utils.RuntimeLibraryUploader;
 import com.strobel.assembler.metadata.Buffer;
 import com.strobel.assembler.metadata.DeobfuscationUtilities;
 import com.strobel.assembler.metadata.ITypeLoader;
@@ -22,15 +23,14 @@ import com.strobel.decompiler.languages.java.BraceStyle;
 import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 import com.strobel.decompiler.languages.java.JavaLanguage;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/21/2017.
- */
 public final class ProcyonDecompiler implements Decompiler {
+
+    private static final String DECOMPILER_PATH = "/src/main/resources/procyon-decompiler-0.5.30.jar";
 
     private byte[] byteCode;
 
@@ -42,11 +42,13 @@ public final class ProcyonDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode) {
-        return decompile(byteCode, new ArrayList<>());
+        return decompile(byteCode, Collections.emptyList());
     }
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
+        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_PATH);
+
         this.byteCode = byteCode;
         if (this.utils == null) {
             this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());

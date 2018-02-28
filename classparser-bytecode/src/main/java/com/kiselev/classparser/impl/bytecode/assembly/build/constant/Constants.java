@@ -2,9 +2,6 @@ package com.kiselev.classparser.impl.bytecode.assembly.build.constant;
 
 import java.util.jar.Attributes;
 
-/**
- * Created by Vadim Kiselev on 06/14/2017.
- */
 public interface Constants {
 
     interface Folders {

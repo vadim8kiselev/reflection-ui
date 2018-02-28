@@ -20,9 +20,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
-/**
- * Created by by Aleksei Makarov on 06/26/2017.
- */
 public class InnerClassesCollector {
 
     private static final String LOCAL_CLASS_PATTERN = "[\\d]+.*";

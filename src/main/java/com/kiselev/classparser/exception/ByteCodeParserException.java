@@ -1,8 +1,5 @@
 package com.kiselev.classparser.exception;
 
-/**
- * Created by Aleksei Makarov on 07/13/2017.
- */
 public class ByteCodeParserException extends RuntimeException {
 
     public ByteCodeParserException(String message) {

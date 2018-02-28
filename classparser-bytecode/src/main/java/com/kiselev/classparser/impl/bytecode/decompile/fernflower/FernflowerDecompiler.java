@@ -19,14 +19,11 @@ import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.jar.Manifest;
 
-/**
- * Created by Aleksei Makarov on 06/26/2017.
- */
 public final class FernflowerDecompiler implements Decompiler {
 
     private static final int CLASS_TYPE = 1;
@@ -39,7 +36,7 @@ public final class FernflowerDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode) {
-        return decompile(byteCode, new ArrayList<>());
+        return decompile(byteCode, Collections.emptyList());
     }
 
     @Override

@@ -12,9 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by Aleksei Makarov on 07/12/2017.
- */
 public class ByteCodeSaver {
 
     private static void writeByteCodeToFile(String fileName, byte[] byteCode) {

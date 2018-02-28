@@ -2,9 +2,6 @@ package com.kiselev.classparser.impl.bytecode.assembly.attach;
 
 import com.ea.agentloader.AgentLoader;
 
-/**
- * Created by Vadim Kiselev on 6/13/2017.
- */
 public final class AgentAttacher {
 
     private static final String EMPTY_OPTIONS = "";

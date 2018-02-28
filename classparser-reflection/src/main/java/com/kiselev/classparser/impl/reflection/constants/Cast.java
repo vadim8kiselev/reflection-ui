@@ -12,9 +12,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 
-/**
- * Created by Aleksei Makarov on 08/01/2017.
- */
 public interface Cast {
 
     Class<Class> CLASS = Class.class;

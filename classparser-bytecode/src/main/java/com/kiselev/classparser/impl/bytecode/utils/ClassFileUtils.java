@@ -6,9 +6,6 @@ import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by Aleksei Makarov on 07/13/2017.
- */
 public class ClassFileUtils {
 
     public static final String EMPTY_PATH = "";

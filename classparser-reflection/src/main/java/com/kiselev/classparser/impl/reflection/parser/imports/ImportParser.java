@@ -8,9 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Created by Aleksei Makarov on 06/18/2017.
- */
 public class ImportParser {
 
     private Set<Class<?>> classesForImport;

@@ -4,9 +4,6 @@ import com.kiselev.classparser.exception.option.OptionNotFoundException;
 
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/28/2017.
- */
 public class ConfigurationUtils {
 
     private final Map<String, Object> defaultConfiguration;

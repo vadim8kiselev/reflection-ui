@@ -9,9 +9,6 @@ import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Vadim Kiselev on 6/12/2017.
- */
 public final class Transformer implements ClassFileTransformer, ByteCodeHolder {
 
     private Map<String, byte[]> bytecodeMap = new HashMap<>();

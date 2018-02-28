@@ -5,9 +5,6 @@ import com.kiselev.classparser.impl.reflection.configuration.api.ReflectionConfi
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Алексей on 07/14/2017.
- */
 public class ReflectionBuilderConfiguration {
 
     public static ReflectionConfiguration configure() {

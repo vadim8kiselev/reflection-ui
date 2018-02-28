@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vadim Kiselev on 6/26/2017.
- */
 public class BytecodeParser implements ClassParser {
 
     private ByteCodeCollector byteCodeCollector;

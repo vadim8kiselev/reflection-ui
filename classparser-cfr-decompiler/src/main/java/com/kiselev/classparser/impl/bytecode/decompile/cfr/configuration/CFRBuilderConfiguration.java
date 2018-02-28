@@ -3,9 +3,6 @@ package com.kiselev.classparser.impl.bytecode.decompile.cfr.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/26/2017.
- */
 public class CFRBuilderConfiguration {
 
     public static CFRConfiguration getBuilderConfiguration() {

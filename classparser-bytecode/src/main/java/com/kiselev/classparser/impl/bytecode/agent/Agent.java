@@ -6,9 +6,6 @@ import com.kiselev.classparser.impl.bytecode.assembly.AgentAssembler;
 
 import java.lang.instrument.Instrumentation;
 
-/**
- * Created by Vadim Kiselev on 6/12/2017.
- */
 public final class Agent implements JavaAgent {
 
     private static final AgentAssembler agentAssembler = new AgentAssembler();

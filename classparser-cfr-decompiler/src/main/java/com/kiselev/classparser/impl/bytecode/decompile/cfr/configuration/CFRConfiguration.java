@@ -4,11 +4,7 @@ import com.kiselev.classparser.configuration.Configuration;
 import com.kiselev.classparser.impl.bytecode.decompile.cfr.CFRDecompiler;
 
 /**
- * Created by Aleksei Makarov on 07/26/2017.
- * <p>
- * Builder configuration for
- *
- * @see CFRDecompiler
+ * Builder configuration for {@link CFRDecompiler}
  */
 public interface CFRConfiguration extends Configuration {
 

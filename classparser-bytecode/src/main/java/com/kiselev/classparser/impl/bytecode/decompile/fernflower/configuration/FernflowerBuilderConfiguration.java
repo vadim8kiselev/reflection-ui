@@ -6,9 +6,6 @@ import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 06/23/2017.
- */
 public class FernflowerBuilderConfiguration {
 
     public static FernflowerConfiguration getBuilderConfiguration() {

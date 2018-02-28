@@ -6,11 +6,7 @@ import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 
 /**
- * Created by Aleksei Makarov on 06/24/2017.
- * <p>
- * Builder configuration for
- *
- * @see FernflowerDecompiler
+ * Builder configuration for {@link FernflowerDecompiler}
  */
 public interface FernflowerConfiguration extends Configuration {
 

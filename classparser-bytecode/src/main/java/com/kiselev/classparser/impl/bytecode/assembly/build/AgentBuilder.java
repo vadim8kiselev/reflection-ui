@@ -23,9 +23,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-/**
- * Created by Aleksei Makarov on 06/13/2017.
- */
 public final class AgentBuilder {
 
     public static Builder getBuilder() {

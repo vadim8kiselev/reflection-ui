@@ -1,11 +1,10 @@
 package com.kiselev.classparser.impl.reflection.configuration.api;
 
 import com.kiselev.classparser.configuration.Configuration;
+import com.kiselev.classparser.impl.reflection.ReflectionParser;
 
 /**
- * Created by Алексей on 07/14/2017.
- * <p>
- * Builder configuration for class: com.kiselev.classparser.impl.reflection.ReflectionParser
+ * Builder configuration for class: {@link ReflectionParser}
  */
 public interface ReflectionConfiguration extends Configuration {
 

@@ -11,9 +11,6 @@ import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/**
- * Created by Aleksei Makarov on 07/12/2017.
- */
 public class ClassFileByteCodeCollector implements ByteCodeCollector {
 
     public byte[] getByteCode(Class<?> clazz) {

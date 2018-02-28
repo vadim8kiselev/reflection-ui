@@ -9,9 +9,6 @@ import com.kiselev.classparser.impl.bytecode.configuration.api.ByteCodeConfigura
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Алексей on 07/14/2017.
- */
 public class ByteCodeBuilderConfiguration {
 
     public static ByteCodeConfiguration configure() {

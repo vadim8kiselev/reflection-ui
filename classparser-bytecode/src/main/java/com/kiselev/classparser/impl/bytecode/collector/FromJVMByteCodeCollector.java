@@ -10,9 +10,6 @@ import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 
-/**
- * Created by Aleksei Makarov on 07/12/2017.
- */
 public class FromJVMByteCodeCollector implements ByteCodeCollector {
 
     private static JavaAgent agent = StateManager.getConfiguration().getAgent();

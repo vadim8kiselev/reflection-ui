@@ -8,6 +8,7 @@ import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.classparser.impl.bytecode.decompile.jd.configuration.JDBuilderConfiguration;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.classparser.impl.bytecode.utils.ClassStringUtils;
+import com.kiselev.classparser.impl.bytecode.utils.RuntimeLibraryUploader;
 import jd.common.preferences.CommonPreferences;
 import jd.common.printer.text.PlainTextPrinter;
 import jd.core.loader.Loader;
@@ -31,6 +32,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,22 +44,33 @@ import java.util.Map;
  */
 public final class JDDecompiler implements Decompiler {
 
+    private static final String DECOMPILER_COMMON_PATH = "/src/main/resources/jd-common.jar";
+
+    private static final String DECOMPILER_CORE_PATH = "/src/main/resources/jd-core.jar";
+
     private static final int INITIAL_CAPACITY = 1024;
+
     private List<ClassFile> innerClasses = new ArrayList<>();
+
     private Map<String, Object> configuration = getDefaultConfiguration();
+
     private ConfigurationUtils utils;
 
     @Override
     public String decompile(byte[] byteCode) {
-        return decompile(byteCode, new ArrayList<>());
+        return decompile(byteCode, Collections.emptyList());
     }
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
+        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_COMMON_PATH);
+        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_CORE_PATH);
+
+        if (this.utils == null) {
+            this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+        }
+
         try {
-            if (this.utils == null) {
-                this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
-            }
             appendAdditionalClasses(classes);
             Loader loader = new JDLoader(byteCode);
 

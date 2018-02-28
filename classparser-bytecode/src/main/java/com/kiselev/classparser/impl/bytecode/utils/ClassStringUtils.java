@@ -1,8 +1,5 @@
 package com.kiselev.classparser.impl.bytecode.utils;
 
-/**
- * Created by Aleksei Makarov on 07/27/2017.
- */
 public class ClassStringUtils {
 
     private static final Character OPEN_BLOCK = '{';

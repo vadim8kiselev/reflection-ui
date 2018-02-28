@@ -6,9 +6,6 @@ import com.kiselev.classparser.impl.reflection.parser.imports.ImportParser;
 
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 06/18/2017.
- */
 public class StateManager {
 
     private static ThreadLocal<State> states = new ThreadLocal<>();

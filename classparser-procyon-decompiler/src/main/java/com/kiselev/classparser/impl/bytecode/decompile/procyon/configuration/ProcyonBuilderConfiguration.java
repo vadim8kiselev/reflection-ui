@@ -6,9 +6,6 @@ import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/21/2017.
- */
 public class ProcyonBuilderConfiguration {
 
     public static ProcyonConfiguration getBuilderConfiguration() {

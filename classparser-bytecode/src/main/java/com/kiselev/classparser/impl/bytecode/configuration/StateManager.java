@@ -2,9 +2,6 @@ package com.kiselev.classparser.impl.bytecode.configuration;
 
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/17/2017.
- */
 public class StateManager {
 
     private static ThreadLocal<ConfigurationManager> configurationLocalMap = new ThreadLocal<>();

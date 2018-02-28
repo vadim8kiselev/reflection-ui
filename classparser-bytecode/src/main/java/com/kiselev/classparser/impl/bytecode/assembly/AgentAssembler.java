@@ -9,9 +9,6 @@ import com.kiselev.classparser.impl.bytecode.assembly.build.AgentBuilder;
 
 import java.io.File;
 
-/**
- * Created by Vadim Kiselev on 6/13/2017.
- */
 public class AgentAssembler {
 
     private static boolean assembled = false;

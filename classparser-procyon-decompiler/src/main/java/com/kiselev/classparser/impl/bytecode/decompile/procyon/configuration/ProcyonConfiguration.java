@@ -7,11 +7,7 @@ import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 import com.strobel.decompiler.languages.java.JavaLanguage;
 
 /**
- * Created by Aleksei Makarov on 07/21/2017.
- * <p>
- * Builder configuration for
- *
- * @see ProcyonDecompiler
+ * Builder configuration for {@link ProcyonDecompiler}
  */
 public interface ProcyonConfiguration extends Configuration {
 

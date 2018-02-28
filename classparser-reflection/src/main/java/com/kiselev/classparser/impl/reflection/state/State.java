@@ -3,9 +3,6 @@ package com.kiselev.classparser.impl.reflection.state;
 import com.kiselev.classparser.impl.reflection.configuration.ConfigurationManager;
 import com.kiselev.classparser.impl.reflection.parser.imports.ImportParser;
 
-/**
- * Created by Aleksei Makarov on 28.02.2018.
- */
 public class State {
 
     private ImportParser importParser;

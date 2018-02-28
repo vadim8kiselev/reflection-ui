@@ -1,8 +1,6 @@
 package com.kiselev.classparser.impl.bytecode.assembly.build;
 
 /**
- * Created by Aleksei Makarov on 06/13/2017.
- * <p>
  * Interface for creating agent jar files
  */
 public interface Builder {
