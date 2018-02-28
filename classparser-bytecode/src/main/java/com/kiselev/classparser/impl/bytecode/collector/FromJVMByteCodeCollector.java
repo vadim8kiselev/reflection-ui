@@ -1,8 +1,9 @@
 package com.kiselev.classparser.impl.bytecode.collector;
 
+import com.kiselev.classparser.api.bytecode.agent.ByteCodeHolder;
+import com.kiselev.classparser.api.bytecode.agent.JavaAgent;
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.exception.agent.InvalidRetransformClass;
-import com.kiselev.classparser.impl.bytecode.agent.ByteCodeHolder;
-import com.kiselev.classparser.impl.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.impl.bytecode.configuration.StateManager;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 

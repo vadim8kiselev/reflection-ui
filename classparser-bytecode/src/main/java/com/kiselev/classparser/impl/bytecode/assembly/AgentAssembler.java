@@ -1,8 +1,8 @@
 package com.kiselev.classparser.impl.bytecode.assembly;
 
+import com.kiselev.classparser.api.bytecode.agent.ByteCodeHolder;
+import com.kiselev.classparser.api.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.impl.bytecode.agent.Agent;
-import com.kiselev.classparser.impl.bytecode.agent.ByteCodeHolder;
-import com.kiselev.classparser.impl.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.impl.bytecode.agent.Transformer;
 import com.kiselev.classparser.impl.bytecode.assembly.attach.AgentAttacher;
 import com.kiselev.classparser.impl.bytecode.assembly.build.AgentBuilder;

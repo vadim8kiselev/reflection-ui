@@ -1,5 +1,6 @@
 package com.kiselev.classparser.impl.bytecode.agent;
 
+import com.kiselev.classparser.api.bytecode.agent.ByteCodeHolder;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 
 import java.lang.instrument.ClassFileTransformer;

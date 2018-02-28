@@ -1,8 +1,8 @@
 package com.kiselev.classparser.impl.bytecode.utils;
 
+import com.kiselev.classparser.api.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.exception.agent.ClassLoadException;
 import com.kiselev.classparser.exception.file.ReadFileException;
-import com.kiselev.classparser.impl.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
 import com.kiselev.classparser.impl.bytecode.configuration.StateManager;
 

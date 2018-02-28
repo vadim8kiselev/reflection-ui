@@ -1,10 +1,10 @@
 package com.kiselev.classparser.impl.bytecode.assembly.build;
 
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.exception.agent.ClassLoadException;
 import com.kiselev.classparser.exception.agent.InvalidAgentClassException;
 import com.kiselev.classparser.exception.file.CreateFileException;
 import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.classparser.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.collector.ClassFileByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 

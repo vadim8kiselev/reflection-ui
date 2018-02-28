@@ -2,7 +2,7 @@ package com.kiselev.classparser.impl.reflection.state;
 
 import com.kiselev.classparser.exception.ReflectionParserException;
 import com.kiselev.classparser.impl.reflection.configuration.ConfigurationManager;
-import com.kiselev.classparser.impl.reflection.imports.ImportUtils;
+import com.kiselev.classparser.impl.reflection.parser.imports.ImportParser;
 
 import java.util.Map;
 
@@ -17,9 +17,9 @@ public class StateManager {
         State state = states.get();
         if (!clazz.isMemberClass() ||
                 state == null ||
-                state.getImportUtils() == null ||
+                state.getImportParser() == null ||
                 state.getCurrentParsedClass() == null) {
-            state = new State(new ImportUtils(), clazz, clazz);
+            state = new State(new ImportParser(), clazz, clazz);
             states.set(state);
             if (state.getConfigurationManager() == null) {
                 state.setConfigurationManager(new ConfigurationManager());
@@ -27,14 +27,14 @@ public class StateManager {
         }
     }
 
-    public static ImportUtils getImportUtils() {
+    public static ImportParser getImportUtils() {
         State state = states.get();
-        ImportUtils importUtils = state.getImportUtils();
-        if (importUtils == null) {
+        ImportParser importParser = state.getImportParser();
+        if (importParser == null) {
             throw new ReflectionParserException("Import utils is not register");
         }
 
-        return importUtils;
+        return importParser;
     }
 
     public static void clearState() {

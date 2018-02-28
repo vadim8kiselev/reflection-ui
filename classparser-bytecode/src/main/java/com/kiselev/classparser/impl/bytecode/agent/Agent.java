@@ -1,5 +1,7 @@
 package com.kiselev.classparser.impl.bytecode.agent;
 
+import com.kiselev.classparser.api.bytecode.agent.ByteCodeHolder;
+import com.kiselev.classparser.api.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.impl.bytecode.assembly.AgentAssembler;
 
 import java.lang.instrument.Instrumentation;

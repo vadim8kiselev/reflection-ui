@@ -1,9 +1,9 @@
 package com.kiselev.classparser.impl.bytecode.decompile.fernflower;
 
+import com.kiselev.classparser.api.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.configuration.Configuration;
 import com.kiselev.classparser.exception.decompile.DecompilationException;
 import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.classparser.impl.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.impl.bytecode.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
 import com.kiselev.classparser.impl.bytecode.utils.ClassFileUtils;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;

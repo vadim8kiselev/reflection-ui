@@ -1,5 +1,6 @@
 package com.kiselev.classparser.impl.bytecode.collector;
 
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.configuration.StateManager;
 
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
 package com.kiselev.classparser.impl.reflection.configuration;
 
-import com.kiselev.classparser.configuration.reflection.ReflectionBuilderConfiguration;
 import com.kiselev.classparser.configuration.util.ConfigurationUtils;
 
 import java.util.Map;

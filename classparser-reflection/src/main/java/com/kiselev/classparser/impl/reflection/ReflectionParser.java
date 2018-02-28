@@ -1,19 +1,19 @@
 package com.kiselev.classparser.impl.reflection;
 
 import com.kiselev.classparser.api.ClassParser;
-import com.kiselev.classparser.impl.reflection.annotation.AnnotationUtils;
-import com.kiselev.classparser.impl.reflection.classes.ClassUtils;
-import com.kiselev.classparser.impl.reflection.constructor.ConstructorUtils;
-import com.kiselev.classparser.impl.reflection.field.FieldUtils;
-import com.kiselev.classparser.impl.reflection.generic.GenericsUtils;
-import com.kiselev.classparser.impl.reflection.indent.IndentUtils;
-import com.kiselev.classparser.impl.reflection.inheritance.InheritancesUtils;
-import com.kiselev.classparser.impl.reflection.method.MethodUtils;
-import com.kiselev.classparser.impl.reflection.modifier.ModifiersUtils;
-import com.kiselev.classparser.impl.reflection.name.NameUtils;
-import com.kiselev.classparser.impl.reflection.packages.PackageUtils;
+import com.kiselev.classparser.impl.reflection.parser.ClassNameParser;
+import com.kiselev.classparser.impl.reflection.parser.ClassTypeParser;
+import com.kiselev.classparser.impl.reflection.parser.InheritanceParser;
+import com.kiselev.classparser.impl.reflection.parser.base.AnnotationParser;
+import com.kiselev.classparser.impl.reflection.parser.base.GenericTypeParser;
+import com.kiselev.classparser.impl.reflection.parser.base.IndentParser;
+import com.kiselev.classparser.impl.reflection.parser.base.ModifierParser;
+import com.kiselev.classparser.impl.reflection.parser.structure.ClassesParser;
+import com.kiselev.classparser.impl.reflection.parser.structure.FieldParser;
+import com.kiselev.classparser.impl.reflection.parser.structure.PackageParser;
+import com.kiselev.classparser.impl.reflection.parser.structure.executeble.ConstructorParser;
+import com.kiselev.classparser.impl.reflection.parser.structure.executeble.MethodParser;
 import com.kiselev.classparser.impl.reflection.state.StateManager;
-import com.kiselev.classparser.impl.reflection.type.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,29 +22,29 @@ import java.util.Map;
 
 public class ReflectionParser implements ClassParser {
 
-    private AnnotationUtils annotationUtils = new AnnotationUtils();
+    private AnnotationParser annotationParser = new AnnotationParser();
 
-    private IndentUtils indentUtils = new IndentUtils();
+    private IndentParser indentParser = new IndentParser();
 
-    private GenericsUtils genericsUtils = new GenericsUtils();
+    private GenericTypeParser genericTypeParser = new GenericTypeParser();
 
-    private NameUtils nameUtils = new NameUtils();
+    private ClassNameParser classNameParser = new ClassNameParser();
 
-    private ModifiersUtils modifiersUtils = new ModifiersUtils();
+    private ModifierParser modifierParser = new ModifierParser();
 
-    private PackageUtils packageUtils = new PackageUtils();
+    private PackageParser packageParser = new PackageParser();
 
-    private TypeUtils typeUtils = new TypeUtils();
+    private ClassTypeParser classTypeParser = new ClassTypeParser();
 
-    private InheritancesUtils inheritancesUtils = new InheritancesUtils();
+    private InheritanceParser inheritanceParser = new InheritanceParser();
 
-    private FieldUtils fieldUtils = new FieldUtils();
+    private FieldParser fieldParser = new FieldParser();
 
-    private MethodUtils methodUtils = new MethodUtils();
+    private MethodParser methodParser = new MethodParser();
 
-    private ConstructorUtils constructorUtils = new ConstructorUtils();
+    private ConstructorParser constructorParser = new ConstructorParser();
 
-    private ClassUtils classUtils = new ClassUtils();
+    private ClassesParser classesParser = new ClassesParser();
 
     @Override
     public String parseClass(Class<?> clazz) {
@@ -56,9 +56,9 @@ public class ReflectionParser implements ClassParser {
 
         StateManager.setCurrentClass(clazz);
 
-        String packageName = packageUtils.getPackage(clazz);
+        String packageName = packageParser.getPackage(clazz);
 
-        String indent = indentUtils.getIndent(clazz);
+        String indent = indentParser.getIndent(clazz);
 
         String classSignature = getClassSignature(clazz);
 
@@ -81,21 +81,21 @@ public class ReflectionParser implements ClassParser {
     private String getClassSignature(Class<?> clazz) {
         String classSignature = "";
 
-        String annotations = annotationUtils.getAnnotations(clazz);
+        String annotations = annotationParser.getAnnotations(clazz);
 
-        String indent = indentUtils.getIndent(clazz);
+        String indent = indentParser.getIndent(clazz);
 
-        String modifiers = modifiersUtils.getModifiers(clazz.getModifiers());
+        String modifiers = modifierParser.getModifiers(clazz.getModifiers());
 
-        String type = typeUtils.getType(clazz);
+        String type = classTypeParser.getType(clazz);
 
-        String typeName = nameUtils.getTypeName(clazz);
+        String typeName = classNameParser.getTypeName(clazz);
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        String generics = isShowGeneric ? genericsUtils.getGenerics(clazz) : " ";
+        String generics = isShowGeneric ? genericTypeParser.getGenerics(clazz) : " ";
 
-        String inheritances = inheritancesUtils.getInheritances(clazz);
+        String inheritances = inheritanceParser.getInheritances(clazz);
 
         classSignature += annotations + indent + modifiers + type + typeName + generics + inheritances;
 
@@ -105,15 +105,15 @@ public class ReflectionParser implements ClassParser {
     private String getClassContent(Class<?> clazz) {
         String classContent = "";
 
-        String fields = fieldUtils.getFields(clazz);
+        String fields = fieldParser.getFields(clazz);
 
-        String constructors = constructorUtils.getConstructors(clazz);
+        String constructors = constructorParser.getConstructors(clazz);
 
-        String methods = methodUtils.getMethods(clazz);
+        String methods = methodParser.getMethods(clazz);
 
         boolean isShowInnerClasses = StateManager.getConfiguration().isShowInnerClasses();
 
-        String classes = isShowInnerClasses ? classUtils.getClasses(clazz) : "";
+        String classes = isShowInnerClasses ? classesParser.getClasses(clazz) : "";
 
         //fields + constructors + methods + classes;
         classContent += composeContent(Arrays.asList(fields, constructors, methods, classes));

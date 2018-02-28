@@ -1,12 +1,12 @@
 package com.kiselev.classparser.impl.bytecode;
 
 import com.kiselev.classparser.api.ClassParser;
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
+import com.kiselev.classparser.api.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.configuration.Configuration;
 import com.kiselev.classparser.exception.agent.InvalidRetransformClass;
-import com.kiselev.classparser.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.collector.ChainByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.configuration.StateManager;
-import com.kiselev.classparser.impl.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.impl.bytecode.saver.ByteCodeSaver;
 import com.kiselev.classparser.impl.bytecode.utils.InnerClassesCollector;
 

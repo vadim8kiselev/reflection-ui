@@ -1,10 +1,10 @@
 package com.kiselev.classparser.impl.bytecode.decompile.jd;
 
+import com.kiselev.classparser.api.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.configuration.Configuration;
 import com.kiselev.classparser.configuration.util.ConfigurationUtils;
 import com.kiselev.classparser.exception.decompile.DecompilationException;
 import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.classparser.impl.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.impl.bytecode.decompile.jd.configuration.JDBuilderConfiguration;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 import com.kiselev.classparser.impl.bytecode.utils.ClassStringUtils;
@@ -42,13 +42,10 @@ import java.util.Map;
  */
 public final class JDDecompiler implements Decompiler {
 
-    private List<ClassFile> innerClasses = new ArrayList<>();
-
-    private Map<String, Object> configuration = getDefaultConfiguration();
-
-    private ConfigurationUtils utils;
-
     private static final int INITIAL_CAPACITY = 1024;
+    private List<ClassFile> innerClasses = new ArrayList<>();
+    private Map<String, Object> configuration = getDefaultConfiguration();
+    private ConfigurationUtils utils;
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -76,7 +73,7 @@ public final class JDDecompiler implements Decompiler {
             JDPrinter jdPrinter = new JDPrinter(System.out);
             Printer printer = new InstructionPrinter(new PlainTextPrinter(preferences, jdPrinter));
 
-            List<LayoutBlock> layoutBlockList = new ArrayList<>(INITIAL_CAPACITY);
+            ArrayList<LayoutBlock> layoutBlockList = new ArrayList<>(INITIAL_CAPACITY);
 
             int maxLineNumber = ClassFileLayouter.Layout(preferences, referenceMap, classFile, layoutBlockList);
             int minorVersion = classFile.getMinorVersion();
@@ -120,7 +117,7 @@ public final class JDDecompiler implements Decompiler {
     private void resolveInnerClasses(ClassFile classFile, List<ClassFile> innerClasses) {
         String className = ClassNameUtils.normalizeSimpleName(classFile.getThisClassName()) + Constants.Symbols.DOLLAR;
         Iterator<ClassFile> iterator = innerClasses.iterator();
-        List<ClassFile> currentInnerClasses = new ArrayList<>();
+        ArrayList<ClassFile> currentInnerClasses = new ArrayList<>();
         while (iterator.hasNext()) {
             ClassFile innerClass = iterator.next();
             String innerClassName = ClassNameUtils.normalizeSimpleName(innerClass.getThisClassName());
@@ -168,7 +165,7 @@ public final class JDDecompiler implements Decompiler {
 
         private byte[] bytecode;
 
-        public JDLoader(byte[] bytecode) {
+        private JDLoader(byte[] bytecode) {
             this.bytecode = bytecode;
         }
 
@@ -190,7 +187,7 @@ public final class JDDecompiler implements Decompiler {
         private StringBuilder builder = new StringBuilder();
         private String indent;
 
-        public JDPrinter(OutputStream stream) throws FileNotFoundException {
+        private JDPrinter(OutputStream stream) throws FileNotFoundException {
             super(stream);
             this.indent = utils.getConfig("ind", String.class);
         }
@@ -213,7 +210,7 @@ public final class JDDecompiler implements Decompiler {
             return STUB;
         }
 
-        public String getSource() {
+        private String getSource() {
             return ClassStringUtils.normalizeOpenBlockCharacter(builder);
         }
     }

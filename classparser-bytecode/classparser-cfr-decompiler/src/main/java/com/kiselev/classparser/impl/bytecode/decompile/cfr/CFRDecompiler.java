@@ -1,10 +1,10 @@
 package com.kiselev.classparser.impl.bytecode.decompile.cfr;
 
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
+import com.kiselev.classparser.api.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.configuration.Configuration;
 import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.classparser.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.collector.ChainByteCodeCollector;
-import com.kiselev.classparser.impl.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.impl.bytecode.decompile.cfr.configuration.CFRBuilderConfiguration;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 import org.benf.cfr.reader.api.ClassFileSource;
@@ -125,7 +125,7 @@ public final class CFRDecompiler implements Decompiler {
         private boolean skipLineSeparator = false;
 
         private CFRBuilderDumper(TypeUsageInformation typeUsageInformation, Options options,
-                                IllegalIdentifierDump illegalIdentifierDump) {
+                                 IllegalIdentifierDump illegalIdentifierDump) {
             super(typeUsageInformation, options, illegalIdentifierDump);
         }
 

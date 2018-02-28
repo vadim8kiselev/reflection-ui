@@ -1,5 +1,6 @@
 package com.kiselev.classparser.impl.bytecode.collector;
 
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.exception.file.ReadFileException;
 import com.kiselev.classparser.impl.bytecode.utils.ClassFileUtils;
 

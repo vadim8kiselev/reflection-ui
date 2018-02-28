@@ -1,13 +1,12 @@
 package com.kiselev.classparser.impl.bytecode.configuration;
 
+import com.kiselev.classparser.api.bytecode.agent.JavaAgent;
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
+import com.kiselev.classparser.api.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.configuration.Configuration;
-import com.kiselev.classparser.configuration.bytecode.ByteCodeBuilderConfiguration;
 import com.kiselev.classparser.configuration.util.ConfigurationUtils;
 import com.kiselev.classparser.impl.bytecode.agent.Agent;
-import com.kiselev.classparser.impl.bytecode.agent.JavaAgent;
 import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.classparser.impl.bytecode.collector.ByteCodeCollector;
-import com.kiselev.classparser.impl.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.impl.bytecode.decompile.fernflower.FernflowerDecompiler;
 
 import java.io.File;

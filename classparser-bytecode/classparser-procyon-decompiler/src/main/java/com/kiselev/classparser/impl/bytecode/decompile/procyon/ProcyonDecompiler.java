@@ -1,11 +1,11 @@
 package com.kiselev.classparser.impl.bytecode.decompile.procyon;
 
+import com.kiselev.classparser.api.bytecode.collector.ByteCodeCollector;
+import com.kiselev.classparser.api.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.configuration.Configuration;
 import com.kiselev.classparser.configuration.util.ConfigurationUtils;
 import com.kiselev.classparser.impl.bytecode.assembly.build.constant.Constants;
-import com.kiselev.classparser.impl.bytecode.collector.ByteCodeCollector;
 import com.kiselev.classparser.impl.bytecode.collector.ChainByteCodeCollector;
-import com.kiselev.classparser.impl.bytecode.decompile.Decompiler;
 import com.kiselev.classparser.impl.bytecode.decompile.procyon.configuration.ProcyonBuilderConfiguration;
 import com.kiselev.classparser.impl.bytecode.utils.ClassNameUtils;
 import com.strobel.assembler.metadata.Buffer;

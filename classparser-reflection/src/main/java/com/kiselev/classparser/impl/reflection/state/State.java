@@ -1,14 +1,14 @@
 package com.kiselev.classparser.impl.reflection.state;
 
 import com.kiselev.classparser.impl.reflection.configuration.ConfigurationManager;
-import com.kiselev.classparser.impl.reflection.imports.ImportUtils;
+import com.kiselev.classparser.impl.reflection.parser.imports.ImportParser;
 
 /**
  * Created by Aleksei Makarov on 28.02.2018.
  */
 public class State {
 
-    private ImportUtils importUtils;
+    private ImportParser importParser;
 
     private Class<?> mainParsedClass;
 
@@ -16,14 +16,14 @@ public class State {
 
     private ConfigurationManager configurationManager;
 
-    public State(ImportUtils importUtils, Class<?> mainParsedClass, Class<?> currentParsedClass) {
-        this.importUtils = importUtils;
+    public State(ImportParser importParser, Class<?> mainParsedClass, Class<?> currentParsedClass) {
+        this.importParser = importParser;
         this.mainParsedClass = mainParsedClass;
         this.currentParsedClass = currentParsedClass;
     }
 
-    public ImportUtils getImportUtils() {
-        return importUtils;
+    public ImportParser getImportParser() {
+        return importParser;
     }
 
     public Class<?> getMainParsedClass() {
@@ -49,6 +49,6 @@ public class State {
     public void clearState() {
         mainParsedClass = null;
         currentParsedClass = null;
-        importUtils = null;
+        importParser = null;
     }
 }
