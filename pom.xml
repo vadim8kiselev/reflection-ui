@@ -6,13 +6,8 @@
 
     <groupId>com.kiselev.classparser</groupId>
     <artifactId>classparser-core</artifactId>
-    <packaging>pom</packaging>
-    <version>0.9.1</version>
-
-    <modules>
-        <module>classparser-reflection</module>
-        <module>classparser-bytecode</module>
-    </modules>
+    <packaging>jar</packaging>
+    <version>1.0.0</version>
 
     <build>
         <plugins>

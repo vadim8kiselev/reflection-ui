@@ -2,30 +2,15 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>classparser-bytecode</artifactId>
-        <groupId>com.kiselev.classparser.impl.bytecode</groupId>
-        <version>0.9.2</version>
-    </parent>
-
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kiselev.classparser.impl.bytecode.decompile.procyon</groupId>
     <artifactId>classparser-procyon-decompiler</artifactId>
     <packaging>jar</packaging>
-    <version>0.9.1</version>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.kiselev.classparser.impl.bytecode</groupId>
-                <artifactId>classparser-bytecode</artifactId>
-                <version>0.9.2</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <version>1.0.0</version>
 
     <dependencies>
+        <!-- Procyon Decompiler -->
         <dependency>
             <groupId>com.strombel</groupId>
             <artifactId>procjon-decompiler</artifactId>
@@ -33,5 +18,25 @@
             <scope>system</scope>
             <systemPath>${basedir}/src/main/resources/procyon-decompiler-0.5.30.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>com.kiselev.classparser.impl.bytecode</groupId>
+            <artifactId>classparser-bytecode</artifactId>
+            <version>0.9.2</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
