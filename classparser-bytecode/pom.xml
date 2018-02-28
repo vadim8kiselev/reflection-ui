@@ -36,13 +36,17 @@
         </repository>
     </distributionManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.kiselev.classparser</groupId>
-            <artifactId>classparser-core</artifactId>
-            <version>0.9.1</version>
-        </dependency>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.kiselev.classparser</groupId>
+                <artifactId>classparser-core</artifactId>
+                <version>0.9.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
+    <dependencies>
         <!-- FernFlower Decompiler -->
         <dependency>
             <groupId>com.github.fesh0r</groupId>

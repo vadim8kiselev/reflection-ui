@@ -14,11 +14,31 @@
     <packaging>jar</packaging>
     <version>0.9.1</version>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.kiselev.classparser.impl.bytecode</groupId>
+                <artifactId>classparser-bytecode</artifactId>
+                <version>0.9.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
-            <groupId>com.kiselev.classparser.impl.bytecode</groupId>
-            <artifactId>classparser-bytecode</artifactId>
-            <version>0.9.2</version>
+            <groupId>jd.core</groupId>
+            <artifactId>jd-core</artifactId>
+            <version>0.94</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/resources/jd-core.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>jd.common</groupId>
+            <artifactId>jd-common</artifactId>
+            <version>0.94</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/resources/jd-common.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
