@@ -39,4 +39,9 @@ public final class Agent implements JavaAgent {
         initialize();
         return transformer;
     }
+
+    @Override
+    public boolean isInitialize() {
+        return agentAssembler.isAssembled();
+    }
 }

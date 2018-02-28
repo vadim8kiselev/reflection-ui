@@ -175,8 +175,7 @@ public class InnerClassesCollector {
 
     @SuppressWarnings("unchecked")
     private static Collection<Class<?>> getLoadedClasses(ClassLoader classLoader) {
-        Instrumentation instrumentation = agent.getInstrumentation();
-        if (instrumentation == null) {
+        if (!agent.isInitialize()) {
             try {
                 Field classes = ClassLoader.class.getDeclaredField("classes");
                 classes.setAccessible(true);
@@ -185,6 +184,7 @@ public class InnerClassesCollector {
                 throw new ClassLoadException("Can't get loaded classes", exception);
             }
         } else {
+            Instrumentation instrumentation = agent.getInstrumentation();
             return Arrays.asList(instrumentation.getInitiatedClasses(classLoader));
         }
     }

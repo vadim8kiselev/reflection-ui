@@ -20,4 +20,11 @@ public interface JavaAgent {
      * @return ByteCodeHolder instance
      */
     ByteCodeHolder getByteCodeHolder();
+
+    /**
+     * Try check agent is initialize
+     *
+     * @return boolean status
+     */
+    boolean isInitialize();
 }
