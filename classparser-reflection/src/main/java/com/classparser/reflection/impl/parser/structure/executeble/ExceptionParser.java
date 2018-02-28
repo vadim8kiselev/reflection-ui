@@ -11,9 +11,7 @@ import java.util.List;
 
 public class ExceptionParser {
 
-    private GenericTypeParser genericTypeParser = new GenericTypeParser();
-
-    public String getExceptions(Executable executable) {
+    public static String getExceptions(Executable executable) {
         String exceptions = "";
 
         List<String> exceptionTypes = new ArrayList<>();
@@ -27,9 +25,9 @@ public class ExceptionParser {
             if (StateManager.getConfiguration().isShowAnnotationTypes()) {
                 Type genericExceptionType = genericExceptionTypes[index];
                 AnnotatedType annotatedExceptionType = annotatedExceptionTypes[index];
-                exceptionType = genericTypeParser.resolveType(genericExceptionType, annotatedExceptionType);
+                exceptionType = GenericTypeParser.resolveType(genericExceptionType, annotatedExceptionType);
             } else {
-                exceptionType = genericTypeParser.resolveType(genericExceptionTypes[index], null);
+                exceptionType = GenericTypeParser.resolveType(genericExceptionTypes[index], null);
             }
             exceptionTypes.add(exceptionType);
         }

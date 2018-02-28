@@ -16,19 +16,7 @@ import java.util.List;
 
 public class FieldParser {
 
-    private AnnotationParser annotationParser = new AnnotationParser();
-
-    private IndentParser indentParser = new IndentParser();
-
-    private GenericTypeParser genericTypeParser = new GenericTypeParser();
-
-    private ClassNameParser classNameParser = new ClassNameParser();
-
-    private ValueParser valueParser = new ValueParser();
-
-    private ModifierParser modifierParser = new ModifierParser();
-
-    public String getFields(Class<?> clazz) {
+    public static String getFields(Class<?> clazz) {
         String fields = "";
 
         List<String> fieldList = new ArrayList<>();
@@ -45,14 +33,14 @@ public class FieldParser {
         return fields;
     }
 
-    private String getField(Field field) {
+    private static String getField(Field field) {
         String fieldSignature = "";
 
-        String annotations = annotationParser.getAnnotations(field);
+        String annotations = AnnotationParser.getAnnotations(field);
 
-        String indent = indentParser.getIndent(field);
+        String indent = IndentParser.getIndent(field);
 
-        String modifiers = modifierParser.getModifiers(field.getModifiers());
+        String modifiers = ModifierParser.getModifiers(field.getModifiers());
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
@@ -62,13 +50,13 @@ public class FieldParser {
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? field.getAnnotatedType() : null;
 
-        String type = genericTypeParser.resolveType(fieldType, annotatedType);
+        String type = GenericTypeParser.resolveType(fieldType, annotatedType);
 
-        String fieldName = classNameParser.getMemberName(field);
+        String fieldName = ClassNameParser.getMemberName(field);
 
         boolean isDisplayFiledValue = StateManager.getConfiguration().isDisplayFieldValue();
 
-        String fieldValue = isDisplayFiledValue ? valueParser.getValue(field) : "";
+        String fieldValue = isDisplayFiledValue ? ValueParser.getValue(field) : "";
 
         fieldSignature += annotations + indent + modifiers + type + " " + fieldName + fieldValue + ";";
 

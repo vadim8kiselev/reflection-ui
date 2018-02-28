@@ -13,19 +13,7 @@ import java.util.List;
 
 public class ConstructorParser {
 
-    private AnnotationParser annotationParser = new AnnotationParser();
-
-    private IndentParser indentParser = new IndentParser();
-
-    private GenericTypeParser genericTypeParser = new GenericTypeParser();
-
-    private ArgumentParser argumentParser = new ArgumentParser();
-
-    private ExceptionParser exceptionParser = new ExceptionParser();
-
-    private ModifierParser modifierParser = new ModifierParser();
-
-    public String getConstructors(Class<?> clazz) {
+    public static String getConstructors(Class<?> clazz) {
         String constructors = "";
 
         List<String> constructorList = new ArrayList<>();
@@ -42,30 +30,30 @@ public class ConstructorParser {
         return constructors;
     }
 
-    private String getConstructor(Constructor constructor) {
+    private static String getConstructor(Constructor constructor) {
         String constructorSignature = "";
 
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
-        String annotations = annotationParser.getAnnotations(constructor);
+        String annotations = AnnotationParser.getAnnotations(constructor);
 
-        String indent = indentParser.getIndent(constructor);
+        String indent = IndentParser.getIndent(constructor);
 
-        String modifiers = modifierParser.getModifiers(constructor.getModifiers());
+        String modifiers = ModifierParser.getModifiers(constructor.getModifiers());
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        String generics = isShowGeneric ? genericTypeParser.getGenerics(constructor) : "";
+        String generics = isShowGeneric ? GenericTypeParser.getGenerics(constructor) : "";
 
         boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? constructor.getAnnotatedReturnType() : null;
 
-        String constructorName = genericTypeParser.resolveType(constructor.getDeclaringClass(), annotatedType);
+        String constructorName = GenericTypeParser.resolveType(constructor.getDeclaringClass(), annotatedType);
 
-        String arguments = argumentParser.getArguments(constructor);
+        String arguments = ArgumentParser.getArguments(constructor);
 
-        String exceptions = exceptionParser.getExceptions(constructor);
+        String exceptions = ExceptionParser.getExceptions(constructor);
 
         String oneIndent = StateManager.getConfiguration().getIndentSpaces();
 

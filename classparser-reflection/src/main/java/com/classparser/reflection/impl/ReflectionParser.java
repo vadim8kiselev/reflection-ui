@@ -22,43 +22,19 @@ import java.util.Map;
 
 public class ReflectionParser implements ClassParser {
 
-    private AnnotationParser annotationParser = new AnnotationParser();
-
-    private IndentParser indentParser = new IndentParser();
-
-    private GenericTypeParser genericTypeParser = new GenericTypeParser();
-
-    private ClassNameParser classNameParser = new ClassNameParser();
-
-    private ModifierParser modifierParser = new ModifierParser();
-
-    private PackageParser packageParser = new PackageParser();
-
-    private ClassTypeParser classTypeParser = new ClassTypeParser();
-
-    private InheritanceParser inheritanceParser = new InheritanceParser();
-
-    private FieldParser fieldParser = new FieldParser();
-
-    private MethodParser methodParser = new MethodParser();
-
-    private ConstructorParser constructorParser = new ConstructorParser();
-
-    private ClassesParser classesParser = new ClassesParser();
-
     @Override
     public String parseClass(Class<?> clazz) {
         String parsedClass = "";
 
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
-
         StateManager.registerImportUtils(clazz);
+
+        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         StateManager.setCurrentClass(clazz);
 
-        String packageName = packageParser.getPackage(clazz);
+        String packageName = PackageParser.getPackage(clazz);
 
-        String indent = indentParser.getIndent(clazz);
+        String indent = IndentParser.getIndent(clazz);
 
         String classSignature = getClassSignature(clazz);
 
@@ -81,21 +57,21 @@ public class ReflectionParser implements ClassParser {
     private String getClassSignature(Class<?> clazz) {
         String classSignature = "";
 
-        String annotations = annotationParser.getAnnotations(clazz);
+        String annotations = AnnotationParser.getAnnotations(clazz);
 
-        String indent = indentParser.getIndent(clazz);
+        String indent = IndentParser.getIndent(clazz);
 
-        String modifiers = modifierParser.getModifiers(clazz.getModifiers());
+        String modifiers = ModifierParser.getModifiers(clazz.getModifiers());
 
-        String type = classTypeParser.getType(clazz);
+        String type = ClassTypeParser.getType(clazz);
 
-        String typeName = classNameParser.getTypeName(clazz);
+        String typeName = ClassNameParser.getTypeName(clazz);
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        String generics = isShowGeneric ? genericTypeParser.getGenerics(clazz) : " ";
+        String generics = isShowGeneric ? GenericTypeParser.getGenerics(clazz) : " ";
 
-        String inheritances = inheritanceParser.getInheritances(clazz);
+        String inheritances = InheritanceParser.getInheritances(clazz);
 
         classSignature += annotations + indent + modifiers + type + typeName + generics + inheritances;
 
@@ -105,17 +81,16 @@ public class ReflectionParser implements ClassParser {
     private String getClassContent(Class<?> clazz) {
         String classContent = "";
 
-        String fields = fieldParser.getFields(clazz);
+        String fields = FieldParser.getFields(clazz);
 
-        String constructors = constructorParser.getConstructors(clazz);
+        String constructors = ConstructorParser.getConstructors(clazz);
 
-        String methods = methodParser.getMethods(clazz);
+        String methods = MethodParser.getMethods(clazz);
 
         boolean isShowInnerClasses = StateManager.getConfiguration().isShowInnerClasses();
 
-        String classes = isShowInnerClasses ? classesParser.getClasses(clazz) : "";
+        String classes = isShowInnerClasses ? ClassesParser.getClasses(clazz) : "";
 
-        //fields + constructors + methods + classes;
         classContent += composeContent(Arrays.asList(fields, constructors, methods, classes));
 
         return classContent;

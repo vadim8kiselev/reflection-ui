@@ -6,11 +6,11 @@ import java.lang.reflect.Member;
 
 public class ClassNameParser {
 
-    public String getTypeName(Class<?> clazz) {
+    public static String getTypeName(Class<?> clazz) {
         return StateManager.getImportUtils().addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
     }
 
-    public String getSimpleName(Class<?> clazz) {
+    public static String getSimpleName(Class<?> clazz) {
         String typeName = clazz.getSimpleName();
         if (typeName.isEmpty()) {
             typeName = clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1);
@@ -18,7 +18,7 @@ public class ClassNameParser {
         return typeName;
     }
 
-    public String getName(Class<?> clazz) {
+    public static String getName(Class<?> clazz) {
         if (clazz.isMemberClass() || clazz == StateManager.getParsedClass()) {
             return getSimpleName(clazz);
         } else {
@@ -26,7 +26,7 @@ public class ClassNameParser {
         }
     }
 
-    public String getMemberName(Member member) {
+    public static String getMemberName(Member member) {
         return member.getName();
     }
 }

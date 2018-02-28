@@ -6,7 +6,7 @@
 
     <groupId>com.classparser</groupId>
     <artifactId>classparser-core</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <version>1.0.0</version>
 
     <build>
@@ -22,4 +22,7 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>classparser-test</module>
+    </modules>
 </project>

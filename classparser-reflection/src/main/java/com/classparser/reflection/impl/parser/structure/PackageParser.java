@@ -5,9 +5,7 @@ import com.classparser.reflection.impl.state.StateManager;
 
 public class PackageParser {
 
-    private AnnotationParser annotationParser = new AnnotationParser();
-
-    public String getPackage(Class<?> clazz) {
+    public static String getPackage(Class<?> clazz) {
         String packageName = "";
 
         Package classPackage = clazz.getPackage();
@@ -16,7 +14,7 @@ public class PackageParser {
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
         if (classPackage != null && clazz.equals(parsedClass)) {
-            String packageAnnotations = annotationParser.getAnnotations(classPackage);
+            String packageAnnotations = AnnotationParser.getAnnotations(classPackage);
             packageName += packageAnnotations + "package " +
                     classPackage.getName() + ";" + lineSeparator + lineSeparator;
         }
@@ -24,7 +22,7 @@ public class PackageParser {
         return packageName;
     }
 
-    public String getPackageName(Class<?> clazz) {
+    public static String getPackageName(Class<?> clazz) {
         return clazz.getPackage() != null ? clazz.getPackage().getName() : "";
     }
 }

@@ -9,14 +9,14 @@ import java.util.List;
 
 public class ClassesParser {
 
-    private ClassParser classParser = new ReflectionParser();
+    private static final ClassParser CLASS_PARSER = new ReflectionParser();
 
-    public String getClasses(Class<?> clazz) {
+    public static String getClasses(Class<?> clazz) {
         String classes = "";
 
         List<String> classList = new ArrayList<>();
         for (Class<?> declaredClass : clazz.getDeclaredClasses()) {
-            classList.add(classParser.parseClass(declaredClass));
+            classList.add(CLASS_PARSER.parseClass(declaredClass));
         }
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 

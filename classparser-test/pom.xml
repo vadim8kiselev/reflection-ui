@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>classparser-core</artifactId>
+        <groupId>com.classparser</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.classparser.test</groupId>
+    <artifactId>classparser-test</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.classparser</groupId>
+            <artifactId>classparser-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.classparser.bytecode</groupId>
+            <artifactId>classparser-bytecode</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.classparser.reflection</groupId>
+            <artifactId>classparser-reflection</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.classparser.bytecode.impl.decompile.cfr</groupId>
+            <artifactId>classparser-cfr-decompiler</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.classparser.bytecode.impl.decompile.jd</groupId>
+            <artifactId>classparser-jd-decompiler</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.classparser.bytecode.impl.decompile.procyon</groupId>
+            <artifactId>classparser-procyon-decompiler</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+</project>

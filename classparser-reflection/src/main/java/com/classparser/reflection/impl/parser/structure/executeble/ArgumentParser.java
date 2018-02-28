@@ -13,13 +13,7 @@ import java.util.ArrayList;
 
 public class ArgumentParser {
 
-    private AnnotationParser annotationParser = new AnnotationParser();
-
-    private GenericTypeParser genericTypeParser = new GenericTypeParser();
-
-    private ModifierParser modifierParser = new ModifierParser();
-
-    public String getArguments(Executable executable) {
+    public static String getArguments(Executable executable) {
         String arguments = "";
 
         ArrayList<String> strings = new ArrayList<>();
@@ -41,7 +35,7 @@ public class ArgumentParser {
         return arguments;
     }
 
-    private String getArgument(Parameter parameter, AnnotatedType annotatedType) {
+    private static String getArgument(Parameter parameter, AnnotatedType annotatedType) {
         String argumentSignature = "";
 
         String annotations = getArgumentAnnotations(parameter);
@@ -50,11 +44,11 @@ public class ArgumentParser {
 
         Type type = isShowGeneric ? parameter.getParameterizedType() : parameter.getType();
 
-        String genericType = genericTypeParser.resolveType(type, annotatedType);
+        String genericType = GenericTypeParser.resolveType(type, annotatedType);
 
         genericType = parameter.isVarArgs() ? convertToVarArg(genericType) : genericType;
 
-        String modifiers = modifierParser.getModifiers(parameter.getModifiers());
+        String modifiers = ModifierParser.getModifiers(parameter.getModifiers());
 
         String parameterName = parameter.getName();
 
@@ -63,12 +57,12 @@ public class ArgumentParser {
         return argumentSignature;
     }
 
-    private String getArgumentAnnotations(Parameter parameter) {
-        String annotations = annotationParser.getInlineAnnotations(parameter);
+    private static String getArgumentAnnotations(Parameter parameter) {
+        String annotations = AnnotationParser.getInlineAnnotations(parameter);
         return !annotations.isEmpty() ? annotations + " " : "";
     }
 
-    private String convertToVarArg(String type) {
+    private static String convertToVarArg(String type) {
         if (StateManager.getConfiguration().isShowVarArgs()) {
             return type.substring(0, type.length() - 2) + "...";
         } else {

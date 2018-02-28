@@ -17,23 +17,7 @@ import java.util.List;
 
 public class MethodParser {
 
-    private AnnotationParser annotationParser = new AnnotationParser();
-
-    private IndentParser indentParser = new IndentParser();
-
-    private GenericTypeParser genericTypeParser = new GenericTypeParser();
-
-    private ClassNameParser classNameParser = new ClassNameParser();
-
-    private ArgumentParser argumentParser = new ArgumentParser();
-
-    private ValueParser valueParser = new ValueParser();
-
-    private ExceptionParser exceptionParser = new ExceptionParser();
-
-    private ModifierParser modifierParser = new ModifierParser();
-
-    public String getMethods(Class<?> clazz) {
+    public static String getMethods(Class<?> clazz) {
         String methods = "";
 
         List<String> methodList = new ArrayList<>();
@@ -50,14 +34,14 @@ public class MethodParser {
         return methods;
     }
 
-    private String getMethod(Method method) {
+    private static String getMethod(Method method) {
         String methodSignature = "";
 
         String lineSeparator = StateManager.getConfiguration().getLineSeparator();
 
-        String annotations = annotationParser.getAnnotations(method);
+        String annotations = AnnotationParser.getAnnotations(method);
 
-        String indent = indentParser.getIndent(method);
+        String indent = IndentParser.getIndent(method);
 
         String isDefault = method.isDefault() ? "default " : "";
 
@@ -65,7 +49,7 @@ public class MethodParser {
 
         boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
 
-        String generics = isShowGeneric ? genericTypeParser.getGenerics(method) : "";
+        String generics = isShowGeneric ? GenericTypeParser.getGenerics(method) : "";
 
         Type type = isShowGeneric ? method.getGenericReturnType() : method.getReturnType();
 
@@ -73,15 +57,15 @@ public class MethodParser {
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? method.getAnnotatedReturnType() : null;
 
-        String returnType = genericTypeParser.resolveType(type, annotatedType);
+        String returnType = GenericTypeParser.resolveType(type, annotatedType);
 
-        String methodName = classNameParser.getMemberName(method);
+        String methodName = ClassNameParser.getMemberName(method);
 
-        String arguments = argumentParser.getArguments(method);
+        String arguments = ArgumentParser.getArguments(method);
 
-        String defaultAnnotationValue = valueParser.getValue(method);
+        String defaultAnnotationValue = ValueParser.getValue(method);
 
-        String exceptions = exceptionParser.getExceptions(method);
+        String exceptions = ExceptionParser.getExceptions(method);
 
         String oneIndent = StateManager.getConfiguration().getIndentSpaces();
 
@@ -98,12 +82,12 @@ public class MethodParser {
         return methodSignature;
     }
 
-    private boolean isMethodRealization(Method method) {
+    private static boolean isMethodRealization(Method method) {
         return !Modifier.isAbstract(method.getModifiers()) && !Modifier.isNative(method.getModifiers());
     }
 
-    private String getModifiers(Method method) {
-        String modifiers = modifierParser.getModifiers(method.getModifiers());
+    private static String getModifiers(Method method) {
+        String modifiers = ModifierParser.getModifiers(method.getModifiers());
         modifiers = modifiers.replace("transient ", "");
 
         if (modifiers.contains("volatile")) {

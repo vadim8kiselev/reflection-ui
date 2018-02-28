@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ValueParser {
 
-    public String getValue(Object object) {
+    public static String getValue(Object object) {
         if (isField(object)) {
             return getFieldValue(Cast.FIELD.cast(object));
         }
@@ -42,7 +42,7 @@ public class ValueParser {
             }
 
             if (clazz.isEnum()) {
-                return new GenericTypeParser().resolveType(clazz) + "." + object;
+                return GenericTypeParser.resolveType(clazz) + "." + object;
             } else if (object instanceof String) {
                 return "\"" + object + "\"";
             } else if (object instanceof Character) {
@@ -50,9 +50,9 @@ public class ValueParser {
             } else if (object instanceof Number || object instanceof Boolean) {
                 return object.toString() + getLiteral(object);
             } else if (object instanceof Annotation) {
-                return new AnnotationParser().getAnnotation(Cast.ANNOTATION.cast(object));
+                return AnnotationParser.getAnnotation(Cast.ANNOTATION.cast(object));
             } else if (object instanceof Class) {
-                return new GenericTypeParser().resolveType(Cast.CLASS.cast(object)) + ".class";
+                return GenericTypeParser.resolveType(Cast.CLASS.cast(object)) + ".class";
             } else {
                 return "";
             }
@@ -61,11 +61,11 @@ public class ValueParser {
         return null;
     }
 
-    private boolean isObjectValue(Object object) {
+    private static boolean isObjectValue(Object object) {
         return object != null && !(object instanceof String) && object.toString().isEmpty();
     }
 
-    public Object[] getArrayValues(Object object) {
+    public static Object[] getArrayValues(Object object) {
         Object[] objects = new Object[0];
         if (object.getClass().isArray()) {
             int length = Array.getLength(object);
@@ -79,7 +79,7 @@ public class ValueParser {
         return objects;
     }
 
-    private String getLiteral(Object object) {
+    private static String getLiteral(Object object) {
         if (object instanceof Long) {
             return "L";
         } else if (object instanceof Float) {
@@ -91,7 +91,7 @@ public class ValueParser {
         }
     }
 
-    private String getDefaultAnnotationValue(Method method) {
+    private static String getDefaultAnnotationValue(Method method) {
         String defaultAnnotationValue = "";
 
         String defaultValue = getValue(method.getDefaultValue());
@@ -103,7 +103,7 @@ public class ValueParser {
         return defaultAnnotationValue;
     }
 
-    private String getFieldValue(Field field) {
+    private static String getFieldValue(Field field) {
         if (Modifier.isStatic(field.getModifiers())) {
             try {
                 field.setAccessible(true);
@@ -122,12 +122,12 @@ public class ValueParser {
         return "";
     }
 
-    private boolean isField(Object object) {
+    private static boolean isField(Object object) {
         return object instanceof Field &&
                 Cast.FIELD.cast(object).getDeclaringClass() == StateManager.getCurrentClass();
     }
 
-    private boolean isAnnotationMethod(Object object) {
+    private static boolean isAnnotationMethod(Object object) {
         return object instanceof Method &&
                 Cast.METHOD.cast(object).getDeclaringClass().isAnnotation();
     }

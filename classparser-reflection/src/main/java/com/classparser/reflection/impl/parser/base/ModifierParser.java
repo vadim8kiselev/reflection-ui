@@ -10,7 +10,7 @@ public class ModifierParser {
 
     private static final int IMPLICIT = 0x00008000;
 
-    public String getModifiers(int modifierIndex) {
+    public static String getModifiers(int modifierIndex) {
         String modifiers = "";
 
         if (StateManager.getConfiguration().isShowNonJavaModifiers()) {
@@ -65,11 +65,11 @@ public class ModifierParser {
         return modifiers;
     }
 
-    private boolean isSynthetic(int modifierIndex) {
+    private static boolean isSynthetic(int modifierIndex) {
         return (modifierIndex & SYNTHETIC) != 0;
     }
 
-    private boolean isImplicit(int modifierIndex) {
+    private static boolean isImplicit(int modifierIndex) {
         return (modifierIndex & IMPLICIT) != 0;
     }
 }

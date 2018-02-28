@@ -10,7 +10,7 @@ import java.util.List;
 
 public class InheritanceParser {
 
-    public String getInheritances(Class<?> clazz) {
+    public static String getInheritances(Class<?> clazz) {
         String inheritances = "";
 
         inheritances += getSuperClass(clazz);
@@ -20,7 +20,7 @@ public class InheritanceParser {
         return inheritances;
     }
 
-    private String getSuperClass(Class<?> clazz) {
+    private static String getSuperClass(Class<?> clazz) {
         boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? clazz.getAnnotatedSuperclass() : null;
@@ -35,7 +35,7 @@ public class InheritanceParser {
         return (!superClass.isEmpty()) ? "extends " + superClass + " " : "";
     }
 
-    private String getInterfaces(Class<?> clazz) {
+    private static String getInterfaces(Class<?> clazz) {
         boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
         AnnotatedType[] annotatedTypes = isShowTypeAnnotation ? clazz.getAnnotatedInterfaces() : null;
         String interfaces;
@@ -51,7 +51,7 @@ public class InheritanceParser {
         return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
     }
 
-    private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
+    private static List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
         List<String> multipleParentTypes = new ArrayList<>();
         for (int index = 0; index < parentTypes.length; index++) {
             multipleParentTypes.add(getSingleParentType(parentTypes[index], ifEmpty(annotatedTypes, index)));
@@ -59,11 +59,11 @@ public class InheritanceParser {
         return multipleParentTypes;
     }
 
-    private String getSingleParentType(Type parentType, AnnotatedType annotatedType) {
-        return new GenericTypeParser().resolveType(parentType, annotatedType);
+    private static String getSingleParentType(Type parentType, AnnotatedType annotatedType) {
+        return GenericTypeParser.resolveType(parentType, annotatedType);
     }
 
-    private AnnotatedType ifEmpty(AnnotatedType[] types, int index) {
+    private static AnnotatedType ifEmpty(AnnotatedType[] types, int index) {
         return types == null || types.length == 0 ? null : types[index];
     }
 }

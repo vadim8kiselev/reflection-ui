@@ -7,7 +7,7 @@ import java.lang.reflect.Member;
 
 public class IndentParser {
 
-    public String getIndent(Object object) {
+    public static String getIndent(Object object) {
         StringBuilder indent = new StringBuilder();
 
         Class<?> declaringClass;
