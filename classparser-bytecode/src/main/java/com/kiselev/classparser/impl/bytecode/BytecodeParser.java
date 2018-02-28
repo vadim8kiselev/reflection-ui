@@ -23,8 +23,10 @@ public class BytecodeParser implements ClassParser {
 
     @Override
     public String parseClass(Class<?> clazz) {
-        byteCodeCollector = new ChainByteCodeCollector();
         checkToCorrectClass(clazz);
+        if (byteCodeCollector == null) {
+            byteCodeCollector = new ChainByteCodeCollector();
+        }
 
         byte[] byteCode = getByteCodeOfClass(clazz);
         List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz);
@@ -36,6 +38,7 @@ public class BytecodeParser implements ClassParser {
         if (configuration != null) {
             decompiler.setConfiguration(configuration);
         }
+
 
         return decompiler.decompile(byteCode, bytecodeOfInnerClasses);
     }

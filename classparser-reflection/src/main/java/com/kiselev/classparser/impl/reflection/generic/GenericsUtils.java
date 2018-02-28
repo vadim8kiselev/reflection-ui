@@ -1,15 +1,10 @@
 package com.kiselev.classparser.impl.reflection.generic;
 
 import com.kiselev.classparser.impl.reflection.annotation.AnnotationUtils;
-import com.kiselev.classparser.impl.reflection.argument.ArgumentUtils;
 import com.kiselev.classparser.impl.reflection.constants.Cast;
-import com.kiselev.classparser.impl.reflection.exception.ExceptionUtils;
-import com.kiselev.classparser.impl.reflection.indent.IndentUtils;
-import com.kiselev.classparser.impl.reflection.modifier.ModifiersUtils;
 import com.kiselev.classparser.impl.reflection.name.NameUtils;
 import com.kiselev.classparser.impl.reflection.packages.PackageUtils;
 import com.kiselev.classparser.impl.reflection.state.StateManager;
-import com.kiselev.classparser.impl.reflection.value.ValueUtils;
 
 import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -83,7 +78,6 @@ public class GenericsUtils {
                     annotations = "";
                 }
             }
-
         } else if (type instanceof TypeVariable) {
             TypeVariable typeVariable = Cast.TYPE_VARIABLE.cast(type);
             boundType = typeVariable.getName();

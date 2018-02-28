@@ -203,7 +203,7 @@ public interface FernflowerConfiguration extends Configuration {
     FernflowerConfiguration setCountIndentSpaces(int indent);
 
     /**
-     * A logging level, possible values are TRACE, INFO, WARN, ERROR
+     * Set logging level, possible values are TRACE, INFO, WARN, ERROR
      * <p>
      * Default value: ERROR
      */

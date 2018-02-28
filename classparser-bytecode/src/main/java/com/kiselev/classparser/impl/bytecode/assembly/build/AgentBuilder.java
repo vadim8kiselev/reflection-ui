@@ -32,6 +32,10 @@ public final class AgentBuilder {
         return new AgentJarBuilder();
     }
 
+    public static String getAgentPath(String agentName) {
+        return System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
+    }
+
     private static class AgentJarBuilder implements Builder {
 
         private String agentName;
@@ -131,7 +135,7 @@ public final class AgentBuilder {
                 agentName = "agent.jar";
             }
 
-            String agentPath = System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
+            String agentPath = getAgentPath(agentName);
 
             attachedClasses.add(agentClass);
             try (JarOutputStream jarStream = new JarOutputStream(new FileOutputStream(agentPath), getManifest())) {

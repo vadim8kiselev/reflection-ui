@@ -15,10 +15,6 @@ public final class Agent implements JavaAgent {
 
     private static Transformer transformer = new Transformer();
 
-    public Agent() {
-        initialize();
-    }
-
     public static void agentmain(String args, Instrumentation instrumentation) {
         Agent.instrumentation = instrumentation;
         instrumentation.addTransformer(transformer, true);
@@ -26,6 +22,7 @@ public final class Agent implements JavaAgent {
 
     @Override
     public Instrumentation getInstrumentation() {
+        initialize();
         return instrumentation;
     }
 
@@ -37,6 +34,7 @@ public final class Agent implements JavaAgent {
 
     @Override
     public ByteCodeHolder getByteCodeHolder() {
+        initialize();
         return transformer;
     }
 }

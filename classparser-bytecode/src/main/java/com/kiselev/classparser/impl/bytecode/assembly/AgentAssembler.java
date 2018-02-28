@@ -7,6 +7,8 @@ import com.kiselev.classparser.impl.bytecode.agent.Transformer;
 import com.kiselev.classparser.impl.bytecode.assembly.attach.AgentAttacher;
 import com.kiselev.classparser.impl.bytecode.assembly.build.AgentBuilder;
 
+import java.io.File;
+
 /**
  * Created by Vadim Kiselev on 6/13/2017.
  */
@@ -16,17 +18,18 @@ public class AgentAssembler {
 
     public void assembly() {
         if (!assembled) {
-            // Build agent jar
-            String agentPath = AgentBuilder.getBuilder()
-                    .addAgentName(getAgentJarName())
-                    .addAgentClass(getAgentClass())
-                    .addManifest(getManifestFileName())
-                    .addClasses(getAgentJarClasses())
-                    .build();
+            String agentPath = AgentBuilder.getAgentPath(getAgentJarName());
+            File file = new File(agentPath);
+            if (!file.exists()) {
+                agentPath = AgentBuilder.getBuilder()
+                        .addAgentName(getAgentJarName())
+                        .addAgentClass(getAgentClass())
+                        .addManifest(getManifestFileName())
+                        .addClasses(getAgentJarClasses())
+                        .build();
+            }
 
-            // Attach agent.jar to current process
             AgentAttacher.attach(agentPath);
-
             assembled = true;
         }
     }

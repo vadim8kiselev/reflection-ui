@@ -46,6 +46,7 @@ public class InheritancesUtils {
             interfaces = String.join(", ",
                     getMultipleParentTypes(clazz.getInterfaces(), annotatedTypes));
         }
+
         String relationship = clazz.isInterface() ? "extends " : "implements ";
         return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
     }
