@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.kiselev.classparser.impl.bytecode.decompile.procyon</groupId>
+    <groupId>com.classparser.bytecode.impl.decompile.procyon</groupId>
     <artifactId>classparser-procyon-decompiler</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
@@ -20,7 +20,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.kiselev.classparser.impl.bytecode</groupId>
+            <groupId>com.classparser.bytecode</groupId>
             <artifactId>classparser-bytecode</artifactId>
             <version>1.0.0</version>
         </dependency>
