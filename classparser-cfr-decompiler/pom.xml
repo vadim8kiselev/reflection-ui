@@ -3,6 +3,12 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>aggregator</artifactId>
+        <groupId>com.classparser</groupId>
+        <version>1.0.0</version>
+        <relativePath></relativePath>
+    </parent>
 
     <groupId>com.classparser.bytecode.impl.decompile.cfr</groupId>
     <artifactId>classparser-cfr-decompiler</artifactId>
@@ -12,16 +18,17 @@
     <dependencies>
         <!-- CFR Decompiler -->
         <dependency>
-            <groupId>com.benf.cfr.reader</groupId>
+            <groupId>org.benf.cfr.reader</groupId>
             <artifactId>cfr-decompiler</artifactId>
             <version>0.125</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/cfr_0_125.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/cfr-decompiler-0.125.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode</groupId>
             <artifactId>classparser-bytecode</artifactId>
+            <scope>provided</scope>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
@@ -30,13 +37,34 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-5</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${project.artifactId}-${project.version}-with-decompiler</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>install-internal</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>*.jar</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
 </project>

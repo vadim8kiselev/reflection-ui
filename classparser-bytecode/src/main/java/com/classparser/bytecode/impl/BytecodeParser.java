@@ -36,7 +36,6 @@ public class BytecodeParser implements ClassParser {
             decompiler.setConfiguration(configuration);
         }
 
-
         return decompiler.decompile(byteCode, bytecodeOfInnerClasses);
     }
 

@@ -30,8 +30,6 @@ import java.util.Map;
 
 public final class ProcyonDecompiler implements Decompiler {
 
-    private static final String DECOMPILER_PATH = "/src/main/resources/procyon-decompiler-0.5.30.jar";
-
     private byte[] byteCode;
 
     private Map<String, Object> configuration = getDefaultConfiguration();
@@ -47,8 +45,6 @@ public final class ProcyonDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
-        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_PATH);
-
         this.byteCode = byteCode;
         if (this.utils == null) {
             this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());

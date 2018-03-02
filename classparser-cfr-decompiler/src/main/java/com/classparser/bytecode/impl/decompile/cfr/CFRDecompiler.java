@@ -36,8 +36,6 @@ import java.util.Map;
  */
 public final class CFRDecompiler implements Decompiler {
 
-    private static final String DECOMPILER_PATH = "/src/main/resources/cfr_0_125.jar";
-
     private Collection<byte[]> innerClasses = new ArrayList<>();
 
     private Map<String, Object> configuration = getDefaultConfiguration();
@@ -49,7 +47,6 @@ public final class CFRDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
-        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_PATH);
         String className = ClassNameUtils.getClassName(byteCode);
         this.innerClasses = classes;
 

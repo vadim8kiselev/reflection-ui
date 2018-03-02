@@ -11,13 +11,13 @@ public class StateManager {
     private static ThreadLocal<State> states = new ThreadLocal<>();
 
     public static void registerImportUtils(Class<?> clazz) {
-        State state = states.get();
+        State state = getCurrentState();
         if (!clazz.isMemberClass() ||
                 state == null ||
                 state.getImportParser() == null ||
                 state.getCurrentParsedClass() == null) {
             state = new State(new ImportParser(), clazz, clazz);
-            states.set(state);
+            setCurrentState(state);
             if (state.getConfigurationManager() == null) {
                 state.setConfigurationManager(new ConfigurationManager());
             }
@@ -25,7 +25,7 @@ public class StateManager {
     }
 
     public static ImportParser getImportUtils() {
-        State state = states.get();
+        State state = getCurrentState();
         ImportParser importParser = state.getImportParser();
         if (importParser == null) {
             throw new ReflectionParserException("Import utils is not register");
@@ -35,39 +35,48 @@ public class StateManager {
     }
 
     public static void clearState() {
-        states.get().clearState();
+        getCurrentState().clearState();
     }
 
     public static Class<?> getParsedClass() {
-        return states.get().getMainParsedClass();
+        return getCurrentState().getMainParsedClass();
     }
 
     public static Class<?> getCurrentClass() {
-        return states.get().getCurrentParsedClass();
+        return getCurrentState().getCurrentParsedClass();
     }
 
     public static void setCurrentClass(Class<?> currentClass) {
-        states.get().setCurrentParsedClass(currentClass);
+        getCurrentState().setCurrentParsedClass(currentClass);
     }
 
     public static void popCurrentClass() {
-        State state = states.get();
+        State state = getCurrentState();
         if (state.getCurrentParsedClass() != null) {
             state.setCurrentParsedClass(state.getCurrentParsedClass().getDeclaringClass());
         }
     }
 
     public static ConfigurationManager getConfiguration() {
-        ConfigurationManager configurationManager = states.get().getConfigurationManager();
+        ConfigurationManager configurationManager = getCurrentState().getConfigurationManager();
         if (configurationManager == null) {
             configurationManager = new ConfigurationManager();
-            states.get().setConfigurationManager(configurationManager);
+            getCurrentState().setConfigurationManager(configurationManager);
         }
 
         return configurationManager;
     }
 
     public static void setConfiguration(Map<String, Object> configuration) {
-        states.get().setConfigurationManager(new ConfigurationManager(configuration));
+        getCurrentState().setConfigurationManager(new ConfigurationManager(configuration));
     }
+
+    private static State getCurrentState() {
+        return states.get();
+    }
+
+    private static void setCurrentState(State state) {
+        states.set(state);
+    }
+
 }

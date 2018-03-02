@@ -62,7 +62,7 @@ public class ImportParser {
 
     private boolean isAppendToImports(Class<?> clazz) {
         return !clazz.isPrimitive()
-                && !"java.lang".equals(new PackageParser().getPackageName(clazz))
+                && !"java.lang".equals(PackageParser.getPackageName(clazz))
                 && StateManager.getParsedClass().getPackage() != clazz.getPackage();
     }
 
@@ -71,8 +71,7 @@ public class ImportParser {
     }
 
     private boolean areEqualBySimpleName(Class<?> source, Class<?> target) {
-        ClassNameParser classNameParser = new ClassNameParser();
-        return classNameParser.getSimpleName(source).equals(classNameParser.getSimpleName(target));
+        return ClassNameParser.getSimpleName(source).equals(ClassNameParser.getSimpleName(target));
     }
 
     private Class<?> resolveClass(Class<?> clazz) {

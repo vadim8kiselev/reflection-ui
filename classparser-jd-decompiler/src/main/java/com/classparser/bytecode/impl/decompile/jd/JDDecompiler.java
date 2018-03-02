@@ -44,10 +44,6 @@ import java.util.Map;
  */
 public final class JDDecompiler implements Decompiler {
 
-    private static final String DECOMPILER_COMMON_PATH = "/src/main/resources/jd-common.jar";
-
-    private static final String DECOMPILER_CORE_PATH = "/src/main/resources/jd-core.jar";
-
     private static final int INITIAL_CAPACITY = 1024;
 
     private List<ClassFile> innerClasses = new ArrayList<>();
@@ -63,9 +59,6 @@ public final class JDDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
-        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_COMMON_PATH);
-        RuntimeLibraryUploader.appendToClassPath(DECOMPILER_CORE_PATH);
-
         if (this.utils == null) {
             this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
         }

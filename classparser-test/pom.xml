@@ -2,26 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>classparser-core</artifactId>
+        <artifactId>aggregator</artifactId>
         <groupId>com.classparser</groupId>
         <version>1.0.0</version>
+        <relativePath></relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.classparser.test</groupId>
     <artifactId>classparser-test</artifactId>
+    <version>1.0.0</version>
+
+    <description>
+        Module for running some tests for bytecode and reflection parsers.
+        This moduble needed only for dev.
+    </description>
 
     <dependencies>
         <dependency>
             <groupId>com.classparser</groupId>
             <artifactId>classparser-core</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.classparser.bytecode</groupId>
-            <artifactId>classparser-bytecode</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -32,21 +33,45 @@
         </dependency>
 
         <dependency>
+            <groupId>com.classparser.bytecode</groupId>
+            <artifactId>classparser-bytecode</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.classparser.bytecode.impl.decompile.cfr</groupId>
             <artifactId>classparser-cfr-decompiler</artifactId>
             <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode.impl.decompile.jd</groupId>
             <artifactId>classparser-jd-decompiler</artifactId>
             <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode.impl.decompile.procyon</groupId>
             <artifactId>classparser-procyon-decompiler</artifactId>
             <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

@@ -3,6 +3,12 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>classparser-aggregator</artifactId>
+        <groupId>com.classparser</groupId>
+        <version>1.0.0</version>
+        <relativePath></relativePath>
+    </parent>
 
     <groupId>com.classparser.bytecode.impl.decompile.jd</groupId>
     <artifactId>classparser-jd-decompiler</artifactId>
@@ -14,22 +20,23 @@
         <dependency>
             <groupId>jd.core</groupId>
             <artifactId>jd-core</artifactId>
-            <version>0.94</version>
+            <version>0.7.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/jd-core.jar</systemPath>
+            <systemPath>${basedir}/src/main/resources/jd-core-0.7.1.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>jd.common</groupId>
             <artifactId>jd-common</artifactId>
-            <version>0.94</version>
+            <version>0.7.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/jd-common.jar</systemPath>
+            <systemPath>${basedir}/src/main/resources/jd-common-0.7.1.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode</groupId>
             <artifactId>classparser-bytecode</artifactId>
+            <scope>provided</scope>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
@@ -38,13 +45,34 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-5</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${project.artifactId}-${project.version}-with-decompiler</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>install-internal</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>*.jar</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
 </project>

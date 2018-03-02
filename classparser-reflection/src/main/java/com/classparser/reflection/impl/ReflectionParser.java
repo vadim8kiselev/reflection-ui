@@ -24,6 +24,10 @@ public class ReflectionParser implements ClassParser {
 
     @Override
     public String parseClass(Class<?> clazz) {
+        if (clazz == null) {
+            throw new NullPointerException("Class can't be a null!");
+        }
+
         String parsedClass = "";
 
         StateManager.registerImportUtils(clazz);

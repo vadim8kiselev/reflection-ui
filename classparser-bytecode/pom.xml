@@ -3,6 +3,12 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>aggregator</artifactId>
+        <groupId>com.classparser</groupId>
+        <version>1.0.0</version>
+        <relativePath></relativePath>
+    </parent>
 
     <groupId>com.classparser.bytecode</groupId>
     <artifactId>classparser-bytecode</artifactId>
@@ -15,14 +21,6 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>internal.repo</id>
-            <name>Temporary Staging Repository</name>
-            <url>file://https://github.com/java-decompiler/mvn-repo</url>
-        </repository>
-    </distributionManagement>
 
     <dependencies>
         <!-- FernFlower Decompiler -->
@@ -50,12 +48,24 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-5</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${project.artifactId}-${project.version}-with-decompiler</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

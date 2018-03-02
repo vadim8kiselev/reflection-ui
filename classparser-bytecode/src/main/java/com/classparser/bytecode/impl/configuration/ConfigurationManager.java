@@ -66,7 +66,7 @@ public class ConfigurationManager {
     }
 
     public boolean isSaveToFile() {
-        return utils.getConfig("cfc", Boolean.class);
+        return utils.getConfig("stf", Boolean.class);
     }
 
     public String getDirectoryForSaveBytecode() {

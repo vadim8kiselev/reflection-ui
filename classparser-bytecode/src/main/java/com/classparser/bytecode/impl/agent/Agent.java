@@ -22,11 +22,14 @@ public final class Agent implements JavaAgent {
     @Override
     public Instrumentation getInstrumentation() {
         initialize();
+        if (true) {
+            throw new RuntimeException();
+        }
         return instrumentation;
     }
 
     private void initialize() {
-        if (!agentAssembler.isAssembled()) {
+        if (!isInitialize()) {
             agentAssembler.assembly();
         }
     }
@@ -34,6 +37,7 @@ public final class Agent implements JavaAgent {
     @Override
     public ByteCodeHolder getByteCodeHolder() {
         initialize();
+        System.out.println(321);
         return transformer;
     }
 
