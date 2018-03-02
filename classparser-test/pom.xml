@@ -4,10 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>aggregator</artifactId>
+        <artifactId>classparser</artifactId>
         <groupId>com.classparser</groupId>
         <version>1.0.0</version>
-        <relativePath></relativePath>
     </parent>
 
     <groupId>com.classparser.test</groupId>
@@ -16,7 +15,7 @@
 
     <description>
         Module for running some tests for bytecode and reflection parsers.
-        This moduble needed only for dev.
+        This module needed only for dev.
     </description>
 
     <dependencies>
@@ -42,36 +41,18 @@
             <groupId>com.classparser.bytecode.impl.decompile.cfr</groupId>
             <artifactId>classparser-cfr-decompiler</artifactId>
             <version>1.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode.impl.decompile.jd</groupId>
             <artifactId>classparser-jd-decompiler</artifactId>
             <version>1.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode.impl.decompile.procyon</groupId>
             <artifactId>classparser-procyon-decompiler</artifactId>
             <version>1.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 </project>

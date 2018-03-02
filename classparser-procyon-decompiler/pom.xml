@@ -4,10 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>aggregator</artifactId>
+        <artifactId>classparser</artifactId>
         <groupId>com.classparser</groupId>
         <version>1.0.0</version>
-        <relativePath></relativePath>
     </parent>
 
     <groupId>com.classparser.bytecode.impl.decompile.procyon</groupId>
@@ -22,7 +21,7 @@
             <artifactId>procjon-decompiler</artifactId>
             <version>0.5.30</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/procyon-decompiler-0.5.30.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/procyon-decompiler-0.5.30.jar</systemPath>
         </dependency>
 
         <dependency>

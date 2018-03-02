@@ -4,10 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>classparser-aggregator</artifactId>
+        <artifactId>classparser</artifactId>
         <groupId>com.classparser</groupId>
         <version>1.0.0</version>
-        <relativePath></relativePath>
     </parent>
 
     <groupId>com.classparser.bytecode.impl.decompile.jd</groupId>
@@ -22,7 +21,7 @@
             <artifactId>jd-core</artifactId>
             <version>0.7.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/jd-core-0.7.1.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/jd-core-0.7.1.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -30,7 +29,7 @@
             <artifactId>jd-common</artifactId>
             <version>0.7.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/jd-common-0.7.1.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/jd-common-0.7.1.jar</systemPath>
         </dependency>
 
         <dependency>
