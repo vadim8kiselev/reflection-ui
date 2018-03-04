@@ -2,20 +2,15 @@ package com.classparser.bytecode.impl.utils;
 
 import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
+import com.classparser.bytecode.impl.configuration.StateManager;
 import com.classparser.exception.agent.ClassLoadException;
 import com.classparser.exception.file.ReadFileException;
-import com.classparser.bytecode.impl.configuration.StateManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;

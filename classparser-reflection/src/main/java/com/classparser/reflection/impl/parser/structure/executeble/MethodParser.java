@@ -1,12 +1,8 @@
 package com.classparser.reflection.impl.parser.structure.executeble;
 
-import com.classparser.reflection.impl.parser.base.AnnotationParser;
-import com.classparser.reflection.impl.parser.base.GenericTypeParser;
-import com.classparser.reflection.impl.parser.base.IndentParser;
-import com.classparser.reflection.impl.parser.base.ModifierParser;
-import com.classparser.reflection.impl.parser.base.ValueParser;
-import com.classparser.reflection.impl.state.StateManager;
 import com.classparser.reflection.impl.parser.ClassNameParser;
+import com.classparser.reflection.impl.parser.base.*;
+import com.classparser.reflection.impl.state.StateManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;

@@ -1,7 +1,7 @@
 package com.classparser.bytecode.impl.decompile.jd.configuration;
 
-import com.classparser.configuration.Configuration;
 import com.classparser.bytecode.impl.decompile.jd.JDDecompiler;
+import com.classparser.configuration.Configuration;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.

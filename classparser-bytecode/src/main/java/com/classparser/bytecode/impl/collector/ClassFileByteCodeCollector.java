@@ -1,8 +1,8 @@
 package com.classparser.bytecode.impl.collector;
 
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
-import com.classparser.exception.file.ReadFileException;
 import com.classparser.bytecode.impl.utils.ClassFileUtils;
+import com.classparser.exception.file.ReadFileException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;

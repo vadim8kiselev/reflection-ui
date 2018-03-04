@@ -1,10 +1,10 @@
 package com.classparser.bytecode.impl.configuration.api;
 
+import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
+import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.BytecodeParser;
 import com.classparser.configuration.Configuration;
-import com.classparser.bytecode.api.agent.JavaAgent;
-import com.classparser.bytecode.api.decompile.Decompiler;
 
 /**
  * Builder configuration for class: {@link BytecodeParser}

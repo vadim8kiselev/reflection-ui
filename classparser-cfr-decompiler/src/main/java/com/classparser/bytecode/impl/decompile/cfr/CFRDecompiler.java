@@ -1,13 +1,12 @@
 package com.classparser.bytecode.impl.decompile.cfr;
 
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
+import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.collector.ChainByteCodeCollector;
-import com.classparser.bytecode.impl.utils.ClassNameUtils;
-import com.classparser.bytecode.impl.utils.RuntimeLibraryUploader;
-import com.classparser.configuration.Configuration;
-import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.decompile.cfr.configuration.CFRBuilderConfiguration;
+import com.classparser.bytecode.impl.utils.ClassNameUtils;
+import com.classparser.configuration.Configuration;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
@@ -24,12 +23,7 @@ import org.benf.cfr.reader.util.output.Dumper;
 import org.benf.cfr.reader.util.output.IllegalIdentifierDump;
 import org.benf.cfr.reader.util.output.StdIODumper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This decompiler can't show local classes

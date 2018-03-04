@@ -1,12 +1,12 @@
 package com.classparser.bytecode.impl.decompile.fernflower;
 
+import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
+import com.classparser.bytecode.impl.utils.ClassFileUtils;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
-import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.exception.decompile.DecompilationException;
-import com.classparser.bytecode.impl.utils.ClassFileUtils;
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;

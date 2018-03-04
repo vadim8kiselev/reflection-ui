@@ -2,13 +2,13 @@ package com.classparser.bytecode.impl;
 
 import com.classparser.api.ClassParser;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
+import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.collector.ChainByteCodeCollector;
 import com.classparser.bytecode.impl.configuration.StateManager;
 import com.classparser.bytecode.impl.saver.ByteCodeSaver;
 import com.classparser.bytecode.impl.utils.InnerClassesCollector;
 import com.classparser.configuration.Configuration;
 import com.classparser.exception.agent.InvalidRetransformClass;
-import com.classparser.bytecode.api.decompile.Decompiler;
 
 import java.util.ArrayList;
 import java.util.List;

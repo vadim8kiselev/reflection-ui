@@ -1,12 +1,12 @@
 package com.classparser.bytecode.impl.configuration;
 
+import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
+import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.agent.Agent;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.decompile.fernflower.FernflowerDecompiler;
 import com.classparser.configuration.Configuration;
-import com.classparser.bytecode.api.agent.JavaAgent;
-import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.configuration.util.ConfigurationUtils;
 
 import java.io.File;

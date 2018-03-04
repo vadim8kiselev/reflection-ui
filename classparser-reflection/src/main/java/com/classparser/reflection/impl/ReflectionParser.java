@@ -1,19 +1,19 @@
 package com.classparser.reflection.impl;
 
 import com.classparser.api.ClassParser;
+import com.classparser.reflection.impl.parser.ClassNameParser;
 import com.classparser.reflection.impl.parser.ClassTypeParser;
 import com.classparser.reflection.impl.parser.InheritanceParser;
 import com.classparser.reflection.impl.parser.base.AnnotationParser;
 import com.classparser.reflection.impl.parser.base.GenericTypeParser;
 import com.classparser.reflection.impl.parser.base.IndentParser;
 import com.classparser.reflection.impl.parser.base.ModifierParser;
+import com.classparser.reflection.impl.parser.structure.ClassesParser;
 import com.classparser.reflection.impl.parser.structure.FieldParser;
 import com.classparser.reflection.impl.parser.structure.PackageParser;
 import com.classparser.reflection.impl.parser.structure.executeble.ConstructorParser;
-import com.classparser.reflection.impl.state.StateManager;
-import com.classparser.reflection.impl.parser.ClassNameParser;
-import com.classparser.reflection.impl.parser.structure.ClassesParser;
 import com.classparser.reflection.impl.parser.structure.executeble.MethodParser;
+import com.classparser.reflection.impl.state.StateManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;

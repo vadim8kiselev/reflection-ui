@@ -1,8 +1,8 @@
 package com.classparser.reflection.impl.state;
 
-import com.classparser.reflection.impl.parser.imports.ImportParser;
 import com.classparser.exception.ReflectionParserException;
 import com.classparser.reflection.impl.configuration.ConfigurationManager;
+import com.classparser.reflection.impl.parser.imports.ImportParser;
 
 import java.util.Map;
 

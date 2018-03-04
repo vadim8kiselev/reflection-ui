@@ -1,7 +1,7 @@
 package com.classparser.bytecode.impl.agent;
 
-import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.bytecode.api.agent.ByteCodeHolder;
+import com.classparser.bytecode.impl.utils.ClassNameUtils;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;

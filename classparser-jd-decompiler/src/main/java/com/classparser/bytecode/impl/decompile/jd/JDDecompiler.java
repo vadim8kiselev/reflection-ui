@@ -1,14 +1,13 @@
 package com.classparser.bytecode.impl.decompile.jd;
 
-import com.classparser.bytecode.impl.assembly.build.constant.Constants;
-import com.classparser.bytecode.impl.utils.ClassNameUtils;
-import com.classparser.configuration.Configuration;
-import com.classparser.exception.decompile.DecompilationException;
-import com.classparser.bytecode.impl.decompile.jd.configuration.JDBuilderConfiguration;
-import com.classparser.bytecode.impl.utils.ClassStringUtils;
 import com.classparser.bytecode.api.decompile.Decompiler;
+import com.classparser.bytecode.impl.assembly.build.constant.Constants;
+import com.classparser.bytecode.impl.decompile.jd.configuration.JDBuilderConfiguration;
+import com.classparser.bytecode.impl.utils.ClassNameUtils;
+import com.classparser.bytecode.impl.utils.ClassStringUtils;
+import com.classparser.configuration.Configuration;
 import com.classparser.configuration.util.ConfigurationUtils;
-import com.classparser.bytecode.impl.utils.RuntimeLibraryUploader;
+import com.classparser.exception.decompile.DecompilationException;
 import jd.common.preferences.CommonPreferences;
 import jd.common.printer.text.PlainTextPrinter;
 import jd.core.loader.Loader;
@@ -25,17 +24,8 @@ import jd.core.process.deserializer.ClassFormatException;
 import jd.core.process.layouter.ClassFileLayouter;
 import jd.core.process.writer.ClassFileWriter;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.FileNotFoundException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Aleksei Makarov on 07/19/2017.
