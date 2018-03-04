@@ -18,7 +18,7 @@ public class FernflowerBuilderConfiguration {
 
         private static final String ONE = "1";
 
-        private Map<String, Object> configuration = new HashMap<>();
+        private final Map<String, Object> configuration = new HashMap<>();
 
         private Builder() {
         }

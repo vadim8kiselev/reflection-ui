@@ -13,7 +13,7 @@ public class ReflectionBuilderConfiguration {
 
     private static class Builder implements ReflectionConfiguration {
 
-        private HashMap<String, Object> configuration = new HashMap<>();
+        private final HashMap<String, Object> configuration = new HashMap<>();
 
         @Override
         public Map<String, Object> getConfiguration() {

@@ -14,9 +14,9 @@ import java.util.Map;
 
 public class ConfigurationManager {
 
-    private Map<String, Object> configuration;
+    private final Map<String, Object> configuration;
 
-    private ConfigurationUtils utils;
+    private final ConfigurationUtils utils;
 
     public ConfigurationManager() {
         this.configuration = getDefaultConfiguration();

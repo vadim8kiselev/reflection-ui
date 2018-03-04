@@ -11,7 +11,7 @@ public class CFRBuilderConfiguration {
 
     private static class Builder implements CFRConfiguration {
 
-        private Map<String, Object> configuration = new HashMap<>();
+        private final Map<String, Object> configuration = new HashMap<>();
 
         private Builder() {
         }

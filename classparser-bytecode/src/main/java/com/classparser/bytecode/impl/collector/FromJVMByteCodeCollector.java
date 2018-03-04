@@ -12,7 +12,7 @@ import java.lang.instrument.UnmodifiableClassException;
 
 public class FromJVMByteCodeCollector implements ByteCodeCollector {
 
-    private static JavaAgent agent = StateManager.getConfiguration().getAgent();
+    private static final JavaAgent AGENT = StateManager.getConfiguration().getAgent();
 
     private Instrumentation instrumentation;
 
@@ -21,8 +21,8 @@ public class FromJVMByteCodeCollector implements ByteCodeCollector {
     @Override
     public byte[] getByteCode(Class<?> clazz) {
         if (instrumentation == null || holder == null) {
-            instrumentation = agent.getInstrumentation();
-            holder = agent.getByteCodeHolder();
+            instrumentation = AGENT.getInstrumentation();
+            holder = AGENT.getByteCodeHolder();
         }
 
         if (clazz != null) {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ChainByteCodeCollector implements ByteCodeCollector {
 
-    private List<ByteCodeCollector> collectors = new ArrayList<>();
+    private final List<ByteCodeCollector> collectors = new ArrayList<>();
 
     public ChainByteCodeCollector() {
         ByteCodeCollector customByteCodeCollector = StateManager.getConfiguration().getCustomByteCodeCollector();

@@ -30,9 +30,9 @@ public final class FernflowerDecompiler implements Decompiler {
 
     private static final int CLASS_FILE_TYPE = 0;
 
-    private Map<String, Object> configuration = getDefaultConfiguration();
+    private final Map<String, Object> configuration = getDefaultConfiguration();
 
-    private FernflowerResultSaver saver = new FernflowerResultSaver();
+    private final FernflowerResultSaver saver = new FernflowerResultSaver();
 
     @Override
     public String decompile(byte[] byteCode) {

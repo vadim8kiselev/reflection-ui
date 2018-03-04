@@ -32,7 +32,7 @@ public final class CFRDecompiler implements Decompiler {
 
     private Collection<byte[]> innerClasses = new ArrayList<>();
 
-    private Map<String, Object> configuration = getDefaultConfiguration();
+    private final Map<String, Object> configuration = getDefaultConfiguration();
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -114,7 +114,7 @@ public final class CFRDecompiler implements Decompiler {
 
     private class CFRBuilderDumper extends StdIODumper {
 
-        private StringBuilder builder = new StringBuilder();
+        private final StringBuilder builder = new StringBuilder();
 
         private boolean skipLineSeparator = false;
 
@@ -181,8 +181,8 @@ public final class CFRDecompiler implements Decompiler {
 
         private static final String EMPTY_MESSAGE = "";
         private final String outerClassName;
-        private ByteCodeCollector codeCollector = new ChainByteCodeCollector();
-        private Map<String, ClassFile> classFileMap = new HashMap<>();
+        private final ByteCodeCollector codeCollector = new ChainByteCodeCollector();
+        private final Map<String, ClassFile> classFileMap = new HashMap<>();
 
         private CFRDCCommonState(Options options, ClassFileSource classFileSource, byte[] byteCode) {
             super(options, classFileSource);

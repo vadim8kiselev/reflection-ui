@@ -38,7 +38,7 @@ public final class JDDecompiler implements Decompiler {
 
     private List<ClassFile> innerClasses = new ArrayList<>();
 
-    private Map<String, Object> configuration = getDefaultConfiguration();
+    private final Map<String, Object> configuration = getDefaultConfiguration();
 
     private ConfigurationUtils utils;
 
@@ -83,7 +83,7 @@ public final class JDDecompiler implements Decompiler {
             String exceptionMessage = String.format("JD can't decompile class: %s", className);
 
             throw new DecompilationException(exceptionMessage, exception);
-        } catch (LoaderException | FileNotFoundException exception) {
+        } catch (LoaderException exception) {
             throw new DecompilationException("Decompilation process is interrupted", exception);
         } catch (Throwable throwable) {
             throw new DecompilationException("Some shit happens with JD decompiler", throwable);
@@ -159,7 +159,7 @@ public final class JDDecompiler implements Decompiler {
 
     private class JDLoader implements Loader {
 
-        private byte[] bytecode;
+        private final byte[] bytecode;
 
         private JDLoader(byte[] bytecode) {
             this.bytecode = bytecode;
@@ -180,10 +180,10 @@ public final class JDDecompiler implements Decompiler {
 
         private static final String JD_INDENT = "  ";
         private final PrintStream STUB = null;
-        private StringBuilder builder = new StringBuilder();
-        private String indent;
+        private final StringBuilder builder = new StringBuilder();
+        private final String indent;
 
-        private JDPrinter(OutputStream stream) throws FileNotFoundException {
+        private JDPrinter(OutputStream stream) {
             super(stream);
             this.indent = utils.getConfig("ind", String.class);
         }

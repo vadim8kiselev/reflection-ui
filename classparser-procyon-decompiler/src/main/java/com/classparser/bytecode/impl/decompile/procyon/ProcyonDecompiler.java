@@ -26,9 +26,9 @@ public final class ProcyonDecompiler implements Decompiler {
 
     private byte[] byteCode;
 
-    private Map<String, Object> configuration = getDefaultConfiguration();
+    private final Map<String, Object> configuration = getDefaultConfiguration();
 
-    private Map<String, byte[]> byteCodeMap = new HashMap<>();
+    private final Map<String, byte[]> byteCodeMap = new HashMap<>();
 
     private ConfigurationUtils utils;
 
@@ -137,11 +137,11 @@ public final class ProcyonDecompiler implements Decompiler {
 
         private static final int START_POSITION = 0;
 
-        private String outerClassName = ClassNameUtils.getClassName(byteCode);
+        private final String outerClassName = ClassNameUtils.getClassName(byteCode);
 
-        private boolean isLoadReferenceOnClass = utils.getConfig("ucr", Boolean.class);
+        private final boolean isLoadReferenceOnClass = utils.getConfig("ucr", Boolean.class);
 
-        private ByteCodeCollector collector = new ChainByteCodeCollector();
+        private final ByteCodeCollector collector = new ChainByteCodeCollector();
 
         @Override
         public boolean tryLoadType(String baseClassName, Buffer buffer) {

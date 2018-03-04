@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class StateManager {
 
-    private static ThreadLocal<ConfigurationManager> configurationLocalMap = new ThreadLocal<>();
+    private static final ThreadLocal<ConfigurationManager> configurationLocalMap = new ThreadLocal<>();
 
     public static void registerConfiguration(Map<String, Object> configuration) {
         ConfigurationManager manager = configurationLocalMap.get();

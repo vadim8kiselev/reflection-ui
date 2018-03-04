@@ -14,7 +14,7 @@ public class ProcyonBuilderConfiguration {
 
     private static class Builder implements ProcyonConfiguration {
 
-        private Map<String, Object> configuration = new HashMap<>();
+        private final Map<String, Object> configuration = new HashMap<>();
 
         @Override
         public Map<String, Object> getConfiguration() {

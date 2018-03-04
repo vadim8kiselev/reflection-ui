@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 public class ImportParser {
 
-    private Set<Class<?>> classesForImport;
+    private final Set<Class<?>> classesForImport;
 
     public ImportParser() {
         this.classesForImport = new HashSet<>();

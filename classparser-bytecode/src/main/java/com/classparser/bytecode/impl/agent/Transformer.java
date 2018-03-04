@@ -11,7 +11,7 @@ import java.util.Map;
 
 public final class Transformer implements ClassFileTransformer, ByteCodeHolder {
 
-    private Map<String, byte[]> bytecodeMap = new HashMap<>();
+    private final Map<String, byte[]> bytecodeMap = new HashMap<>();
 
     @Override
     public final byte[] transform(ClassLoader loader,

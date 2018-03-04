@@ -3,9 +3,6 @@ package com.classparser.bytecode.impl.decompile.jd.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Aleksei Makarov on 07/19/2017.
- */
 public class JDBuilderConfiguration {
 
     public static JDConfiguration getBuilderConfiguration() {
@@ -14,7 +11,7 @@ public class JDBuilderConfiguration {
 
     private static class Builder implements JDConfiguration {
 
-        private Map<String, Object> configuration = new HashMap<>();
+        private final Map<String, Object> configuration = new HashMap<>();
 
         private Builder() {
         }

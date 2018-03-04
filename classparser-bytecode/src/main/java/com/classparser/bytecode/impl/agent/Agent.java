@@ -12,11 +12,11 @@ public final class Agent implements JavaAgent {
 
     private static Instrumentation instrumentation;
 
-    private static Transformer transformer = new Transformer();
+    private static final Transformer TRANSFORMER = new Transformer();
 
     public static void agentmain(String args, Instrumentation instrumentation) {
         Agent.instrumentation = instrumentation;
-        instrumentation.addTransformer(transformer, true);
+        instrumentation.addTransformer(TRANSFORMER, true);
     }
 
     @Override
@@ -34,7 +34,7 @@ public final class Agent implements JavaAgent {
     @Override
     public ByteCodeHolder getByteCodeHolder() {
         initialize();
-        return transformer;
+        return TRANSFORMER;
     }
 
     @Override

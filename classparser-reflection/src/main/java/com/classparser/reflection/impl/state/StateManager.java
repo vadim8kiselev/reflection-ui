@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class StateManager {
 
-    private static ThreadLocal<State> states = new ThreadLocal<>();
+    private static final ThreadLocal<State> states = new ThreadLocal<>();
 
     public static void registerImportUtils(Class<?> clazz) {
         State state = getCurrentState();

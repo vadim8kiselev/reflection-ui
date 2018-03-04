@@ -13,6 +13,10 @@ public class AgentAssembler {
 
     private static boolean assembled = false;
 
+    private static final String DEFAULT_AGENT_JAR_NAME = "agent.jar";
+
+    public static final String MANIFEST_AGENT_FILE_NAME = "REFLECTION-UI-MANIFEST.MF";
+
     public void assembly() {
         if (!assembled) {
             String agentPath = AgentBuilder.getAgentPath(getAgentJarName());
@@ -32,7 +36,7 @@ public class AgentAssembler {
     }
 
     protected String getAgentJarName() {
-        return "agent.jar";
+        return DEFAULT_AGENT_JAR_NAME;
     }
 
     protected Class<?> getAgentClass() {
@@ -40,7 +44,7 @@ public class AgentAssembler {
     }
 
     protected String getManifestFileName() {
-        return "REFLECTION-UI-MANIFEST.MF";
+        return MANIFEST_AGENT_FILE_NAME;
     }
 
     protected Class<?>[] getAgentJarClasses() {
