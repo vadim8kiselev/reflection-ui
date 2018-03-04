@@ -2,7 +2,6 @@ package com.classparser.bytecode.impl.decompile.procyon;
 
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
 import com.classparser.bytecode.api.decompile.Decompiler;
-import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.collector.ChainByteCodeCollector;
 import com.classparser.bytecode.impl.decompile.procyon.configuration.ProcyonBuilderConfiguration;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
@@ -24,12 +23,9 @@ import java.util.Map;
 
 public final class ProcyonDecompiler implements Decompiler {
 
-    private byte[] byteCode;
-
     private final Map<String, Object> configuration = getDefaultConfiguration();
-
     private final Map<String, byte[]> byteCodeMap = new HashMap<>();
-
+    private byte[] byteCode;
     private ConfigurationUtils utils;
 
     @Override
@@ -149,7 +145,7 @@ public final class ProcyonDecompiler implements Decompiler {
 
             if (byteCode == null) {
                 if (isLoadReferenceOnClass) {
-                    if (baseClassName.contains(outerClassName + Constants.Symbols.DOLLAR)) {
+                    if (baseClassName.contains(outerClassName + "$")) {
                         return false;
                     }
 

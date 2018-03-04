@@ -25,7 +25,7 @@ public class ByteCodeSaver {
     private static String getClassFileName(byte[] byteCode) {
         String classFileName = StateManager.getConfiguration().getDirectoryForSaveBytecode()
                 + File.separator
-                + ClassNameUtils.getClassName(byteCode).replace(Constants.Symbols.SLASH, File.separator);
+                + ClassNameUtils.getClassName(byteCode).replace("/", File.separator);
         createClassFileNameDirectory(classFileName);
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }

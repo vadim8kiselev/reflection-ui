@@ -162,7 +162,7 @@ public final class AgentBuilder {
         }
 
         private Manifest getManifest() {
-            String manifestName = Constants.Folders.MANIFEST_HOME + Constants.Symbols.SLASH + this.manifestName;
+            String manifestName = Constants.Folders.MANIFEST_HOME + "/" + this.manifestName;
             try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(manifestName)) {
                 if (stream == null) {
                     Manifest manifest = new Manifest();

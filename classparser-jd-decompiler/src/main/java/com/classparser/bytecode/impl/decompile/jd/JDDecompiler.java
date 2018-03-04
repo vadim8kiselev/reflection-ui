@@ -1,7 +1,6 @@
 package com.classparser.bytecode.impl.decompile.jd;
 
 import com.classparser.bytecode.api.decompile.Decompiler;
-import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.decompile.jd.configuration.JDBuilderConfiguration;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.bytecode.impl.utils.ClassStringUtils;
@@ -24,7 +23,10 @@ import jd.core.process.deserializer.ClassFormatException;
 import jd.core.process.layouter.ClassFileLayouter;
 import jd.core.process.writer.ClassFileWriter;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -35,11 +37,8 @@ import java.util.*;
 public final class JDDecompiler implements Decompiler {
 
     private static final int INITIAL_CAPACITY = 1024;
-
-    private List<ClassFile> innerClasses = new ArrayList<>();
-
     private final Map<String, Object> configuration = getDefaultConfiguration();
-
+    private List<ClassFile> innerClasses = new ArrayList<>();
     private ConfigurationUtils utils;
 
     @Override
@@ -111,13 +110,13 @@ public final class JDDecompiler implements Decompiler {
     }
 
     private void resolveInnerClasses(ClassFile classFile, List<ClassFile> innerClasses) {
-        String className = ClassNameUtils.normalizeSimpleName(classFile.getThisClassName()) + Constants.Symbols.DOLLAR;
+        String className = ClassNameUtils.normalizeSimpleName(classFile.getThisClassName()) + "$";
         Iterator<ClassFile> iterator = innerClasses.iterator();
         ArrayList<ClassFile> currentInnerClasses = new ArrayList<>();
         while (iterator.hasNext()) {
             ClassFile innerClass = iterator.next();
             String innerClassName = ClassNameUtils.normalizeSimpleName(innerClass.getThisClassName());
-            if (!ClassStringUtils.delete(innerClassName, className).contains(Constants.Symbols.DOLLAR)) {
+            if (!ClassStringUtils.delete(innerClassName, className).contains("$")) {
                 innerClass.setOuterClass(classFile);
                 currentInnerClasses.add(innerClass);
                 iterator.remove();

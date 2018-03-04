@@ -31,13 +31,4 @@ public interface Constants {
 
         String CLASS_FILE_SUFFIX = ".class";
     }
-
-    interface Symbols {
-
-        String DOLLAR = "$";
-
-        String SLASH = "/";
-
-        String DOT = ".";
-    }
 }

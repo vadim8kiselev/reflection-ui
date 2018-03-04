@@ -1,6 +1,5 @@
 package com.classparser.bytecode.impl.utils;
 
-import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.exception.ByteCodeParserException;
 
 import java.net.MalformedURLException;
@@ -50,7 +49,7 @@ public class ClassFileUtils {
         String path = getFilePath(clazz);
 
         if (!path.isEmpty() && !isArchive(path)) {
-            return path.substring(0, path.lastIndexOf(Constants.Symbols.SLASH));
+            return path.substring(0, path.lastIndexOf("/"));
         }
 
         return EMPTY_PATH;
@@ -59,7 +58,7 @@ public class ClassFileUtils {
     public static String getArchivePath(String jarFilePath) {
         if (!jarFilePath.isEmpty() && isArchive(jarFilePath)) {
             String path = jarFilePath.substring(0, getSeparatorPosition(jarFilePath));
-            path = path.replace(Constants.Symbols.SLASH, "\\").replace(SHIELDED_SPACE, " ");
+            path = path.replace("/", "\\").replace(SHIELDED_SPACE, " ");
             try {
                 URL urlPath = new URL(path);
                 return urlPath.getFile();
@@ -81,7 +80,7 @@ public class ClassFileUtils {
 
     private static int getSeparatorPosition(String jarFilePath) {
         String archiveType = ClassFileUtils.getArchiveType(jarFilePath);
-        return jarFilePath.lastIndexOf(Constants.Symbols.DOT + archiveType + "!") + archiveType.length() + 1;
+        return jarFilePath.lastIndexOf("." + archiveType + "!") + archiveType.length() + 1;
     }
 
     private static String getArchiveType(String path) {

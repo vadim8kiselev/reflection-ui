@@ -30,9 +30,8 @@ import java.util.*;
  */
 public final class CFRDecompiler implements Decompiler {
 
-    private Collection<byte[]> innerClasses = new ArrayList<>();
-
     private final Map<String, Object> configuration = getDefaultConfiguration();
+    private Collection<byte[]> innerClasses = new ArrayList<>();
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -209,7 +208,7 @@ public final class CFRDecompiler implements Decompiler {
                 return classFile;
             }
 
-            if (className.contains(outerClassName + Constants.Symbols.DOLLAR)) {
+            if (className.contains(outerClassName + "$")) {
                 throw new CannotLoadClassException(EMPTY_MESSAGE, null);
             }
 
