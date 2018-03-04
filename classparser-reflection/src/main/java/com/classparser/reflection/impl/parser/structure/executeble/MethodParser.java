@@ -69,7 +69,7 @@ public class MethodParser {
 
         String oneIndent = StateManager.getConfiguration().getIndentSpaces();
 
-        String body = "";
+        String body = ";";
         if (isMethodRealization(method)) {
             body = " {" + lineSeparator + indent + oneIndent +
                     "/* Compiled code */" + lineSeparator + indent + "}";

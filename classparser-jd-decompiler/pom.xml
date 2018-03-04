@@ -15,21 +15,22 @@
     <version>1.0.0</version>
 
     <dependencies>
-        <!-- JD Decompiler -->
+        <!-- JD Decompiler core-->
         <dependency>
             <groupId>jd.core</groupId>
             <artifactId>jd-core</artifactId>
             <version>0.7.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/jd-core-0.7.1.jar</systemPath>
+            <systemPath>${project.basedir}/lib/jd-core-0.7.1.jar</systemPath>
         </dependency>
 
+        <!-- JD Decompiler common-->
         <dependency>
             <groupId>jd.common</groupId>
             <artifactId>jd-common</artifactId>
             <version>0.7.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/jd-common-0.7.1.jar</systemPath>
+            <systemPath>${project.basedir}/lib/jd-common-0.7.1.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -39,39 +40,4 @@
             <version>1.0.0</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-5</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>${project.artifactId}-${project.version}-with-decompiler</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install-internal</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>*.jar</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-    </build>
 </project>

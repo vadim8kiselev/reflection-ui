@@ -21,7 +21,7 @@
             <artifactId>cfr-decompiler</artifactId>
             <version>0.125</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/cfr-decompiler-0.125.jar</systemPath>
+            <systemPath>${project.basedir}/lib/cfr-decompiler-0.125.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -31,39 +31,4 @@
             <version>1.0.0</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-5</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>${project.artifactId}-${project.version}-with-decompiler</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install-internal</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>*.jar</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-    </build>
 </project>

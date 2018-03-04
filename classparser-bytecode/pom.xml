@@ -37,7 +37,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.classparser</groupId>
+            <groupId>com.classparser.core</groupId>
             <artifactId>classparser-core</artifactId>
             <version>1.0.0</version>
         </dependency>
