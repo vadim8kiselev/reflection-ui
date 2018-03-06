@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class BytecodeParser implements ClassParser {
 
-    private final ByteCodeCollector byteCodeCollector =  new ChainByteCodeCollector();
+    private final ByteCodeCollector byteCodeCollector = new ChainByteCodeCollector();
 
     @Override
     public String parseClass(Class<?> clazz) {

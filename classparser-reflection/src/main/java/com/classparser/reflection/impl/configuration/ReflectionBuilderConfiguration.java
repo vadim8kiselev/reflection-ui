@@ -82,12 +82,7 @@ public class ReflectionBuilderConfiguration {
 
         @Override
         public ReflectionConfiguration defineLineSeparator(String character) {
-            if (character.equals("\n")) {
-                configuration.put("nlc", character);
-            } else if (character.equals("\n\r")) {
-                configuration.put("nlc", character);
-            }
-
+            configuration.put("nlc", character);
             return this;
         }
     }

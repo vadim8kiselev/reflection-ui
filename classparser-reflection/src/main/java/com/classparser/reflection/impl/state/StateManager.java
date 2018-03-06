@@ -16,10 +16,12 @@ public class StateManager {
                 state == null ||
                 state.getImportParser() == null ||
                 state.getCurrentParsedClass() == null) {
-            state = new State(new ImportParser(), clazz, clazz);
-            setCurrentState(state);
-            if (state.getConfigurationManager() == null) {
-                state.setConfigurationManager(new ConfigurationManager());
+            State newState = new State(new ImportParser(), clazz, clazz);
+            setCurrentState(newState);
+            if (state != null && state.getConfigurationManager() != null) {
+                newState.setConfigurationManager(state.getConfigurationManager());
+            } else {
+                newState.setConfigurationManager(new ConfigurationManager());
             }
         }
     }
@@ -68,11 +70,22 @@ public class StateManager {
     }
 
     public static void setConfiguration(Map<String, Object> configuration) {
-        getCurrentState().setConfigurationManager(new ConfigurationManager(configuration));
+        ConfigurationManager configurationManager = getCurrentState().getConfigurationManager();
+        if (configurationManager == null) {
+            getCurrentState().setConfigurationManager(new ConfigurationManager(configuration));
+        } else {
+            configurationManager.reloadConfiguration(configuration);
+        }
     }
 
     private static State getCurrentState() {
-        return states.get();
+        State state = states.get();
+        if (state == null) {
+            state = new State();
+            states.set(state);
+        }
+
+        return state;
     }
 
     private static void setCurrentState(State state) {

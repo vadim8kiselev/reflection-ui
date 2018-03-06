@@ -10,23 +10,9 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
 
     private final List<ByteCodeCollector> collectors = new ArrayList<>();
 
-    public ChainByteCodeCollector() {
-        ByteCodeCollector customByteCodeCollector = StateManager.getConfiguration().getCustomByteCodeCollector();
-        if (StateManager.getConfiguration().isEnableCustomByteCodeCollector() && customByteCodeCollector != null) {
-            collectors.add(customByteCodeCollector);
-        }
-
-        if (StateManager.getConfiguration().isEnableClassFileByteCodeCollector()) {
-            collectors.add(new ClassFileByteCodeCollector());
-        }
-
-        if (StateManager.getConfiguration().isEnableRetransformClassByteCodeCollector()) {
-            collectors.add(new FromJVMByteCodeCollector());
-        }
-    }
-
     @Override
     public byte[] getByteCode(Class<?> clazz) {
+        loadCollectors();
         if (clazz != null) {
             for (ByteCodeCollector collector : collectors) {
                 byte[] byteCode = collector.getByteCode(clazz);
@@ -38,5 +24,23 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
         }
 
         return null;
+    }
+
+    private void loadCollectors() {
+        collectors.clear();
+
+        ByteCodeCollector customByteCodeCollector = StateManager.getConfiguration().getCustomByteCodeCollector();
+        if (StateManager.getConfiguration().isEnableCustomByteCodeCollector() && customByteCodeCollector != null) {
+            collectors.add(customByteCodeCollector);
+        }
+
+        System.out.println(StateManager.getConfiguration().isEnableClassFileByteCodeCollector());
+        if (StateManager.getConfiguration().isEnableClassFileByteCodeCollector()) {
+            collectors.add(new ClassFileByteCodeCollector());
+        }
+
+        if (StateManager.getConfiguration().isEnableRetransformClassByteCodeCollector()) {
+            collectors.add(new FromJVMByteCodeCollector());
+        }
     }
 }

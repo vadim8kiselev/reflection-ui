@@ -13,6 +13,9 @@ class State {
 
     private ConfigurationManager configurationManager;
 
+    State() {
+    }
+
     State(ImportParser importParser, Class<?> mainParsedClass, Class<?> currentParsedClass) {
         this.importParser = importParser;
         this.mainParsedClass = mainParsedClass;

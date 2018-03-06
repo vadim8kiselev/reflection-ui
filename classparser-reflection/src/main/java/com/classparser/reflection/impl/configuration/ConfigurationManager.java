@@ -8,7 +8,7 @@ public class ConfigurationManager {
 
     private final Map<String, Object> configuration;
 
-    private final ConfigurationUtils utils;
+    private ConfigurationUtils utils;
 
     public ConfigurationManager() {
         this.configuration = getDefaultConfiguration();
@@ -19,6 +19,11 @@ public class ConfigurationManager {
         this();
         this.configuration.putAll(configuration);
         this.utils.appendConfiguration(configuration);
+    }
+
+    public void reloadConfiguration(Map<String, Object> configuration) {
+        this.configuration.putAll(configuration);
+        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
     private static Map<String, Object> getDefaultConfiguration() {

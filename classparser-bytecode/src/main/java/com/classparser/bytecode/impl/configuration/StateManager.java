@@ -10,15 +10,18 @@ public class StateManager {
         ConfigurationManager manager = configurationLocalMap.get();
         if (manager == null) {
             configurationLocalMap.set(new ConfigurationManager(configuration));
+        } else {
+            manager.reloadConfiguration(configuration);
         }
     }
 
     public static ConfigurationManager getConfiguration() {
         ConfigurationManager manager = configurationLocalMap.get();
         if (manager == null) {
-            configurationLocalMap.set(new ConfigurationManager());
+            manager = new ConfigurationManager();
+            configurationLocalMap.set(manager);
         }
 
-        return configurationLocalMap.get();
+        return manager;
     }
 }

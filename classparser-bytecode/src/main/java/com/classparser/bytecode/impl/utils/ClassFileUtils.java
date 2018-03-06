@@ -2,6 +2,7 @@ package com.classparser.bytecode.impl.utils;
 
 import com.classparser.exception.ByteCodeParserException;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -10,6 +11,8 @@ public class ClassFileUtils {
     public static final String EMPTY_PATH = "";
 
     private static final String SHIELDED_SPACE = "%20";
+
+    private static final String PROTOCOL = "file://";
 
     public static String getFilePath(Class<?> clazz) {
         ClassLoader loader = getClassLoader(clazz);
@@ -58,12 +61,16 @@ public class ClassFileUtils {
     public static String getArchivePath(String jarFilePath) {
         if (!jarFilePath.isEmpty() && isArchive(jarFilePath)) {
             String path = jarFilePath.substring(0, getSeparatorPosition(jarFilePath));
-            path = path.replace("/", "\\").replace(SHIELDED_SPACE, " ");
+            if (!"/".equals(File.separator)) {
+                path = path.replace("/", File.separator);
+            }
+
+            path = PROTOCOL + path.replace(SHIELDED_SPACE, " ");
             try {
                 URL urlPath = new URL(path);
                 return urlPath.getFile();
             } catch (MalformedURLException exception) {
-                throw new ByteCodeParserException(String.format("Jar path: %s is undefined", path));
+                throw new ByteCodeParserException(String.format("Jar path: %s is undefined", path), exception);
             }
         }
 
