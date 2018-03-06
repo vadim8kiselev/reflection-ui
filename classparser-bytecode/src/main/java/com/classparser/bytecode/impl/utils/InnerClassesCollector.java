@@ -199,7 +199,7 @@ public class InnerClassesCollector {
     }
 
     private static Pattern getPattern(String name) {
-        String pattern = name.replace("$", "\\" + "$");
+        String pattern = name.replace("$", File.separator + "$");
         return Pattern.compile(pattern + LOCAL_CLASS_PATTERN);
     }
 }
