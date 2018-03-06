@@ -9,7 +9,9 @@ import java.lang.instrument.Instrumentation;
 public final class Agent implements JavaAgent {
 
     private static final AgentAssembler agentAssembler = new AgentAssembler();
+
     private static final Transformer TRANSFORMER = new Transformer();
+
     private static Instrumentation instrumentation;
 
     public static void agentmain(String args, Instrumentation instrumentation) {

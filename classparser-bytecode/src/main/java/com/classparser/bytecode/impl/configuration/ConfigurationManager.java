@@ -18,12 +18,12 @@ public class ConfigurationManager {
 
     private final ConfigurationUtils utils;
 
-    public ConfigurationManager() {
+    ConfigurationManager() {
         this.configuration = getDefaultConfiguration();
         this.utils = new ConfigurationUtils(configuration, configuration);
     }
 
-    public ConfigurationManager(Map<String, Object> configuration) {
+    ConfigurationManager(Map<String, Object> configuration) {
         this();
         this.configuration.putAll(configuration);
         this.utils.appendConfiguration(configuration);

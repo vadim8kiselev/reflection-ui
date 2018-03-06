@@ -61,10 +61,6 @@ public class ClassStringUtils {
         return builder.toString();
     }
 
-    public static boolean isEmpty(String line) {
-        return line != null && !line.isEmpty();
-    }
-
     public static String delete(String from, String deleteElement) {
         return from.replaceAll(deleteElement, "");
     }

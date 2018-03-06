@@ -11,8 +11,10 @@ import java.io.File;
 
 public class AgentAssembler {
 
-    public static final String MANIFEST_AGENT_FILE_NAME = "REFLECTION-UI-MANIFEST.MF";
+    private static final String MANIFEST_AGENT_FILE_NAME = "REFLECTION-UI-MANIFEST.MF";
+
     private static final String DEFAULT_AGENT_JAR_NAME = "agent.jar";
+
     private static boolean assembled = false;
 
     public void assembly() {

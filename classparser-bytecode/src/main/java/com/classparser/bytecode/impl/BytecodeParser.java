@@ -11,19 +11,17 @@ import com.classparser.configuration.Configuration;
 import com.classparser.exception.agent.InvalidRetransformClass;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class BytecodeParser implements ClassParser {
 
-    private ByteCodeCollector byteCodeCollector;
+    private final ByteCodeCollector byteCodeCollector =  new ChainByteCodeCollector();
 
     @Override
     public String parseClass(Class<?> clazz) {
         checkToCorrectClass(clazz);
-        if (byteCodeCollector == null) {
-            byteCodeCollector = new ChainByteCodeCollector();
-        }
 
         byte[] byteCode = getByteCodeOfClass(clazz);
         List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz);
@@ -41,15 +39,12 @@ public class BytecodeParser implements ClassParser {
 
     private void saveByteCodeToFile(byte[] byteCode, List<byte[]> bytecodeOfInnerClasses) {
         if (StateManager.getConfiguration().isSaveToFile()) {
-            Thread thread = new Thread(() -> {
-                ByteCodeSaver saver = new ByteCodeSaver();
+            ByteCodeSaver saver = new ByteCodeSaver();
 
-                saver.saveToFile(byteCode);
-                for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
-                    saver.saveToFile(bytecodeOfInnerClass);
-                }
-            });
-            thread.start();
+            saver.saveToFile(byteCode);
+            for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
+                saver.saveToFile(bytecodeOfInnerClass);
+            }
         }
     }
 
@@ -66,7 +61,7 @@ public class BytecodeParser implements ClassParser {
 
             return bytecodeOfInnerClasses;
         } else {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
 
