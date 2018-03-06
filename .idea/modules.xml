@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/classparser.iml" filepath="$PROJECT_DIR$/classparser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/classparser-bytecode/classparser-bytecode.iml" filepath="$PROJECT_DIR$/classparser-bytecode/classparser-bytecode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/classparser-cfr-decompiler/classparser-cfr-decompiler.iml" filepath="$PROJECT_DIR$/classparser-cfr-decompiler/classparser-cfr-decompiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/classparser-core/classparser-core.iml" filepath="$PROJECT_DIR$/classparser-core/classparser-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/classparser-jd-decompiler/classparser-jd-decompiler.iml" filepath="$PROJECT_DIR$/classparser-jd-decompiler/classparser-jd-decompiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/classparser-procyon-decompiler/classparser-procyon-decompiler.iml" filepath="$PROJECT_DIR$/classparser-procyon-decompiler/classparser-procyon-decompiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/classparser-reflection/classparser-reflection.iml" filepath="$PROJECT_DIR$/classparser-reflection/classparser-reflection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/classparser-test/classparser-test.iml" filepath="$PROJECT_DIR$/classparser-test/classparser-test.iml" />
+    </modules>
+  </component>
+</project>

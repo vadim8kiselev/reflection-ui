@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="classparser-bytecode" />
+        <module name="classparser-cfr-decompiler" />
+        <module name="classparser-core" />
+        <module name="classparser-jd-decompiler" />
+        <module name="classparser-procyon-decompiler" />
+        <module name="classparser-reflection" />
+        <module name="classparser-test" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="aggregator" target="1.8" />
+      <module name="classparser" target="1.8" />
+      <module name="classparser-bytecode" target="1.8" />
+      <module name="classparser-cfr-decompiler" target="1.8" />
+      <module name="classparser-core" target="1.8" />
+      <module name="classparser-jd-decompiler" target="1.8" />
+      <module name="classparser-procyon-decompiler" target="1.8" />
+      <module name="classparser-reflection" target="1.8" />
+      <module name="classparser-test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

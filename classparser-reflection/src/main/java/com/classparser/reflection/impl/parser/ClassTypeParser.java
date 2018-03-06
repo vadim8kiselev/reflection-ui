@@ -7,10 +7,10 @@ public class ClassTypeParser {
 
         if (clazz.isEnum()) {
             type = "enum ";
-        } else if (clazz.isInterface()) {
-            type = "interface ";
         } else if (clazz.isAnnotation()) {
             type = "@interface ";
+        } else if (clazz.isInterface()) {
+            type = "interface ";
         }
 
         return type;
