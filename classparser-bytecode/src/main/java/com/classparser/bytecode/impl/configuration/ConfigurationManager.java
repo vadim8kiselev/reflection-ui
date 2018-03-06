@@ -29,12 +29,6 @@ public class ConfigurationManager {
         this.utils.appendConfiguration(configuration);
     }
 
-    void reloadConfiguration(Map<String, Object> configuration) {
-        this.configuration.putAll(configuration);
-        System.out.println(this.configuration);
-        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
-    }
-
     private static Map<String, Object> getDefaultConfiguration() {
         String HOME_DIR = System.getProperty(Constants.Properties.HOME_DIR);
         return ByteCodeBuilderConfiguration
@@ -53,6 +47,12 @@ public class ConfigurationManager {
                 .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")
                 .setAgentClass(new Agent())
                 .getConfiguration();
+    }
+
+    void reloadConfiguration(Map<String, Object> configuration) {
+        this.configuration.putAll(configuration);
+        System.out.println(this.configuration);
+        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
     public boolean isDecompileInnerClasses() {

@@ -21,11 +21,6 @@ public class ConfigurationManager {
         this.utils.appendConfiguration(configuration);
     }
 
-    public void reloadConfiguration(Map<String, Object> configuration) {
-        this.configuration.putAll(configuration);
-        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
-    }
-
     private static Map<String, Object> getDefaultConfiguration() {
         return ReflectionBuilderConfiguration
                 .configure()
@@ -48,6 +43,11 @@ public class ConfigurationManager {
         } else {
             return "\n";
         }
+    }
+
+    public void reloadConfiguration(Map<String, Object> configuration) {
+        this.configuration.putAll(configuration);
+        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
     public boolean isShowAnnotationTypes() {
