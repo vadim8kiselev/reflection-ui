@@ -7,12 +7,7 @@ import com.classparser.bytecode.impl.decompile.procyon.configuration.ProcyonBuil
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
 import com.classparser.configuration.util.ConfigurationUtils;
-import com.strobel.assembler.metadata.Buffer;
-import com.strobel.assembler.metadata.DeobfuscationUtilities;
-import com.strobel.assembler.metadata.ITypeLoader;
-import com.strobel.assembler.metadata.MetadataSystem;
-import com.strobel.assembler.metadata.TypeDefinition;
-import com.strobel.assembler.metadata.TypeReference;
+import com.strobel.assembler.metadata.*;
 import com.strobel.decompiler.DecompilationOptions;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
