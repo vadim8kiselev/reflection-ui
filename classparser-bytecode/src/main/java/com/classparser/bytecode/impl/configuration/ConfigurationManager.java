@@ -44,7 +44,7 @@ public class ConfigurationManager {
                 .setDecompilerConfiguration(null)
                 .addCustomByteCodeCollector(null)
                 .enableCustomByteCodeCollector(false)
-                .setDirectoryToSaveByteCode(HOME_DIR + File.separator + "classes")
+                .setDirectoryToSaveByteCode(HOME_DIR + File.separatorChar + "classes")
                 .setAgentClass(new Agent())
                 .getConfiguration();
     }

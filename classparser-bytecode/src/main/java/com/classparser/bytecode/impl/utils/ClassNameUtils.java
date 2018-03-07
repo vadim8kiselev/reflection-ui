@@ -16,7 +16,7 @@ public class ClassNameUtils {
     public static String getJavaBasedClassName(Class<?> clazz) {
         String className = clazz.getName();
         if (className.contains("/")) {
-            className = className.substring(0, className.indexOf("/"));
+            className = className.substring(0, className.indexOf('/'));
         }
 
         return className;
@@ -24,7 +24,7 @@ public class ClassNameUtils {
 
     public static String normalizeSimpleName(String className) {
         String fullName = normalizeFullName(className);
-        return fullName.substring(fullName.lastIndexOf(".") + 1);
+        return fullName.substring(fullName.lastIndexOf('.') + 1);
     }
 
     public static String normalizeFullName(String className) {
@@ -32,17 +32,17 @@ public class ClassNameUtils {
             className = ClassStringUtils.delete(className, Constants.Suffix.CLASS_FILE_SUFFIX);
         }
 
-        return className.replace("/", ".");
+        return className.replace('/', '.');
     }
 
     public static String getClassToFileName(Class<?> clazz) {
-        return getJavaBasedClassName(clazz).replace(".", "/")
+        return getJavaBasedClassName(clazz).replace('.', '/')
                 + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
     public static String getSimpleName(Class<?> clazz) {
         String typeName = getJavaBasedClassName(clazz);
-        return typeName.substring(typeName.lastIndexOf(".") + 1);
+        return typeName.substring(typeName.lastIndexOf('.') + 1);
     }
 
     public static String getPackageName(Class<?> clazz) {

@@ -30,7 +30,7 @@ public final class AgentBuilder {
     }
 
     public static String getAgentPath(String agentName) {
-        return System.getProperty(Constants.Properties.HOME_DIR) + File.separator + agentName;
+        return System.getProperty(Constants.Properties.HOME_DIR) + File.separatorChar + agentName;
     }
 
     private static class AgentJarBuilder implements Builder {
@@ -162,7 +162,7 @@ public final class AgentBuilder {
         }
 
         private Manifest getManifest() {
-            String manifestName = Constants.Folders.MANIFEST_HOME + "/" + this.manifestName;
+            String manifestName = Constants.Folders.MANIFEST_HOME + File.separatorChar + this.manifestName;
             try (InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(manifestName)) {
                 if (stream == null) {
                     Manifest manifest = new Manifest();

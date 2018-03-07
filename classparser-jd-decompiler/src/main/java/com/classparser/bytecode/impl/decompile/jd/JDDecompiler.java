@@ -110,7 +110,7 @@ public final class JDDecompiler implements Decompiler {
     }
 
     private void resolveInnerClasses(ClassFile classFile, List<ClassFile> innerClasses) {
-        String className = ClassNameUtils.normalizeSimpleName(classFile.getThisClassName()) + "$";
+        String className = ClassNameUtils.normalizeSimpleName(classFile.getThisClassName()) + '$';
         Iterator<ClassFile> iterator = innerClasses.iterator();
         ArrayList<ClassFile> currentInnerClasses = new ArrayList<>();
         while (iterator.hasNext()) {

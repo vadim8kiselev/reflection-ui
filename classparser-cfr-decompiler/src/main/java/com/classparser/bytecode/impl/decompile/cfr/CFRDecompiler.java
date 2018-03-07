@@ -208,7 +208,7 @@ public final class CFRDecompiler implements Decompiler {
                 return classFile;
             }
 
-            if (className.contains(outerClassName + "$")) {
+            if (className.contains(outerClassName + '$')) {
                 throw new CannotLoadClassException(EMPTY_MESSAGE, null);
             }
 

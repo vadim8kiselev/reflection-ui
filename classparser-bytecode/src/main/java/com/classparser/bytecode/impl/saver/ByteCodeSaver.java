@@ -24,14 +24,14 @@ public class ByteCodeSaver {
 
     private static String getClassFileName(byte[] byteCode) {
         String classFileName = StateManager.getConfiguration().getDirectoryForSaveBytecode()
-                + File.separator
-                + ClassNameUtils.getClassName(byteCode).replace("/", File.separator);
+                + File.separatorChar
+                + ClassNameUtils.getClassName(byteCode).replace('/', File.separatorChar);
         createClassFileNameDirectory(classFileName);
         return classFileName + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
     private static void createClassFileNameDirectory(String classFileName) {
-        String path = classFileName.substring(0, classFileName.lastIndexOf(File.separator));
+        String path = classFileName.substring(0, classFileName.lastIndexOf(File.separatorChar));
         Path directoryPath = Paths.get(path);
         try {
             Files.createDirectories(directoryPath).toFile();

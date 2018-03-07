@@ -50,7 +50,7 @@ public class InnerClassesCollector {
         int classId = 0;
         while (classId++ < 2 << 15) {
             try {
-                Class<?> foundedClass = Class.forName(clazz.getName() + "$" + classId);
+                Class<?> foundedClass = Class.forName(clazz.getName() + '$' + classId);
                 anonymousOrSyntheticClasses.add(foundedClass);
                 anonymousOrSyntheticClasses.addAll(getInnerClasses(foundedClass));
             } catch (Exception exception) {
@@ -135,7 +135,7 @@ public class InnerClassesCollector {
 
         if (classes != null) {
             for (File classFile : classes) {
-                String name = ClassNameUtils.getPackageName(clazz) + "." + classFile.getName();
+                String name = ClassNameUtils.getPackageName(clazz) + '.' + classFile.getName();
                 addLocalClass(collectLocalStaticClass(clazz, name), localClasses);
             }
         }
@@ -182,7 +182,7 @@ public class InnerClassesCollector {
     }
 
     private static boolean isLocalClass(Class<?> clazz, String className) {
-        String name = ClassNameUtils.getSimpleName(clazz) + "$";
+        String name = ClassNameUtils.getSimpleName(clazz) + '$';
 
         return getPattern(name).matcher(className).matches() &&
                 !isNumber(ClassStringUtils.delete(className, name)) &&
@@ -194,7 +194,7 @@ public class InnerClassesCollector {
     }
 
     private static Pattern getPattern(String name) {
-        String pattern = name.replace("$", File.separator + "$");
+        String pattern = name.replace("$", File.separator + '$');
         return Pattern.compile(pattern + LOCAL_CLASS_PATTERN);
     }
 }

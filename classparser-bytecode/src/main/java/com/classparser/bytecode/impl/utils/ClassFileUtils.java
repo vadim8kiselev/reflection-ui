@@ -52,7 +52,7 @@ public class ClassFileUtils {
         String path = getFilePath(clazz);
 
         if (!path.isEmpty() && !isArchive(path)) {
-            return path.substring(0, path.lastIndexOf("/"));
+            return path.substring(0, path.lastIndexOf('/'));
         }
 
         return EMPTY_PATH;
@@ -61,8 +61,8 @@ public class ClassFileUtils {
     public static String getArchivePath(String jarFilePath) {
         if (!jarFilePath.isEmpty() && isArchive(jarFilePath)) {
             String path = jarFilePath.substring(0, getSeparatorPosition(jarFilePath));
-            if (!"/".equals(File.separator)) {
-                path = path.replace("/", File.separator);
+            if ('/' != File.separatorChar) {
+                path = path.replace('/', File.separatorChar);
             }
 
             path = PROTOCOL + path.replace(SHIELDED_SPACE, " ");
@@ -87,7 +87,7 @@ public class ClassFileUtils {
 
     private static int getSeparatorPosition(String jarFilePath) {
         String archiveType = ClassFileUtils.getArchiveType(jarFilePath);
-        return jarFilePath.lastIndexOf("." + archiveType + "!") + archiveType.length() + 1;
+        return jarFilePath.lastIndexOf('.' + archiveType + '!') + archiveType.length() + 1;
     }
 
     private static String getArchiveType(String path) {

@@ -145,7 +145,7 @@ public final class ProcyonDecompiler implements Decompiler {
 
             if (byteCode == null) {
                 if (isLoadReferenceOnClass) {
-                    if (baseClassName.contains(outerClassName + "$")) {
+                    if (baseClassName.contains(outerClassName + '$')) {
                         return false;
                     }
 
