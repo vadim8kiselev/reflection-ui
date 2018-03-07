@@ -13,7 +13,7 @@ public class ClassNameParser {
     public static String getSimpleName(Class<?> clazz) {
         String typeName = clazz.getSimpleName();
         if (typeName.isEmpty()) {
-            typeName = clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1);
+            typeName = clazz.getName().substring(clazz.getName().lastIndexOf('.') + 1);
         }
         return typeName;
     }

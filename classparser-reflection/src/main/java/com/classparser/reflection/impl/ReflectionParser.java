@@ -51,7 +51,7 @@ public class ReflectionParser implements ClassParser {
 
         parsedClass += packageName + imports + classSignature;
 
-        parsedClass += "{" + lineSeparator + lineSeparator + classContent + indent + "}";
+        parsedClass += '{' + lineSeparator + lineSeparator + classContent + indent + '}';
 
         StateManager.popCurrentClass();
 

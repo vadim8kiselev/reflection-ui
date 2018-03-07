@@ -68,7 +68,7 @@ public class MethodParser {
         String body = ";";
         if (isMethodRealization(method)) {
             body = " {" + lineSeparator + indent + oneIndent +
-                    "/* Compiled code */" + lineSeparator + indent + "}";
+                    "/* Compiled code */" + lineSeparator + indent + '}';
         }
 
         methodSignature += annotations + indent + modifiers + generics + returnType;

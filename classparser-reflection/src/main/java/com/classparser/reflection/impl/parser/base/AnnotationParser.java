@@ -7,7 +7,12 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AnnotationParser {
 
@@ -46,7 +51,7 @@ public class AnnotationParser {
     public static String getAnnotation(Annotation annotation) {
         String annotationSignature = "";
 
-        String annotationSign = "@";
+        Character annotationSign = '@';
 
         String annotationName = GenericTypeParser.resolveType(annotation.annotationType());
 
@@ -67,7 +72,7 @@ public class AnnotationParser {
         }
 
         if (!arguments.isEmpty()) {
-            annotationArguments += "(" + String.join(", ", arguments) + ")";
+            annotationArguments += '(' + String.join(", ", arguments) + ')';
         }
 
         return annotationArguments;
@@ -89,7 +94,8 @@ public class AnnotationParser {
             }
         } catch (Exception exception) {
             String annotationName = annotation.annotationType().getName();
-            String message = String.format("Can't get default annotation value for annotation: %s", annotationName);
+            String message = MessageFormat.format("Can't get default annotation value for annotation: {}",
+                    annotationName);
             throw new ReflectionParserException(message, exception);
         }
 
@@ -147,7 +153,8 @@ public class AnnotationParser {
             }
         } catch (ReflectiveOperationException exception) {
             String annotationName = annotation.annotationType().getName();
-            String message = String.format("Can't get default annotation value for annotation: %s", annotationName);
+            String message = MessageFormat.format("Can't get default annotation value for annotation: {}",
+                    annotationName);
             throw new ReflectionParserException(message, exception);
         }
 

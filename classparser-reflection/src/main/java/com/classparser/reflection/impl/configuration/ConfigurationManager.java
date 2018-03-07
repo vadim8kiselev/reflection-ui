@@ -47,7 +47,7 @@ public class ConfigurationManager {
 
     public void reloadConfiguration(Map<String, Object> configuration) {
         this.configuration.putAll(configuration);
-        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
+        this.utils.reloadConfiguration(configuration);
     }
 
     public boolean isShowAnnotationTypes() {

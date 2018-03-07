@@ -62,7 +62,7 @@ public class JDBuilderConfiguration {
             StringBuilder builder = new StringBuilder();
 
             for (int i = 0; i < indent; i++) {
-                builder.append(" ");
+                builder.append(' ');
             }
 
             configuration.put("ind", builder.toString());

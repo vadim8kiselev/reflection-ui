@@ -24,8 +24,11 @@ import java.util.Map;
 public final class ProcyonDecompiler implements Decompiler {
 
     private final Map<String, Object> configuration = getDefaultConfiguration();
+
     private final Map<String, byte[]> byteCodeMap = new HashMap<>();
+
     private byte[] byteCode;
+
     private ConfigurationUtils utils;
 
     @Override

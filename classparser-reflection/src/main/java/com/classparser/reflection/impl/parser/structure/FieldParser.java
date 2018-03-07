@@ -54,7 +54,7 @@ public class FieldParser {
 
         String fieldValue = isDisplayFiledValue ? ValueParser.getValue(field) : "";
 
-        fieldSignature += annotations + indent + modifiers + type + " " + fieldName + fieldValue + ";";
+        fieldSignature += annotations + indent + modifiers + type + ' ' + fieldName + fieldValue + ';';
 
         return fieldSignature;
     }

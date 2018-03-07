@@ -16,7 +16,7 @@ public class PackageParser {
         if (classPackage != null && clazz.equals(parsedClass)) {
             String packageAnnotations = AnnotationParser.getAnnotations(classPackage);
             packageName += packageAnnotations + "package " +
-                    classPackage.getName() + ";" + lineSeparator + lineSeparator;
+                    classPackage.getName() + ';' + lineSeparator + lineSeparator;
         }
 
         return packageName;

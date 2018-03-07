@@ -30,7 +30,7 @@ public class ArgumentParser {
             }
         }
 
-        arguments += "(" + String.join(", ", strings) + ")";
+        arguments += '(' + String.join(", ", strings) + ')';
 
         return arguments;
     }
@@ -59,7 +59,7 @@ public class ArgumentParser {
 
     private static String getArgumentAnnotations(Parameter parameter) {
         String annotations = AnnotationParser.getInlineAnnotations(parameter);
-        return !annotations.isEmpty() ? annotations + " " : "";
+        return !annotations.isEmpty() ? annotations + ' ' : "";
     }
 
     private static String convertToVarArg(String type) {

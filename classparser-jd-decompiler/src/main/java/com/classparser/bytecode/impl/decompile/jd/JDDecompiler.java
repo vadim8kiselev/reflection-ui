@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -37,8 +38,11 @@ import java.util.*;
 public final class JDDecompiler implements Decompiler {
 
     private static final int INITIAL_CAPACITY = 1024;
+
     private final Map<String, Object> configuration = getDefaultConfiguration();
+
     private List<ClassFile> innerClasses = new ArrayList<>();
+
     private ConfigurationUtils utils;
 
     @Override
@@ -79,7 +83,7 @@ public final class JDDecompiler implements Decompiler {
             return jdPrinter.getSource();
         } catch (ClassFormatException | NullPointerException exception) {
             String className = ClassNameUtils.getClassName(byteCode);
-            String exceptionMessage = String.format("JD can't decompile class: %s", className);
+            String exceptionMessage = MessageFormat.format("JD can't decompile class: {}", className);
 
             throw new DecompilationException(exceptionMessage, exception);
         } catch (LoaderException exception) {

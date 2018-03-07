@@ -58,7 +58,7 @@ public class ConstructorParser {
         String oneIndent = StateManager.getConfiguration().getIndentSpaces();
 
         String body = " {" + lineSeparator + indent + oneIndent +
-                "/* Compiled code */" + lineSeparator + indent + "}";
+                "/* Compiled code */" + lineSeparator + indent + '}';
 
         constructorSignature += annotations + indent + modifiers +
                 generics + constructorName + arguments + exceptions + body;

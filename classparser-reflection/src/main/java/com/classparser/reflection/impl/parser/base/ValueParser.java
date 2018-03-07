@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ValueParser {
                 if (listValues.size() == 1 || values.isEmpty()) {
                     return values;
                 } else {
-                    return "{" + values + "}";
+                    return '{' + values + '}';
                 }
             }
 
@@ -115,7 +116,8 @@ public class ValueParser {
                     }
                 }
             } catch (IllegalAccessException exception) {
-                throw new ReflectionParserException("Can't get value of field: " + field.getName(), exception);
+                String message = MessageFormat.format("Can't get value of field: {}", field.getName());
+                throw new ReflectionParserException(message, exception);
             }
         }
 

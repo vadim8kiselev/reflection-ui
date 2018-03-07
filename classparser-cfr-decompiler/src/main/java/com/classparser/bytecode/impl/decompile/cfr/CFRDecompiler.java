@@ -31,7 +31,8 @@ import java.util.*;
 public final class CFRDecompiler implements Decompiler {
 
     private final Map<String, Object> configuration = getDefaultConfiguration();
-    private Collection<byte[]> innerClasses = new ArrayList<>();
+
+    private final Collection<byte[]> innerClasses = new ArrayList<>();
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -41,7 +42,7 @@ public final class CFRDecompiler implements Decompiler {
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
         String className = ClassNameUtils.getClassName(byteCode);
-        this.innerClasses = classes;
+        this.innerClasses.addAll(classes);
 
         GetOptParser getOptParser = new GetOptParser();
         Options options = getOptParser.parse(getDefaultOptions(className), OptionsImpl.getFactory());

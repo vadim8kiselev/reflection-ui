@@ -32,7 +32,7 @@ public class InheritanceParser {
             superClass = getSingleParentType(clazz.getSuperclass(), annotatedType);
         }
 
-        return (!superClass.isEmpty()) ? "extends " + superClass + " " : "";
+        return (!superClass.isEmpty()) ? "extends " + superClass + ' ' : "";
     }
 
     private static String getInterfaces(Class<?> clazz) {
@@ -48,7 +48,7 @@ public class InheritanceParser {
         }
 
         String relationship = clazz.isInterface() ? "extends " : "implements ";
-        return (!interfaces.isEmpty()) ? relationship + interfaces + " " : "";
+        return (!interfaces.isEmpty()) ? relationship + interfaces + ' ' : "";
     }
 
     private static List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {

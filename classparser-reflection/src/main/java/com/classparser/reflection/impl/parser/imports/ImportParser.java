@@ -37,7 +37,7 @@ public class ImportParser {
 
         for (Class<?> className : classesForImport) {
             if (isAppendToImports(className)) {
-                imports.add("import " + className.getName() + ";" + lineSeparator);
+                imports.add("import " + className.getName() + ';' + lineSeparator);
             }
         }
 

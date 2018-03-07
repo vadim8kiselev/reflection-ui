@@ -19,6 +19,10 @@ public class ConfigurationUtils {
         return type.isInstance(object);
     }
 
+    public void reloadConfiguration(Map<String, Object> newConfiguration) {
+        this.configuration.putAll(newConfiguration);
+    }
+
     public <T> T getConfig(String config, Class<T> type) {
         Object option = configuration.get(config);
         if (isInstance(option, type)) {
