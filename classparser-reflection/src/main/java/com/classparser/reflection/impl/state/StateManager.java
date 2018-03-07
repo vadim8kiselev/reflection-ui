@@ -79,7 +79,7 @@ public class StateManager {
     }
 
     private static State getCurrentState() {
-        State state = getCurrentState();
+        State state = states.get();
         if (state == null) {
             state = new State();
             setCurrentState(state);
