@@ -19,6 +19,7 @@ import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -104,7 +105,8 @@ public final class FernflowerDecompiler implements Decompiler {
             units.put(structClass.qualifiedName, unit);
         } catch (Exception exception) {
             String className = ClassNameUtils.getClassName(byteCode);
-            String exceptionMessage = String.format("Can't upload bytecode of class: %s to fernflower", className);
+            String exceptionMessage =
+                    MessageFormat.format("Can't upload bytecode of class: \"{}\" to fernflower", className);
             throw new DecompilationException(exceptionMessage, exception);
         }
     }
@@ -135,8 +137,7 @@ public final class FernflowerDecompiler implements Decompiler {
     }
 
     private ContextUnit createFakeContextUnit(Fernflower fernflower) {
-        final String EMPTY_PATH = ClassFileUtils.EMPTY_PATH;
-        return new ContextUnit(CLASS_FILE_TYPE, EMPTY_PATH, EMPTY_PATH, true, saver, fernflower);
+        return new ContextUnit(CLASS_FILE_TYPE, "", "", true, saver, fernflower);
     }
 
     private static class FernflowerResultSaver implements IResultSaver {

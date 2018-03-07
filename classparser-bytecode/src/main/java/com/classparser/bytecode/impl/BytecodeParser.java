@@ -10,6 +10,7 @@ import com.classparser.bytecode.impl.utils.InnerClassesCollector;
 import com.classparser.configuration.Configuration;
 import com.classparser.exception.agent.InvalidRetransformClass;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,16 +18,19 @@ import java.util.Map;
 
 public class BytecodeParser implements ClassParser {
 
-    private final ByteCodeCollector byteCodeCollector = new ChainByteCodeCollector();
+    private final ByteCodeSaver saver = new ByteCodeSaver();
 
     @Override
     public String parseClass(Class<?> clazz) {
         checkToCorrectClass(clazz);
 
-        byte[] byteCode = getByteCodeOfClass(clazz);
-        List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz);
+        ByteCodeCollector byteCodeCollector = new ChainByteCodeCollector();
+        byte[] byteCode = getByteCodeOfClass(clazz, byteCodeCollector);
+        List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz, byteCodeCollector);
 
-        saveByteCodeToFile(byteCode, bytecodeOfInnerClasses);
+        if (StateManager.getConfiguration().isSaveToFile()) {
+            saveByteCodeToFile(byteCode, bytecodeOfInnerClasses);
+        }
 
         Decompiler decompiler = StateManager.getConfiguration().getDecompiler();
         Configuration configuration = StateManager.getConfiguration().getCustomDecompilerConfiguration();
@@ -38,17 +42,13 @@ public class BytecodeParser implements ClassParser {
     }
 
     private void saveByteCodeToFile(byte[] byteCode, List<byte[]> bytecodeOfInnerClasses) {
-        if (StateManager.getConfiguration().isSaveToFile()) {
-            ByteCodeSaver saver = new ByteCodeSaver();
-
-            saver.saveToFile(byteCode);
-            for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
-                saver.saveToFile(bytecodeOfInnerClass);
-            }
+        this.saver.saveToFile(byteCode);
+        for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
+            this.saver.saveToFile(bytecodeOfInnerClass);
         }
     }
 
-    private List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz) {
+    private List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz, ByteCodeCollector byteCodeCollector) {
         if (StateManager.getConfiguration().isDecompileInnerClasses()) {
             List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
 
@@ -65,11 +65,13 @@ public class BytecodeParser implements ClassParser {
         }
     }
 
-    private byte[] getByteCodeOfClass(Class<?> clazz) {
+    private byte[] getByteCodeOfClass(Class<?> clazz, ByteCodeCollector byteCodeCollector) {
         byte[] byteCode = byteCodeCollector.getByteCode(clazz);
 
         if (byteCode == null) {
-            throw new NullPointerException(String.format("Byte code of class: %s is not found!", clazz.getName()));
+            String message = MessageFormat.format("Byte code of class: \"{}\" is not found!",
+                    clazz.getName());
+            throw new NullPointerException(message);
         }
 
         return byteCode;
@@ -81,11 +83,15 @@ public class BytecodeParser implements ClassParser {
         }
 
         if (clazz.isPrimitive()) {
-            throw new InvalidRetransformClass(String.format("Primitive type: %s can not be decompiled", clazz.getName()));
+            String message = MessageFormat.format("Primitive type: \"{}\" can not be decompiled",
+                    clazz.getName());
+            throw new InvalidRetransformClass(message);
         }
 
         if (clazz.isArray()) {
-            throw new InvalidRetransformClass(String.format("Array type: %s can not be decompiled", clazz.getSimpleName()));
+            String message = MessageFormat.format("Array type: \"{}\" can not be decompiled",
+                    clazz.getSimpleName());
+            throw new InvalidRetransformClass(message);
         }
     }
 

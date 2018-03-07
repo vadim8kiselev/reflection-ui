@@ -9,6 +9,7 @@ import com.classparser.exception.agent.InvalidRetransformClass;
 
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.text.MessageFormat;
 
 public class FromJVMByteCodeCollector implements ByteCodeCollector {
 
@@ -31,7 +32,7 @@ public class FromJVMByteCodeCollector implements ByteCodeCollector {
                     instrumentation.retransformClasses(clazz);
                 }
             } catch (UnmodifiableClassException exception) {
-                String message = String.format("Class: %s is can't retransform", clazz.getName());
+                String message = MessageFormat.format("Class: {} is can't retransform", clazz.getName());
                 throw new InvalidRetransformClass(message, exception);
             }
 

@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -31,7 +32,8 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
         try (FileInputStream stream = new FileInputStream(path)) {
             return readByteFromStream(stream);
         } catch (IOException exception) {
-            throw new ReadFileException(String.format("Can't read file by path: %s", path), exception);
+            String message = MessageFormat.format("Can't read file by path: {}", path);
+            throw new ReadFileException(message, exception);
         }
     }
 
@@ -46,7 +48,8 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
                 return readByteFromStream(fileStream);
             }
         } catch (Exception exception) {
-            throw new ReadFileException(String.format("Can't read file by path: %s", path), exception);
+            String message = MessageFormat.format("Can't read file by path: {}", path);
+            throw new ReadFileException(message, exception);
         }
     }
 

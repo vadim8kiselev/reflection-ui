@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -66,7 +67,8 @@ public final class AgentBuilder {
 
         public AgentJarBuilder addAgentClass(Class<?> agentClass) {
             if (!isAgentClass(agentClass)) {
-                String exceptionMessage = String.format("Class %s is can't be a agent class", agentClass.getName());
+                String exceptionMessage =
+                        MessageFormat.format("Class \"{}\" is can't be a agent class", agentClass.getName());
                 throw new InvalidAgentClassException(exceptionMessage);
             }
             this.agentClass = agentClass;
@@ -78,8 +80,8 @@ public final class AgentBuilder {
         }
 
         private void findAgentClass() {
-            if (agentClass == null) {
-                for (Class<?> attachedClass : attachedClasses) {
+            if (this.agentClass == null) {
+                for (Class<?> attachedClass : this.attachedClasses) {
                     if (isAgentClass(attachedClass)) {
                         this.agentClass = attachedClass;
                         return;
@@ -124,27 +126,28 @@ public final class AgentBuilder {
 
         private String createAgentJar() {
             findAgentClass();
-            if (agentClass == null) {
+            if (this.agentClass == null) {
                 throw new NullPointerException("Agent class can't be null");
             }
 
-            if (agentName == null) {
-                agentName = "agent.jar";
+            if (this.agentName == null) {
+                this.agentName = "agent.jar";
             }
 
-            String agentPath = getAgentPath(agentName);
+            String agentPath = getAgentPath(this.agentName);
 
-            attachedClasses.add(agentClass);
+            this.attachedClasses.add(this.agentClass);
             try (JarOutputStream jarStream = new JarOutputStream(new FileOutputStream(agentPath), getManifest())) {
                 ByteCodeCollector reader = new ClassFileByteCodeCollector();
 
-                for (Class<?> attachedClass : attachedClasses) {
+                for (Class<?> attachedClass : this.attachedClasses) {
                     if (attachedClass != null) {
                         jarStream.putNextEntry(new JarEntry(ClassNameUtils.getClassToFileName(attachedClass)));
 
                         byte[] byteCode = reader.getByteCode(attachedClass);
                         if (byteCode == null) {
-                            String exceptionMessage = String.format("Class %s is not found!", attachedClass.getName());
+                            String exceptionMessage =
+                                    MessageFormat.format("Class \"{}\" is not found!", attachedClass.getName());
                             throw new ClassLoadException(exceptionMessage);
                         }
 
@@ -178,7 +181,8 @@ public final class AgentBuilder {
 
                 return new Manifest(stream);
             } catch (IOException exception) {
-                String exceptionMessage = String.format("Manifest with name: \"%s\" is can't created", manifestName);
+                String exceptionMessage =
+                        MessageFormat.format("Manifest with name: \"{}\" is can't created", manifestName);
                 throw new CreateFileException(exceptionMessage, exception);
             }
         }

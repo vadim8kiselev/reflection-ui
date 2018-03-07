@@ -51,7 +51,6 @@ public class ConfigurationManager {
 
     void reloadConfiguration(Map<String, Object> configuration) {
         this.configuration.putAll(configuration);
-        System.out.println(this.configuration);
         this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 

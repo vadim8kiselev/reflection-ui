@@ -8,8 +8,6 @@ import java.net.URL;
 
 public class ClassFileUtils {
 
-    public static final String EMPTY_PATH = "";
-
     private static final String SHIELDED_SPACE = "%20";
 
     private static final String PROTOCOL = "file://";
@@ -24,7 +22,7 @@ public class ClassFileUtils {
             }
         }
 
-        return EMPTY_PATH;
+        return "";
     }
 
     public static ClassLoader getClassLoader(Class<?> clazz) {
@@ -55,7 +53,7 @@ public class ClassFileUtils {
             return path.substring(0, path.lastIndexOf('/'));
         }
 
-        return EMPTY_PATH;
+        return "";
     }
 
     public static String getArchivePath(String jarFilePath) {
@@ -74,7 +72,7 @@ public class ClassFileUtils {
             }
         }
 
-        return EMPTY_PATH;
+        return "";
     }
 
     public static String getClassNameFromArchivePath(String jarFilePath) {
@@ -82,7 +80,7 @@ public class ClassFileUtils {
             return jarFilePath.substring(getSeparatorPosition(jarFilePath) + 2, jarFilePath.length());
         }
 
-        return EMPTY_PATH;
+        return "";
     }
 
     private static int getSeparatorPosition(String jarFilePath) {
@@ -104,6 +102,6 @@ public class ClassFileUtils {
             return "zip";
         }
 
-        return EMPTY_PATH;
+        return "";
     }
 }
