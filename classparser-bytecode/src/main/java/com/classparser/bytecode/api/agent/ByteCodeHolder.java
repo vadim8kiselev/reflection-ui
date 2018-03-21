@@ -3,9 +3,10 @@ package com.classparser.bytecode.api.agent;
 public interface ByteCodeHolder {
 
     /**
-     * Getting byte code of class by class name
+     * Getting bytecode of class by class full name
      *
-     * @return Byte code of class
+     * @param className class full name
+     * @return bytecode of class
      */
     byte[] get(String className);
 }

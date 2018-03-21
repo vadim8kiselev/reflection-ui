@@ -8,6 +8,7 @@ public interface ClassParser {
      * Get meta information of class
      *
      * @param clazz - class for which getting meta-info
+     * @return decompiled code of class
      */
     String parseClass(Class<?> clazz);
 

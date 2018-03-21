@@ -6,7 +6,7 @@ package com.classparser.bytecode.impl.assembly.build;
 public interface Builder {
 
     /**
-     * Name of jar file
+     * Setter for name of jar file
      */
     Builder addAgentName(String agentName);
 

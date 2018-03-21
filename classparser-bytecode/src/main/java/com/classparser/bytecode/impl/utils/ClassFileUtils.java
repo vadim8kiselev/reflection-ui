@@ -5,6 +5,7 @@ import com.classparser.exception.ByteCodeParserException;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 
 public class ClassFileUtils {
 
@@ -68,7 +69,8 @@ public class ClassFileUtils {
                 URL urlPath = new URL(path);
                 return urlPath.getFile();
             } catch (MalformedURLException exception) {
-                throw new ByteCodeParserException(String.format("Jar path: %s is undefined", path), exception);
+                String message = MessageFormat.format("Jar path: {0} is undefined", path);
+                throw new ByteCodeParserException(message, exception);
             }
         }
 

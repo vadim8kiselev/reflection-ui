@@ -3,7 +3,6 @@ package com.classparser.bytecode.impl.decompile.fernflower;
 import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
-import com.classparser.bytecode.impl.utils.ClassFileUtils;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
 import com.classparser.exception.decompile.DecompilationException;
@@ -106,7 +105,7 @@ public final class FernflowerDecompiler implements Decompiler {
         } catch (Exception exception) {
             String className = ClassNameUtils.getClassName(byteCode);
             String exceptionMessage =
-                    MessageFormat.format("Can't upload bytecode of class: \"{}\" to fernflower", className);
+                    MessageFormat.format("Can't upload bytecode of class: \"{0}\" to fernflower", className);
             throw new DecompilationException(exceptionMessage, exception);
         }
     }

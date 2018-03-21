@@ -2,6 +2,7 @@ package com.classparser.configuration.util;
 
 import com.classparser.exception.option.OptionNotFoundException;
 
+import java.text.MessageFormat;
 import java.util.Map;
 
 public class ConfigurationUtils {
@@ -29,8 +30,8 @@ public class ConfigurationUtils {
             return type.cast(option);
         } else {
             if (!defaultConfiguration.containsKey(config)) {
-                String exceptionMessage = String.format("Default option: \"%s\" it isn't put down", config);
-                throw new OptionNotFoundException(exceptionMessage);
+                String message = MessageFormat.format("Default option: \"{0}\" it isn't put down", config);
+                throw new OptionNotFoundException(message);
             }
             return type.cast(defaultConfiguration.get(config));
         }

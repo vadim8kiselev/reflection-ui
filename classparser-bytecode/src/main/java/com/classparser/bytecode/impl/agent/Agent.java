@@ -8,7 +8,7 @@ import java.lang.instrument.Instrumentation;
 
 public final class Agent implements JavaAgent {
 
-    private static final AgentAssembler agentAssembler = new AgentAssembler();
+    private static final AgentAssembler AGENT_ASSEMBLER = new AgentAssembler();
 
     private static final Transformer TRANSFORMER = new Transformer();
 
@@ -27,7 +27,7 @@ public final class Agent implements JavaAgent {
 
     private void initialize() {
         if (!isInitialize()) {
-            agentAssembler.assembly();
+            AGENT_ASSEMBLER.assembly();
         }
     }
 
@@ -39,6 +39,6 @@ public final class Agent implements JavaAgent {
 
     @Override
     public boolean isInitialize() {
-        return agentAssembler.isAssembled();
+        return AGENT_ASSEMBLER.isAssembled();
     }
 }

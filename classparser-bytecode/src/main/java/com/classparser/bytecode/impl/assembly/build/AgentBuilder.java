@@ -68,7 +68,7 @@ public final class AgentBuilder {
         public AgentJarBuilder addAgentClass(Class<?> agentClass) {
             if (!isAgentClass(agentClass)) {
                 String exceptionMessage =
-                        MessageFormat.format("Class \"{}\" is can't be a agent class", agentClass.getName());
+                        MessageFormat.format("Class \"{0}\" is can't be a agent class", agentClass.getName());
                 throw new InvalidAgentClassException(exceptionMessage);
             }
             this.agentClass = agentClass;
@@ -102,7 +102,7 @@ public final class AgentBuilder {
                 Method agentMethod = agentmain != null ? agentmain : premain;
 
                 int modifiers = agentMethod.getModifiers();
-                return Modifier.isStatic(modifiers) && agentMethod.getReturnType().equals(void.class);
+                return Modifier.isStatic(modifiers) && agentMethod.getReturnType().equals(Void.TYPE);
             }
 
             return false;
@@ -147,7 +147,7 @@ public final class AgentBuilder {
                         byte[] byteCode = reader.getByteCode(attachedClass);
                         if (byteCode == null) {
                             String exceptionMessage =
-                                    MessageFormat.format("Class \"{}\" is not found!", attachedClass.getName());
+                                    MessageFormat.format("Class \"{0}\" is not found!", attachedClass.getName());
                             throw new ClassLoadException(exceptionMessage);
                         }
 
@@ -182,7 +182,7 @@ public final class AgentBuilder {
                 return new Manifest(stream);
             } catch (IOException exception) {
                 String exceptionMessage =
-                        MessageFormat.format("Manifest with name: \"{}\" is can't created", manifestName);
+                        MessageFormat.format("Manifest with name: \"{0}\" is can't created", manifestName);
                 throw new CreateFileException(exceptionMessage, exception);
             }
         }

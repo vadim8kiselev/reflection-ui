@@ -32,7 +32,7 @@ public class FromJVMByteCodeCollector implements ByteCodeCollector {
                     instrumentation.retransformClasses(clazz);
                 }
             } catch (UnmodifiableClassException exception) {
-                String message = MessageFormat.format("Class: {} is can't retransform", clazz.getName());
+                String message = MessageFormat.format("Class: \"{0}\" is can't retransform", clazz.getName());
                 throw new InvalidRetransformClass(message, exception);
             }
 

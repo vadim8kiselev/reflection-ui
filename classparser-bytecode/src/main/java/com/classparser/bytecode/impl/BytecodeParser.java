@@ -69,7 +69,7 @@ public class BytecodeParser implements ClassParser {
         byte[] byteCode = byteCodeCollector.getByteCode(clazz);
 
         if (byteCode == null) {
-            String message = MessageFormat.format("Byte code of class: \"{}\" is not found!",
+            String message = MessageFormat.format("Byte code of class: \"{0}\" is not found!",
                     clazz.getName());
             throw new NullPointerException(message);
         }
@@ -83,13 +83,13 @@ public class BytecodeParser implements ClassParser {
         }
 
         if (clazz.isPrimitive()) {
-            String message = MessageFormat.format("Primitive type: \"{}\" can not be decompiled",
+            String message = MessageFormat.format("Primitive type: \"{0}\" can not be decompiled",
                     clazz.getName());
             throw new InvalidRetransformClass(message);
         }
 
         if (clazz.isArray()) {
-            String message = MessageFormat.format("Array type: \"{}\" can not be decompiled",
+            String message = MessageFormat.format("Array type: \"{0}\" can not be decompiled",
                     clazz.getSimpleName());
             throw new InvalidRetransformClass(message);
         }

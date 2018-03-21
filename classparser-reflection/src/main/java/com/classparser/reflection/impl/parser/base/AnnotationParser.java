@@ -94,7 +94,7 @@ public class AnnotationParser {
             }
         } catch (Exception exception) {
             String annotationName = annotation.annotationType().getName();
-            String message = MessageFormat.format("Can't get default annotation value for annotation: {}",
+            String message = MessageFormat.format("Can't get default annotation value for annotation: {0}",
                     annotationName);
             throw new ReflectionParserException(message, exception);
         }
@@ -153,7 +153,7 @@ public class AnnotationParser {
             }
         } catch (ReflectiveOperationException exception) {
             String annotationName = annotation.annotationType().getName();
-            String message = MessageFormat.format("Can't get default annotation value for annotation: {}",
+            String message = MessageFormat.format("Can't get default annotation value for annotation: {0}",
                     annotationName);
             throw new ReflectionParserException(message, exception);
         }

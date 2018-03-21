@@ -83,7 +83,7 @@ public final class JDDecompiler implements Decompiler {
             return jdPrinter.getSource();
         } catch (ClassFormatException | NullPointerException exception) {
             String className = ClassNameUtils.getClassName(byteCode);
-            String exceptionMessage = MessageFormat.format("JD can't decompile class: {}", className);
+            String exceptionMessage = MessageFormat.format("JD can't decompile class: {0}", className);
 
             throw new DecompilationException(exceptionMessage, exception);
         } catch (LoaderException exception) {

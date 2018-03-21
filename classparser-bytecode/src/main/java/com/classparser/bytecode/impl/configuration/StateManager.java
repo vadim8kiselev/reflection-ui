@@ -7,11 +7,13 @@ public class StateManager {
     private static final ThreadLocal<ConfigurationManager> configurationLocalMap = new ThreadLocal<>();
 
     public static void registerConfiguration(Map<String, Object> configuration) {
-        ConfigurationManager manager = configurationLocalMap.get();
-        if (manager == null) {
-            configurationLocalMap.set(new ConfigurationManager(configuration));
-        } else {
-            manager.reloadConfiguration(configuration);
+        if (configuration != null) {
+            ConfigurationManager manager = configurationLocalMap.get();
+            if (manager == null) {
+                configurationLocalMap.set(new ConfigurationManager(configuration));
+            } else {
+                manager.reloadConfiguration(configuration);
+            }
         }
     }
 

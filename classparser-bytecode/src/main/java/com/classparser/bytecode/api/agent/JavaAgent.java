@@ -7,14 +7,14 @@ public interface JavaAgent {
     /**
      * Getting instrumentation from agent premain or agentmain method
      *
-     * @return Instrumentation instance
+     * @return {@link Instrumentation} instance
      */
     Instrumentation getInstrumentation();
 
     /**
      * Getting bytecode holder which contains bytecode of retransform classes
      *
-     * @return ByteCodeHolder instance
+     * @return {@link ByteCodeHolder} instance
      */
     ByteCodeHolder getByteCodeHolder();
 

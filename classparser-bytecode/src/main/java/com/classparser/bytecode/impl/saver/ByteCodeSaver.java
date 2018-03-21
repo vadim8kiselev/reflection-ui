@@ -19,7 +19,7 @@ public class ByteCodeSaver {
         try (FileOutputStream stream = new FileOutputStream(fileName)) {
             stream.write(byteCode);
         } catch (IOException exception) {
-            String message = MessageFormat.format("Can't create file by path: {}", fileName);
+            String message = MessageFormat.format("Can't create file by path: {0}", fileName);
             throw new CreateFileException(message, exception);
         }
     }
@@ -38,7 +38,7 @@ public class ByteCodeSaver {
         try {
             Files.createDirectories(directoryPath).toFile();
         } catch (IOException exception) {
-            String message = MessageFormat.format("Directory: {} can't created", path);
+            String message = MessageFormat.format("Directory: \"{0}\" can't created", path);
             throw new CreateFileException(message, exception);
         }
     }

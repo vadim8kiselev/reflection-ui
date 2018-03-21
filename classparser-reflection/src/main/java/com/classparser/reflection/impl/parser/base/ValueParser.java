@@ -116,7 +116,7 @@ public class ValueParser {
                     }
                 }
             } catch (IllegalAccessException exception) {
-                String message = MessageFormat.format("Can't get value of field: {}", field.getName());
+                String message = MessageFormat.format("Can't get value of field: {0}", field.getName());
                 throw new ReflectionParserException(message, exception);
             }
         }

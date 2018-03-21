@@ -70,11 +70,13 @@ public class StateManager {
     }
 
     public static void setConfiguration(Map<String, Object> configuration) {
-        ConfigurationManager configurationManager = getCurrentState().getConfigurationManager();
-        if (configurationManager == null) {
-            getCurrentState().setConfigurationManager(new ConfigurationManager(configuration));
-        } else {
-            configurationManager.reloadConfiguration(configuration);
+        if (configuration != null) {
+            ConfigurationManager configurationManager = getCurrentState().getConfigurationManager();
+            if (configurationManager == null) {
+                getCurrentState().setConfigurationManager(new ConfigurationManager(configuration));
+            } else {
+                configurationManager.reloadConfiguration(configuration);
+            }
         }
     }
 

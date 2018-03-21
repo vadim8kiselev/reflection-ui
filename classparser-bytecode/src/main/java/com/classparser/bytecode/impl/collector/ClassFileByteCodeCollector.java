@@ -32,7 +32,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
         try (FileInputStream stream = new FileInputStream(path)) {
             return readByteFromStream(stream);
         } catch (IOException exception) {
-            String message = MessageFormat.format("Can't read file by path: {}", path);
+            String message = MessageFormat.format("Can't read file by path: {0}", path);
             throw new ReadFileException(message, exception);
         }
     }
@@ -48,7 +48,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
                 return readByteFromStream(fileStream);
             }
         } catch (Exception exception) {
-            String message = MessageFormat.format("Can't read file by path: {}", path);
+            String message = MessageFormat.format("Can't read file by path: {0}", path);
             throw new ReadFileException(message, exception);
         }
     }

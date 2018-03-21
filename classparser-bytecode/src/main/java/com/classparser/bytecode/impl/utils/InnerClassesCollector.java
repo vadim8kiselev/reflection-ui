@@ -10,7 +10,14 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
@@ -23,20 +30,17 @@ public class InnerClassesCollector {
 
     private static final JavaAgent agent = StateManager.getConfiguration().getAgent();
 
-    public static Collection<Class<?>> getInnerClasses(Class<?> clazz) {
+    public static List<Class<?>> getInnerClasses(Class<?> clazz) {
         Set<Class<?>> innerClasses = new HashSet<>();
 
-        // Anonymous and synthetic classes
         if (StateManager.getConfiguration().isDecompileAnonymousClasses()) {
             innerClasses.addAll(getAnonymousOrSyntheticClasses(clazz));
         }
 
-        // Inner and nested classes
         if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
             innerClasses.addAll(getInnerAndNestedClasses(clazz));
         }
 
-        // Local classes
         if (StateManager.getConfiguration().isDecompileLocalClasses()) {
             innerClasses.addAll(getLocalClasses(clazz));
         }
@@ -44,8 +48,8 @@ public class InnerClassesCollector {
         return new ArrayList<>(innerClasses);
     }
 
-    private static Collection<Class<?>> getAnonymousOrSyntheticClasses(Class<?> clazz) {
-        Collection<Class<?>> anonymousOrSyntheticClasses = new ArrayList<>();
+    private static List<Class<?>> getAnonymousOrSyntheticClasses(Class<?> clazz) {
+        List<Class<?>> anonymousOrSyntheticClasses = new ArrayList<>();
 
         int classId = 0;
         while (classId++ < 2 << 15) {
@@ -61,8 +65,8 @@ public class InnerClassesCollector {
         return anonymousOrSyntheticClasses;
     }
 
-    private static Collection<Class<?>> getInnerAndNestedClasses(Class<?> clazz) {
-        Collection<Class<?>> innerAndNestedClasses = new ArrayList<>();
+    private static List<Class<?>> getInnerAndNestedClasses(Class<?> clazz) {
+        List<Class<?>> innerAndNestedClasses = new ArrayList<>();
 
         for (Class<?> innerOrNestedClass : clazz.getDeclaredClasses()) {
             innerAndNestedClasses.add(innerOrNestedClass);
@@ -72,8 +76,8 @@ public class InnerClassesCollector {
         return innerAndNestedClasses;
     }
 
-    private static Collection<Class<?>> getLocalClasses(Class<?> clazz) {
-        Collection<Class<?>> localClasses = new ArrayList<>();
+    private static List<Class<?>> getLocalClasses(Class<?> clazz) {
+        List<Class<?>> localClasses = new ArrayList<>();
 
         if (isDynamicCreateClass(clazz)) {
             localClasses.addAll(collectLocalDynamicClass(clazz));
@@ -92,12 +96,12 @@ public class InnerClassesCollector {
         return ClassFileUtils.getFilePath(clazz).isEmpty();
     }
 
-    private static Collection<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
-        Collection<Class<?>> localClasses = new ArrayList<>();
+    private static List<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
+        List<Class<?>> localClasses = new ArrayList<>();
 
         ClassLoader loader = ClassFileUtils.getClassLoader(clazz);
 
-        Collection<Class<?>> classes = getLoadedClasses(loader);
+        List<Class<?>> classes = getLoadedClasses(loader);
         for (Class<?> loadedClass : classes) {
             String className = ClassNameUtils.getSimpleName(loadedClass);
             if (loadedClass.isLocalClass() && isLocalClass(clazz, className)) {
@@ -108,8 +112,8 @@ public class InnerClassesCollector {
         return localClasses;
     }
 
-    private static Collection<Class<?>> collectLocalClassesFromArchive(Class<?> clazz) {
-        Collection<Class<?>> localClasses = new ArrayList<>();
+    private static List<Class<?>> collectLocalClassesFromArchive(Class<?> clazz) {
+        List<Class<?>> localClasses = new ArrayList<>();
 
         String path = ClassFileUtils.getFilePath(clazz);
         File file = new File(ClassFileUtils.getArchivePath(path));
@@ -121,14 +125,15 @@ public class InnerClassesCollector {
                 addLocalClass(collectLocalStaticClass(clazz, entry.getName()), localClasses);
             }
         } catch (IOException exception) {
-            throw new ReadFileException(String.format("Can't read jar file: %s", file.getPath()), exception);
+            String message = MessageFormat.format("Can't read jar file: {0}", file.getPath());
+            throw new ReadFileException(message, exception);
         }
 
         return localClasses;
     }
 
-    private static Collection<Class<?>> collectLocalClassesFromDirectory(Class<?> clazz) {
-        Collection<Class<?>> localClasses = new ArrayList<>();
+    private static List<Class<?>> collectLocalClassesFromDirectory(Class<?> clazz) {
+        List<Class<?>> localClasses = new ArrayList<>();
 
         File file = new File(ClassFileUtils.getClassPackagePath(clazz));
         File[] classes = file.listFiles();
@@ -158,7 +163,8 @@ public class InnerClassesCollector {
             try {
                 return Class.forName(fullName);
             } catch (ClassNotFoundException exception) {
-                throw new ClassLoadException(String.format("Can't load local class: %s", fullName), exception);
+                String message = MessageFormat.format("Can't load local class: {0}", fullName);
+                throw new ClassLoadException(message, exception);
             }
         }
 
@@ -166,12 +172,12 @@ public class InnerClassesCollector {
     }
 
     @SuppressWarnings("unchecked")
-    private static Collection<Class<?>> getLoadedClasses(ClassLoader classLoader) {
+    private static List<Class<?>> getLoadedClasses(ClassLoader classLoader) {
         if (!agent.isInitialize()) {
             try {
                 Field classes = ClassLoader.class.getDeclaredField("classes");
                 classes.setAccessible(true);
-                return (Collection<Class<?>>) classes.get(classLoader);
+                return new ArrayList<>((Collection<Class<?>>) classes.get(classLoader));
             } catch (ReflectiveOperationException exception) {
                 throw new ClassLoadException("Can't get loaded classes", exception);
             }

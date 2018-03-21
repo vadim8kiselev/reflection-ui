@@ -23,6 +23,7 @@ import org.benf.cfr.reader.util.output.Dumper;
 import org.benf.cfr.reader.util.output.IllegalIdentifierDump;
 import org.benf.cfr.reader.util.output.StdIODumper;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -221,7 +222,8 @@ public final class CFRDecompiler implements Decompiler {
             try {
                 return Class.forName(className);
             } catch (ClassNotFoundException exception) {
-                throw new CannotLoadClassException(String.format("Can't load class: %s", className), exception);
+                String message = MessageFormat.format("Can't load class: {0}", className);
+                throw new CannotLoadClassException(message, exception);
             }
         }
 
@@ -230,7 +232,8 @@ public final class CFRDecompiler implements Decompiler {
             byte[] byteCode = codeCollector.getByteCode(clazz);
 
             if (byteCode == null) {
-                throw new CannotLoadClassException(String.format("Can't load class: %s", className), null);
+                String message = MessageFormat.format("Can't load class: {0}", className);
+                throw new CannotLoadClassException(message, null);
             }
 
             return byteCode;

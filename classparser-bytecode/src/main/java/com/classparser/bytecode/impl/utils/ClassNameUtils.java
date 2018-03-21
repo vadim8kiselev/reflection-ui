@@ -65,7 +65,7 @@ public class ClassNameUtils {
             stream.discard(2);
             return pool.getPrimitiveConstant(thisClassIdx).getString();
         } catch (IOException exception) {
-            throw new ByteCodeParserException("Constant pool is break", exception);
+            throw new ByteCodeParserException("Constant pool is broken", exception);
         }
     }
 }
