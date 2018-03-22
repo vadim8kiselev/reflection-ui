@@ -21,19 +21,21 @@ public final class Agent implements JavaAgent {
 
     @Override
     public Instrumentation getInstrumentation() {
-        initialize();
+        if (!isInitialize()) {
+            initialize();
+        }
         return instrumentation;
     }
 
     private void initialize() {
-        if (!isInitialize()) {
-            AGENT_ASSEMBLER.assembly();
-        }
+        AGENT_ASSEMBLER.assembly();
     }
 
     @Override
     public ByteCodeHolder getByteCodeHolder() {
-        initialize();
+        if (!isInitialize()) {
+            initialize();
+        }
         return TRANSFORMER;
     }
 

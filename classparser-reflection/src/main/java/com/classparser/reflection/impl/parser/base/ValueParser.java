@@ -70,9 +70,9 @@ public class ValueParser {
         Object[] objects = new Object[0];
         if (object.getClass().isArray()) {
             int length = Array.getLength(object);
-            object = new Object[length];
+            objects = new Object[length];
 
-            for (int i = 0; i < Array.getLength(object); i++) {
+            for (int i = 0; i < length; i++) {
                 objects[i] = Array.get(object, i);
             }
         }

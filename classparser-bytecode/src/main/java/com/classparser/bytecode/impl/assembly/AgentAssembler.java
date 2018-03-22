@@ -11,7 +11,7 @@ import java.io.File;
 
 public class AgentAssembler {
 
-    private static final String MANIFEST_AGENT_FILE_NAME = "REFLECTION-UI-MANIFEST.MF";
+    private static final String MANIFEST_AGENT_FILE_NAME = "AGENT-MANIFEST.MF";
 
     private static final String DEFAULT_AGENT_JAR_NAME = "agent.jar";
 
@@ -48,7 +48,7 @@ public class AgentAssembler {
     }
 
     protected Class<?>[] getAgentJarClasses() {
-        return new Class<?>[]{Transformer.class, JavaAgent.class, ByteCodeHolder.class};
+        return new Class<?>[]{Transformer.class, JavaAgent.class};
     }
 
     public boolean isAssembled() {
