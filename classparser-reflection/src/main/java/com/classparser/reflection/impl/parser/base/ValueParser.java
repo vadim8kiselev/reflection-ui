@@ -84,12 +84,16 @@ public class ValueParser {
         if (object instanceof Long) {
             return "L";
         } else if (object instanceof Float) {
-            return "f";
+            if (!Float.isInfinite((Float) object) && !Float.isNaN((Float) object)) {
+                return "f";
+            }
         } else if (object instanceof Double) {
-            return "d";
-        } else {
-            return "";
+            if (!Double.isInfinite((Double) object) && !Double.isNaN((Double) object)) {
+                return "d";
+            }
         }
+
+        return "";
     }
 
     private static String getDefaultAnnotationValue(Method method) {
