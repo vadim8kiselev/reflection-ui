@@ -1,7 +1,7 @@
 package com.classparser.reflection.impl.parser;
 
 import com.classparser.reflection.impl.parser.base.GenericTypeParser;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
@@ -10,7 +10,16 @@ import java.util.List;
 
 public class InheritanceParser {
 
-    public static String getInheritances(Class<?> clazz) {
+    private final GenericTypeParser genericTypeParser;
+
+    private final ReflectionParserManager manager;
+
+    public InheritanceParser(GenericTypeParser genericTypeParser, ReflectionParserManager manager) {
+        this.genericTypeParser = genericTypeParser;
+        this.manager = manager;
+    }
+
+    public String getInheritances(Class<?> clazz) {
         String inheritances = "";
 
         inheritances += getSuperClass(clazz);
@@ -20,13 +29,13 @@ public class InheritanceParser {
         return inheritances;
     }
 
-    private static String getSuperClass(Class<?> clazz) {
-        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+    private String getSuperClass(Class<?> clazz) {
+        boolean isShowTypeAnnotation = manager.getConfigurationManager().isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? clazz.getAnnotatedSuperclass() : null;
 
         String superClass;
-        if (StateManager.getConfiguration().isShowGenericSignatures()) {
+        if (manager.getConfigurationManager().isShowGenericSignatures()) {
             superClass = getSingleParentType(clazz.getGenericSuperclass(), annotatedType);
         } else {
             superClass = getSingleParentType(clazz.getSuperclass(), annotatedType);
@@ -35,11 +44,11 @@ public class InheritanceParser {
         return (!superClass.isEmpty()) ? "extends " + superClass + ' ' : "";
     }
 
-    private static String getInterfaces(Class<?> clazz) {
-        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+    private String getInterfaces(Class<?> clazz) {
+        boolean isShowTypeAnnotation = manager.getConfigurationManager().isShowAnnotationTypes();
         AnnotatedType[] annotatedTypes = isShowTypeAnnotation ? clazz.getAnnotatedInterfaces() : null;
         String interfaces;
-        if (StateManager.getConfiguration().isShowGenericSignatures()) {
+        if (manager.getConfigurationManager().isShowGenericSignatures()) {
             interfaces = String.join(", ",
                     getMultipleParentTypes(clazz.getGenericInterfaces(), annotatedTypes));
         } else {
@@ -51,7 +60,7 @@ public class InheritanceParser {
         return (!interfaces.isEmpty()) ? relationship + interfaces + ' ' : "";
     }
 
-    private static List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
+    private List<String> getMultipleParentTypes(Type[] parentTypes, AnnotatedType[] annotatedTypes) {
         List<String> multipleParentTypes = new ArrayList<>();
         for (int index = 0; index < parentTypes.length; index++) {
             multipleParentTypes.add(getSingleParentType(parentTypes[index], ifEmpty(annotatedTypes, index)));
@@ -59,11 +68,11 @@ public class InheritanceParser {
         return multipleParentTypes;
     }
 
-    private static String getSingleParentType(Type parentType, AnnotatedType annotatedType) {
-        return GenericTypeParser.resolveType(parentType, annotatedType);
+    private String getSingleParentType(Type parentType, AnnotatedType annotatedType) {
+        return genericTypeParser.resolveType(parentType, annotatedType);
     }
 
-    private static AnnotatedType ifEmpty(AnnotatedType[] types, int index) {
+    private AnnotatedType ifEmpty(AnnotatedType[] types, int index) {
         return types == null || types.length == 0 ? null : types[index];
     }
 }

@@ -3,23 +3,45 @@ package com.classparser.reflection.impl.parser.base;
 import com.classparser.reflection.impl.constants.Cast;
 import com.classparser.reflection.impl.parser.ClassNameParser;
 import com.classparser.reflection.impl.parser.structure.PackageParser;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
-import java.lang.reflect.*;
+import java.lang.reflect.AnnotatedArrayType;
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.AnnotatedWildcardType;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GenericTypeParser {
 
-    public static String getGenerics(GenericDeclaration genericDeclaration) {
+    private final AnnotationParser annotationParser;
+
+    private final ClassNameParser classNameParser;
+
+    private final ReflectionParserManager manager;
+
+    public GenericTypeParser(AnnotationParser annotationParser, ClassNameParser classNameParser,
+                             ReflectionParserManager manager) {
+        this.annotationParser = annotationParser;
+        this.classNameParser = classNameParser;
+        this.manager = manager;
+    }
+
+    public String getGenerics(GenericDeclaration genericDeclaration) {
         List<String> generics = new ArrayList<>();
 
         String whitespace = (genericDeclaration instanceof Class) ? " " : "";
 
         TypeVariable<?>[] typeParameters = genericDeclaration.getTypeParameters();
         for (TypeVariable parameter : typeParameters) {
-            String annotations = AnnotationParser.getInlineAnnotations(parameter);
+            String annotations = annotationParser.getInlineAnnotations(parameter);
             String boundTypes = String.join(" & ", getBounds(parameter));
             String bounds = !boundTypes.isEmpty() ? " extends " + boundTypes : "";
 
@@ -30,12 +52,12 @@ public class GenericTypeParser {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static String resolveType(Type type, AnnotatedType annotatedType) {
+    public String resolveType(Type type, AnnotatedType annotatedType) {
         String annotations = "";
         String boundType = "";
         if (annotatedType != null && !isArray(type)) {
             // If type is inner nested class then "use type" annotations for parametrized type is invisible :(
-            annotations = AnnotationParser.getInlineAnnotations(getAnnotatedType(annotatedType));
+            annotations = annotationParser.getInlineAnnotations(getAnnotatedType(annotatedType));
         }
 
         if (type instanceof Class) {
@@ -45,7 +67,7 @@ public class GenericTypeParser {
                 AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
                 boundType = resolveType(clazz.getComponentType(), annotatedArrayType);
                 AnnotatedType annotatedForArrayType = getAnnotatedTypeForArray(clazz, annotatedArrayType);
-                boundType += AnnotationParser.getInlineAnnotations(annotatedForArrayType) + "[]";
+                boundType += annotationParser.getInlineAnnotations(annotatedForArrayType) + "[]";
             } else {
                 if (isNeedNameForInnerClass(clazz)) {
                     String typeName = resolveType(clazz.getDeclaringClass(), null);
@@ -53,11 +75,11 @@ public class GenericTypeParser {
                     annotations = "";
                 }
 
-                boundType += ClassNameParser.getTypeName(clazz);
+                boundType += classNameParser.getTypeName(clazz);
 
                 if (!clazz.isMemberClass() && boundType.contains(".") && !annotations.isEmpty()) {
                     String packageName = PackageParser.getPackageName(clazz);
-                    String simpleName = ClassNameParser.getSimpleName(clazz);
+                    String simpleName = classNameParser.getSimpleName(clazz);
                     boundType = packageName + "." + annotations + " " + simpleName;
                     annotations = "";
                 }
@@ -79,7 +101,7 @@ public class GenericTypeParser {
 
             String genericArguments = "";
             Class<?> clazz = Cast.CLASS.cast(parameterizedType.getRawType());
-            String parametrizedRawTypeName = ClassNameParser.getTypeName(clazz);
+            String parametrizedRawTypeName = classNameParser.getTypeName(clazz);
             annotatedType = getAnnotatedType(annotatedType);
             AnnotatedParameterizedType annotatedParameterizedType = Cast.ANNOTATED_PARAMETERIZED_TYPE.cast(annotatedType);
 
@@ -94,23 +116,23 @@ public class GenericTypeParser {
             AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType);
             AnnotatedType annotatedTypeForArray = getAnnotatedTypeForArray(genericArrayType, annotatedArrayType);
-            boundType += AnnotationParser.getInlineAnnotations(annotatedTypeForArray) + "[]";
+            boundType += annotationParser.getInlineAnnotations(annotatedTypeForArray) + "[]";
         }
 
         return getCorrectAnnotations(annotations) + boundType;
     }
 
-    public static String resolveType(Type type) {
+    public String resolveType(Type type) {
         return resolveType(type, null);
     }
 
-    private static List<String> getBounds(TypeVariable parameter) {
+    private List<String> getBounds(TypeVariable parameter) {
         List<String> bounds = new ArrayList<>();
         Type[] typeBounds = parameter.getBounds();
         AnnotatedType[] annotatedBounds = parameter.getAnnotatedBounds();
 
         for (int index = 0; index < typeBounds.length; index++) {
-            String annotations = AnnotationParser.getInlineAnnotations(annotatedBounds[index]);
+            String annotations = annotationParser.getInlineAnnotations(annotatedBounds[index]);
 
             String boundType = resolveType(typeBounds[index]);
             if (!boundType.isEmpty()) {
@@ -120,7 +142,7 @@ public class GenericTypeParser {
         return bounds;
     }
 
-    private static AnnotatedType getAnnotatedTypeForArray(Class<?> array, AnnotatedArrayType annotatedType) {
+    private AnnotatedType getAnnotatedTypeForArray(Class<?> array, AnnotatedArrayType annotatedType) {
         int dimensionIndex = 0;
         while (array.getComponentType().isArray()) {
             array = array.getComponentType();
@@ -130,7 +152,7 @@ public class GenericTypeParser {
         return getAnnotatedType(annotatedType, dimensionIndex);
     }
 
-    private static AnnotatedType getAnnotatedTypeForArray(GenericArrayType array, AnnotatedArrayType annotatedType) {
+    private AnnotatedType getAnnotatedTypeForArray(GenericArrayType array, AnnotatedArrayType annotatedType) {
         int dimensionIndex = 0;
         while (array.getGenericComponentType() instanceof GenericArrayType) {
             array = Cast.GENERIC_ARRAY_TYPE.cast(array.getGenericComponentType());
@@ -140,7 +162,7 @@ public class GenericTypeParser {
         return getAnnotatedType(annotatedType, dimensionIndex);
     }
 
-    private static AnnotatedType getAnnotatedType(AnnotatedArrayType annotatedType, int countIncludes) {
+    private AnnotatedType getAnnotatedType(AnnotatedArrayType annotatedType, int countIncludes) {
         for (int index = 0; index < countIncludes; index++) {
             annotatedType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType.getAnnotatedGenericComponentType());
         }
@@ -148,7 +170,7 @@ public class GenericTypeParser {
         return annotatedType;
     }
 
-    private static AnnotatedType getAnnotatedType(AnnotatedType annotatedType) {
+    private AnnotatedType getAnnotatedType(AnnotatedType annotatedType) {
         if (annotatedType instanceof AnnotatedArrayType) {
             AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             while (annotatedArrayType.getAnnotatedGenericComponentType() instanceof AnnotatedArrayType) {
@@ -161,8 +183,8 @@ public class GenericTypeParser {
         return annotatedType;
     }
 
-    private static List<String> getGenericArguments(ParameterizedType parameterizedType,
-                                                    AnnotatedParameterizedType annotatedParameterizedType) {
+    private List<String> getGenericArguments(ParameterizedType parameterizedType,
+                                             AnnotatedParameterizedType annotatedParameterizedType) {
         List<String> genericArguments = new ArrayList<>();
 
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
@@ -173,7 +195,7 @@ public class GenericTypeParser {
                 WildcardType wildcardType = Cast.WILDCARD_TYPE.cast(actualTypeArguments[index]);
                 AnnotatedType annotatedType = ifEmpty(annotatedActualTypeArguments, index);
                 AnnotatedWildcardType annotatedWildcardType = Cast.ANNOTATED_WILDCARD_TYPE.cast(annotatedType);
-                String annotations = AnnotationParser.getInlineAnnotations(annotatedWildcardType);
+                String annotations = annotationParser.getInlineAnnotations(annotatedWildcardType);
                 String wildcard = getCorrectAnnotations(annotations) + "?";
 
                 AnnotatedType[] upper = ifNullUpper(annotatedWildcardType);
@@ -191,7 +213,7 @@ public class GenericTypeParser {
         return genericArguments;
     }
 
-    private static String getWildCardsBound(Type[] types, String boundCase, AnnotatedType[] annotatedTypes) {
+    private String getWildCardsBound(Type[] types, String boundCase, AnnotatedType[] annotatedTypes) {
         String wildcard = "";
         if (types.length != 0) {
             wildcard = " " + boundCase + " ";
@@ -204,15 +226,15 @@ public class GenericTypeParser {
         return wildcard;
     }
 
-    private static boolean isNeedNameForInnerClass(Class<?> innerClass) {
-        Class<?> parsedClass = StateManager.getParsedClass();
+    private boolean isNeedNameForInnerClass(Class<?> innerClass) {
+        Class<?> parsedClass = manager.getParsedClass();
         return innerClass.isMemberClass()
                 && (!getTopClass(innerClass).equals(getTopClass(parsedClass))
                 || !isInVisibilityZone(innerClass));
     }
 
-    private static boolean isInVisibilityZone(Class<?> innerClass) {
-        Class<?> currentClass = StateManager.getCurrentClass();
+    private boolean isInVisibilityZone(Class<?> innerClass) {
+        Class<?> currentClass = manager.getCurrentParsedClass();
         while (currentClass != null) {
             List<Class<?>> innerClasses = Arrays.asList(currentClass.getDeclaredClasses());
             if (innerClasses.contains(innerClass)) {
@@ -224,33 +246,33 @@ public class GenericTypeParser {
         return false;
     }
 
-    private static Class<?> getTopClass(Class<?> innerClass) {
+    private Class<?> getTopClass(Class<?> innerClass) {
         return innerClass.getDeclaringClass() != null ? getTopClass(innerClass.getDeclaringClass()) : innerClass;
     }
 
-    private static String getCorrectAnnotations(String annotations) {
+    private String getCorrectAnnotations(String annotations) {
         return !annotations.isEmpty() ? annotations + " " : "";
     }
 
-    private static boolean isArray(Type type) {
+    private boolean isArray(Type type) {
         return type instanceof Class &&
                 Cast.CLASS.cast(type).isArray() ||
                 type instanceof GenericArrayType;
     }
 
-    private static AnnotatedType[] ifNull(AnnotatedParameterizedType type) {
+    private AnnotatedType[] ifNull(AnnotatedParameterizedType type) {
         return type != null ? type.getAnnotatedActualTypeArguments() : null;
     }
 
-    private static AnnotatedType ifEmpty(AnnotatedType[] annotatedTypes, int index) {
+    private AnnotatedType ifEmpty(AnnotatedType[] annotatedTypes, int index) {
         return annotatedTypes != null && annotatedTypes.length > 0 ? annotatedTypes[index] : null;
     }
 
-    private static AnnotatedType[] ifNullUpper(AnnotatedWildcardType type) {
+    private AnnotatedType[] ifNullUpper(AnnotatedWildcardType type) {
         return type != null ? type.getAnnotatedUpperBounds() : null;
     }
 
-    private static AnnotatedType[] ifNullLower(AnnotatedWildcardType type) {
+    private AnnotatedType[] ifNullLower(AnnotatedWildcardType type) {
         return type != null ? type.getAnnotatedLowerBounds() : null;
     }
 }

@@ -1,6 +1,6 @@
 package com.classparser.reflection.impl.parser.base;
 
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.Modifier;
 
@@ -10,10 +10,16 @@ public class ModifierParser {
 
     private static final int IMPLICIT = 0x00008000;
 
-    public static String getModifiers(int modifierIndex) {
+    private final ReflectionParserManager manager;
+
+    public ModifierParser(ReflectionParserManager manager) {
+        this.manager = manager;
+    }
+
+    public String getModifiers(int modifierIndex) {
         String modifiers = "";
 
-        if (StateManager.getConfiguration().isShowNonJavaModifiers()) {
+        if (manager.getConfigurationManager().isShowNonJavaModifiers()) {
             if (isSynthetic(modifierIndex)) {
                 modifiers += "synthetic ";
             }
@@ -65,11 +71,11 @@ public class ModifierParser {
         return modifiers;
     }
 
-    private static boolean isSynthetic(int modifierIndex) {
+    private boolean isSynthetic(int modifierIndex) {
         return (modifierIndex & SYNTHETIC) != 0;
     }
 
-    private static boolean isImplicit(int modifierIndex) {
+    private boolean isImplicit(int modifierIndex) {
         return (modifierIndex & IMPLICIT) != 0;
     }
 }

@@ -2,7 +2,7 @@ package com.classparser.reflection.impl.parser.imports;
 
 import com.classparser.reflection.impl.parser.ClassNameParser;
 import com.classparser.reflection.impl.parser.structure.PackageParser;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,18 +12,23 @@ public class ImportParser {
 
     private final Set<Class<?>> classesForImport;
 
-    public ImportParser() {
+    private final ReflectionParserManager manager;
+
+    private ClassNameParser classNameParser;
+
+    public ImportParser(ReflectionParserManager manager) {
+        this.manager = manager;
         this.classesForImport = new HashSet<>();
     }
 
     public boolean addImport(Class<?> classForImport) {
-        if (StateManager.getParsedClass() == null) {
+        if (manager.getParsedClass() == null) {
             return false;
         }
 
         classForImport = resolveClass(classForImport);
 
-        if (isNeedFullName(classForImport) || !StateManager.getConfiguration().isEnabledImports()) {
+        if (isNeedFullName(classForImport) || !manager.getConfigurationManager().isEnabledImports()) {
             return false;
         } else {
             classesForImport.add(classForImport);
@@ -33,7 +38,7 @@ public class ImportParser {
 
     public String getImports() {
         Set<String> imports = new TreeSet<>();
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+        String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
         for (Class<?> className : classesForImport) {
             if (isAppendToImports(className)) {
@@ -46,7 +51,7 @@ public class ImportParser {
     }
 
     private void clearState() {
-        StateManager.clearState();
+        manager.clearState();
         this.classesForImport.clear();
     }
 
@@ -63,7 +68,7 @@ public class ImportParser {
     private boolean isAppendToImports(Class<?> clazz) {
         return !clazz.isPrimitive()
                 && !"java.lang".equals(PackageParser.getPackageName(clazz))
-                && StateManager.getParsedClass().getPackage() != clazz.getPackage();
+                && manager.getParsedClass().getPackage() != clazz.getPackage();
     }
 
     private boolean areEqualByName(Class<?> source, Class<?> target) {
@@ -71,7 +76,7 @@ public class ImportParser {
     }
 
     private boolean areEqualBySimpleName(Class<?> source, Class<?> target) {
-        return ClassNameParser.getSimpleName(source).equals(ClassNameParser.getSimpleName(target));
+        return classNameParser.getSimpleName(source).equals(classNameParser.getSimpleName(target));
     }
 
     private Class<?> resolveClass(Class<?> clazz) {
@@ -92,5 +97,9 @@ public class ImportParser {
 
     private Class<?> resolveMemberClass(Class<?> clazz) {
         return clazz.isMemberClass() ? resolveMemberClass(clazz.getEnclosingClass()) : clazz;
+    }
+
+    public void setClassNameParser(ClassNameParser parser) {
+        this.classNameParser = parser;
     }
 }

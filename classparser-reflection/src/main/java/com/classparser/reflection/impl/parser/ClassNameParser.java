@@ -1,16 +1,26 @@
 package com.classparser.reflection.impl.parser;
 
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.parser.imports.ImportParser;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.Member;
 
 public class ClassNameParser {
 
-    public static String getTypeName(Class<?> clazz) {
-        return StateManager.getImportUtils().addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
+    private final ImportParser importParser;
+
+    private final ReflectionParserManager manager;
+
+    public ClassNameParser(ImportParser importParser, ReflectionParserManager manager) {
+        this.importParser = importParser;
+        this.manager = manager;
     }
 
-    public static String getSimpleName(Class<?> clazz) {
+    public String getTypeName(Class<?> clazz) {
+        return importParser.addImport(clazz) ? getSimpleName(clazz) : getName(clazz);
+    }
+
+    public String getSimpleName(Class<?> clazz) {
         String typeName = clazz.getSimpleName();
         if (typeName.isEmpty()) {
             typeName = clazz.getName().substring(clazz.getName().lastIndexOf('.') + 1);
@@ -18,15 +28,15 @@ public class ClassNameParser {
         return typeName;
     }
 
-    public static String getName(Class<?> clazz) {
-        if (clazz.isMemberClass() || clazz == StateManager.getParsedClass()) {
+    public String getName(Class<?> clazz) {
+        if (clazz.isMemberClass() || clazz == manager.getParsedClass()) {
             return getSimpleName(clazz);
         } else {
             return clazz.getName();
         }
     }
 
-    public static String getMemberName(Member member) {
+    public String getMemberName(Member member) {
         return member.getName();
     }
 }

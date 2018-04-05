@@ -15,12 +15,6 @@ public class ConfigurationManager {
         this.utils = new ConfigurationUtils(configuration, configuration);
     }
 
-    public ConfigurationManager(Map<String, Object> configuration) {
-        this();
-        this.configuration.putAll(configuration);
-        this.utils.appendConfiguration(configuration);
-    }
-
     private static Map<String, Object> getDefaultConfiguration() {
         return ReflectionBuilderConfiguration
                 .configure()

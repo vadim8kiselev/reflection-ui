@@ -1,8 +1,13 @@
 package com.classparser.reflection.impl.parser.structure;
 
+import com.classparser.reflection.impl.configuration.ConfigurationManager;
 import com.classparser.reflection.impl.parser.ClassNameParser;
-import com.classparser.reflection.impl.parser.base.*;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.parser.base.AnnotationParser;
+import com.classparser.reflection.impl.parser.base.GenericTypeParser;
+import com.classparser.reflection.impl.parser.base.IndentParser;
+import com.classparser.reflection.impl.parser.base.ModifierParser;
+import com.classparser.reflection.impl.parser.base.ValueParser;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
@@ -12,7 +17,33 @@ import java.util.List;
 
 public class FieldParser {
 
-    public static String getFields(Class<?> clazz) {
+    private final ReflectionParserManager manager;
+
+    private final AnnotationParser annotationParser;
+
+    private final IndentParser indentParser;
+
+    private final ModifierParser modifierParser;
+
+    private final GenericTypeParser genericTypeParser;
+
+    private final ClassNameParser classNameParser;
+
+    private final ValueParser valueParser;
+
+    public FieldParser(ReflectionParserManager manager, AnnotationParser annotationParser,
+                       IndentParser indentParser, ModifierParser modifierParser,
+                       GenericTypeParser genericTypeParser, ClassNameParser classNameParser, ValueParser valueParser) {
+        this.manager = manager;
+        this.annotationParser = annotationParser;
+        this.indentParser = indentParser;
+        this.modifierParser = modifierParser;
+        this.genericTypeParser = genericTypeParser;
+        this.classNameParser = classNameParser;
+        this.valueParser = valueParser;
+    }
+
+    public String getFields(Class<?> clazz) {
         String fields = "";
 
         List<String> fieldList = new ArrayList<>();
@@ -20,7 +51,7 @@ public class FieldParser {
             fieldList.add(getField(field));
         }
 
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+        String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
         if (!fieldList.isEmpty()) {
             fields += String.join(lineSeparator + lineSeparator, fieldList) + lineSeparator;
@@ -29,30 +60,32 @@ public class FieldParser {
         return fields;
     }
 
-    private static String getField(Field field) {
+    private String getField(Field field) {
+        ConfigurationManager configurationManager = manager.getConfigurationManager();
+
         String fieldSignature = "";
 
-        String annotations = AnnotationParser.getAnnotations(field);
+        String annotations = annotationParser.getAnnotations(field);
 
-        String indent = IndentParser.getIndent(field);
+        String indent = indentParser.getIndent(field);
 
-        String modifiers = ModifierParser.getModifiers(field.getModifiers());
+        String modifiers = modifierParser.getModifiers(field.getModifiers());
 
-        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
+        boolean isShowGeneric = configurationManager.isShowGenericSignatures();
 
         Type fieldType = isShowGeneric ? field.getGenericType() : field.getType();
 
-        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+        boolean isShowTypeAnnotation = configurationManager.isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? field.getAnnotatedType() : null;
 
-        String type = GenericTypeParser.resolveType(fieldType, annotatedType);
+        String type = genericTypeParser.resolveType(fieldType, annotatedType);
 
-        String fieldName = ClassNameParser.getMemberName(field);
+        String fieldName = classNameParser.getMemberName(field);
 
-        boolean isDisplayFiledValue = StateManager.getConfiguration().isDisplayFieldValue();
+        boolean isDisplayFiledValue = configurationManager.isDisplayFieldValue();
 
-        String fieldValue = isDisplayFiledValue ? ValueParser.getValue(field) : "";
+        String fieldValue = isDisplayFiledValue ? valueParser.getValue(field) : "";
 
         fieldSignature += annotations + indent + modifiers + type + ' ' + fieldName + fieldValue + ';';
 

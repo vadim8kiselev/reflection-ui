@@ -1,8 +1,13 @@
 package com.classparser.reflection.impl.parser.structure.executeble;
 
+import com.classparser.reflection.impl.configuration.ConfigurationManager;
 import com.classparser.reflection.impl.parser.ClassNameParser;
-import com.classparser.reflection.impl.parser.base.*;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.parser.base.AnnotationParser;
+import com.classparser.reflection.impl.parser.base.GenericTypeParser;
+import com.classparser.reflection.impl.parser.base.IndentParser;
+import com.classparser.reflection.impl.parser.base.ModifierParser;
+import com.classparser.reflection.impl.parser.base.ValueParser;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
@@ -13,7 +18,40 @@ import java.util.List;
 
 public class MethodParser {
 
-    public static String getMethods(Class<?> clazz) {
+    private final ReflectionParserManager manager;
+
+    private final GenericTypeParser genericTypeParser;
+
+    private final ModifierParser modifierParser;
+
+    private final AnnotationParser annotationParser;
+
+    private final ArgumentParser argumentParser;
+
+    private final IndentParser indentParser;
+
+    private final ExceptionParser exceptionParser;
+
+    private final ClassNameParser classNameParser;
+
+    private final ValueParser valueParser;
+
+    public MethodParser(ReflectionParserManager manager, GenericTypeParser genericTypeParser,
+                        ModifierParser modifierParser, AnnotationParser annotationParser,
+                        ArgumentParser argumentParser, IndentParser indentParser,
+                        ExceptionParser exceptionParser, ClassNameParser classNameParser, ValueParser valueParser) {
+        this.manager = manager;
+        this.genericTypeParser = genericTypeParser;
+        this.modifierParser = modifierParser;
+        this.annotationParser = annotationParser;
+        this.argumentParser = argumentParser;
+        this.indentParser = indentParser;
+        this.exceptionParser = exceptionParser;
+        this.classNameParser = classNameParser;
+        this.valueParser = valueParser;
+    }
+
+    public String getMethods(Class<?> clazz) {
         String methods = "";
 
         List<String> methodList = new ArrayList<>();
@@ -21,7 +59,7 @@ public class MethodParser {
             methodList.add(getMethod(method));
         }
 
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+        String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
         if (!methodList.isEmpty()) {
             methods += String.join(lineSeparator + lineSeparator, methodList) + lineSeparator;
@@ -30,40 +68,42 @@ public class MethodParser {
         return methods;
     }
 
-    private static String getMethod(Method method) {
+    private String getMethod(Method method) {
         String methodSignature = "";
 
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+        ConfigurationManager configurationManager = manager.getConfigurationManager();
 
-        String annotations = AnnotationParser.getAnnotations(method);
+        String lineSeparator = configurationManager.getLineSeparator();
 
-        String indent = IndentParser.getIndent(method);
+        String annotations = annotationParser.getAnnotations(method);
+
+        String indent = indentParser.getIndent(method);
 
         String isDefault = method.isDefault() ? "default " : "";
 
         String modifiers = isDefault + getModifiers(method);
 
-        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
+        boolean isShowGeneric = configurationManager.isShowGenericSignatures();
 
-        String generics = isShowGeneric ? GenericTypeParser.getGenerics(method) : "";
+        String generics = isShowGeneric ? genericTypeParser.getGenerics(method) : "";
 
         Type type = isShowGeneric ? method.getGenericReturnType() : method.getReturnType();
 
-        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+        boolean isShowTypeAnnotation = configurationManager.isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? method.getAnnotatedReturnType() : null;
 
-        String returnType = GenericTypeParser.resolveType(type, annotatedType);
+        String returnType = genericTypeParser.resolveType(type, annotatedType);
 
-        String methodName = ClassNameParser.getMemberName(method);
+        String methodName = classNameParser.getMemberName(method);
 
-        String arguments = ArgumentParser.getArguments(method);
+        String arguments = argumentParser.getArguments(method);
 
-        String defaultAnnotationValue = ValueParser.getValue(method);
+        String defaultAnnotationValue = valueParser.getValue(method);
 
-        String exceptions = ExceptionParser.getExceptions(method);
+        String exceptions = exceptionParser.getExceptions(method);
 
-        String oneIndent = StateManager.getConfiguration().getIndentSpaces();
+        String oneIndent = configurationManager.getIndentSpaces();
 
         String body = ";";
         if (isMethodRealization(method)) {
@@ -78,16 +118,16 @@ public class MethodParser {
         return methodSignature;
     }
 
-    private static boolean isMethodRealization(Method method) {
+    private boolean isMethodRealization(Method method) {
         return !Modifier.isAbstract(method.getModifiers()) && !Modifier.isNative(method.getModifiers());
     }
 
-    private static String getModifiers(Method method) {
-        String modifiers = ModifierParser.getModifiers(method.getModifiers());
+    private String getModifiers(Method method) {
+        String modifiers = modifierParser.getModifiers(method.getModifiers());
         modifiers = modifiers.replace("transient ", "");
 
         if (modifiers.contains("volatile")) {
-            String bridgeModifier = StateManager.getConfiguration().isShowNonJavaModifiers() ? "bridge " : "";
+            String bridgeModifier = manager.getConfigurationManager().isShowNonJavaModifiers() ? "bridge " : "";
             modifiers = bridgeModifier + modifiers.replace("volatile ", "");
         }
 

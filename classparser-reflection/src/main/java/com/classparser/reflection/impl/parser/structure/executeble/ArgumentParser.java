@@ -3,7 +3,7 @@ package com.classparser.reflection.impl.parser.structure.executeble;
 import com.classparser.reflection.impl.parser.base.AnnotationParser;
 import com.classparser.reflection.impl.parser.base.GenericTypeParser;
 import com.classparser.reflection.impl.parser.base.ModifierParser;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Executable;
@@ -13,7 +13,23 @@ import java.util.ArrayList;
 
 public class ArgumentParser {
 
-    public static String getArguments(Executable executable) {
+    private final ReflectionParserManager manager;
+
+    private final GenericTypeParser genericTypeParser;
+
+    private final ModifierParser modifierParser;
+
+    private final AnnotationParser annotationParser;
+
+    public ArgumentParser(ReflectionParserManager manager, GenericTypeParser genericTypeParser,
+                          ModifierParser modifierParser, AnnotationParser annotationParser) {
+        this.manager = manager;
+        this.genericTypeParser = genericTypeParser;
+        this.modifierParser = modifierParser;
+        this.annotationParser = annotationParser;
+    }
+
+    public String getArguments(Executable executable) {
         String arguments = "";
 
         ArrayList<String> strings = new ArrayList<>();
@@ -23,7 +39,7 @@ public class ArgumentParser {
         Parameter[] parameters = executable.getParameters();
 
         for (int index = 0; index < parameters.length; index++) {
-            if (StateManager.getConfiguration().isShowAnnotationTypes()) {
+            if (manager.getConfigurationManager().isShowAnnotationTypes()) {
                 strings.add(getArgument(parameters[index], annotatedParameterTypes[index]));
             } else {
                 strings.add(getArgument(parameters[index], null));
@@ -35,20 +51,20 @@ public class ArgumentParser {
         return arguments;
     }
 
-    private static String getArgument(Parameter parameter, AnnotatedType annotatedType) {
+    private String getArgument(Parameter parameter, AnnotatedType annotatedType) {
         String argumentSignature = "";
 
         String annotations = getArgumentAnnotations(parameter);
 
-        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
+        boolean isShowGeneric = manager.getConfigurationManager().isShowGenericSignatures();
 
         Type type = isShowGeneric ? parameter.getParameterizedType() : parameter.getType();
 
-        String genericType = GenericTypeParser.resolveType(type, annotatedType);
+        String genericType = genericTypeParser.resolveType(type, annotatedType);
 
         genericType = parameter.isVarArgs() ? convertToVarArg(genericType) : genericType;
 
-        String modifiers = ModifierParser.getModifiers(parameter.getModifiers());
+        String modifiers = modifierParser.getModifiers(parameter.getModifiers());
 
         String parameterName = parameter.getName();
 
@@ -57,13 +73,13 @@ public class ArgumentParser {
         return argumentSignature;
     }
 
-    private static String getArgumentAnnotations(Parameter parameter) {
-        String annotations = AnnotationParser.getInlineAnnotations(parameter);
+    private String getArgumentAnnotations(Parameter parameter) {
+        String annotations = annotationParser.getInlineAnnotations(parameter);
         return !annotations.isEmpty() ? annotations + ' ' : "";
     }
 
-    private static String convertToVarArg(String type) {
-        if (StateManager.getConfiguration().isShowVarArgs()) {
+    private String convertToVarArg(String type) {
+        if (manager.getConfigurationManager().isShowVarArgs()) {
             return type.substring(0, type.length() - 2) + "...";
         } else {
             return type;

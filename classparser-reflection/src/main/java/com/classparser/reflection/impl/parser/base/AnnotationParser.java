@@ -1,7 +1,7 @@
 package com.classparser.reflection.impl.parser.base;
 
 import com.classparser.exception.ReflectionParserException;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
@@ -16,11 +16,30 @@ import java.util.Map;
 
 public class AnnotationParser {
 
-    public static String getInlineAnnotations(AnnotatedElement annotatedElement) {
+    private final IndentParser indentParser;
+    private final ReflectionParserManager manager;
+    private GenericTypeParser genericTypeParser;
+    private ValueParser valueParser;
+
+    public AnnotationParser(IndentParser indentParser, ReflectionParserManager manager) {
+        this.indentParser = indentParser;
+        this.manager = manager;
+    }
+
+    private static Method retrieveValueMethodFromAnnotation(Class<? extends Annotation> annotationType) {
+        for (Method method : annotationType.getDeclaredMethods()) {
+            if ("value".equals(method.getName())) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    public String getInlineAnnotations(AnnotatedElement annotatedElement) {
         List<String> annotations = new ArrayList<>();
 
         if (annotatedElement != null) {
-            String indent = IndentParser.getIndent(annotatedElement);
+            String indent = indentParser.getIndent(annotatedElement);
 
             for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
                 annotations.add(getAnnotation(annotation));
@@ -32,13 +51,13 @@ public class AnnotationParser {
         return "";
     }
 
-    public static String getAnnotations(AnnotatedElement annotatedElement) {
+    public String getAnnotations(AnnotatedElement annotatedElement) {
         StringBuilder annotations = new StringBuilder();
 
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+        String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
         if (annotatedElement != null) {
-            String indent = IndentParser.getIndent(annotatedElement);
+            String indent = indentParser.getIndent(annotatedElement);
 
             for (Annotation annotation : unrollAnnotations(annotatedElement.getDeclaredAnnotations())) {
                 annotations.append(indent).append(getAnnotation(annotation)).append(lineSeparator);
@@ -48,12 +67,12 @@ public class AnnotationParser {
         return annotations.toString();
     }
 
-    public static String getAnnotation(Annotation annotation) {
+    public String getAnnotation(Annotation annotation) {
         String annotationSignature = "";
 
         Character annotationSign = '@';
 
-        String annotationName = GenericTypeParser.resolveType(annotation.annotationType());
+        String annotationName = genericTypeParser.resolveType(annotation.annotationType());
 
         String annotationArguments = getAnnotationArguments(annotation);
 
@@ -62,7 +81,7 @@ public class AnnotationParser {
         return annotationSignature;
     }
 
-    private static String getAnnotationArguments(Annotation annotation) {
+    private String getAnnotationArguments(Annotation annotation) {
         String annotationArguments = "";
 
         List<String> arguments = new ArrayList<>();
@@ -78,7 +97,7 @@ public class AnnotationParser {
         return annotationArguments;
     }
 
-    private static Map<String, Object> getAnnotationMemberTypes(Annotation annotation) {
+    private Map<String, Object> getAnnotationMemberTypes(Annotation annotation) {
         Map<String, Object> map = new HashMap<>();
 
         try {
@@ -89,7 +108,7 @@ public class AnnotationParser {
                 method.setAccessible(true);
                 Object value = method.invoke(annotation);
                 if (!isDefaultValue(value, method.getDefaultValue())) {
-                    map.put(method.getName(), ValueParser.getValue(value));
+                    map.put(method.getName(), valueParser.getValue(value));
                 }
             }
         } catch (Exception exception) {
@@ -102,7 +121,7 @@ public class AnnotationParser {
         return map;
     }
 
-    private static Annotation[] unrollAnnotations(Annotation[] declaredAnnotations) {
+    private Annotation[] unrollAnnotations(Annotation[] declaredAnnotations) {
         List<Annotation> annotations = new ArrayList<>();
 
         for (Annotation declaredAnnotation : declaredAnnotations) {
@@ -116,7 +135,7 @@ public class AnnotationParser {
         return annotations.toArray(new Annotation[annotations.size()]);
     }
 
-    private static boolean isRepeatableAnnotation(Annotation annotation) {
+    private boolean isRepeatableAnnotation(Annotation annotation) {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         Method valueMethod = retrieveValueMethodFromAnnotation(annotationType);
         if (valueMethod != null) {
@@ -131,16 +150,7 @@ public class AnnotationParser {
         return false;
     }
 
-    private static Method retrieveValueMethodFromAnnotation(Class<? extends Annotation> annotationType) {
-        for (Method method : annotationType.getDeclaredMethods()) {
-            if ("value".equals(method.getName())) {
-                return method;
-            }
-        }
-        return null;
-    }
-
-    private static List<Annotation> retrieveRepeatableAnnotations(Annotation annotation) {
+    private List<Annotation> retrieveRepeatableAnnotations(Annotation annotation) {
         List<Annotation> annotations = new ArrayList<>();
 
         try {
@@ -161,17 +171,25 @@ public class AnnotationParser {
         return annotations;
     }
 
-    private static boolean isDefaultValue(Object value, Object defaultValue) {
-        if (StateManager.getConfiguration().isShowDefaultValueInAnnotation()) {
+    private boolean isDefaultValue(Object value, Object defaultValue) {
+        if (manager.getConfigurationManager().isShowDefaultValueInAnnotation()) {
             return false;
         }
 
         if (!value.getClass().isArray()) {
             return value.equals(defaultValue);
         } else {
-            Object[] arrayValue = ValueParser.getArrayValues(value);
-            Object[] arrayDefaultValue = ValueParser.getArrayValues(defaultValue);
+            Object[] arrayValue = valueParser.getArrayValues(value);
+            Object[] arrayDefaultValue = valueParser.getArrayValues(defaultValue);
             return Arrays.equals(arrayValue, arrayDefaultValue);
         }
+    }
+
+    public void setGenericTypeParser(GenericTypeParser genericTypeParser) {
+        this.genericTypeParser = genericTypeParser;
+    }
+
+    public void setValueParser(ValueParser valueParser) {
+        this.valueParser = valueParser;
     }
 }

@@ -1,14 +1,22 @@
 package com.classparser.reflection.impl.parser.base;
 
+import com.classparser.reflection.impl.configuration.ConfigurationManager;
 import com.classparser.reflection.impl.constants.Cast;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.Member;
 
 public class IndentParser {
 
-    public static String getIndent(Object object) {
+    private final ReflectionParserManager manager;
+
+    public IndentParser(ReflectionParserManager manager) {
+        this.manager = manager;
+    }
+
+    public String getIndent(Object object) {
         StringBuilder indent = new StringBuilder();
+        ConfigurationManager configurationManager = manager.getConfigurationManager();
 
         Class<?> declaringClass;
 
@@ -17,7 +25,7 @@ public class IndentParser {
             declaringClass = member.getDeclaringClass();
 
             if (declaringClass != null) {
-                indent.append(StateManager.getConfiguration().getIndentSpaces());
+                indent.append(configurationManager.getIndentSpaces());
             }
         } else if (object instanceof Class) {
             declaringClass = Cast.CLASS.cast(object);
@@ -25,10 +33,10 @@ public class IndentParser {
             return "";
         }
 
-        Class<?> parsedClass = StateManager.getParsedClass();
+        Class<?> parsedClass = manager.getParsedClass();
         if (declaringClass != null && !parsedClass.equals(declaringClass)) {
             while ((declaringClass = declaringClass.getDeclaringClass()) != null) {
-                indent.append(StateManager.getConfiguration().getIndentSpaces());
+                indent.append(configurationManager.getIndentSpaces());
             }
         }
 

@@ -2,7 +2,7 @@ package com.classparser.reflection.impl.parser;
 
 public class ClassTypeParser {
 
-    public static String getType(Class<?> clazz) {
+    public String getType(Class<?> clazz) {
         String type = "class ";
 
         if (clazz.isEnum()) {

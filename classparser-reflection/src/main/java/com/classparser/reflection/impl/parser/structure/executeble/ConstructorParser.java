@@ -4,7 +4,7 @@ import com.classparser.reflection.impl.parser.base.AnnotationParser;
 import com.classparser.reflection.impl.parser.base.GenericTypeParser;
 import com.classparser.reflection.impl.parser.base.IndentParser;
 import com.classparser.reflection.impl.parser.base.ModifierParser;
-import com.classparser.reflection.impl.state.StateManager;
+import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Constructor;
@@ -13,7 +13,33 @@ import java.util.List;
 
 public class ConstructorParser {
 
-    public static String getConstructors(Class<?> clazz) {
+    private final ReflectionParserManager manager;
+
+    private final GenericTypeParser genericTypeParser;
+
+    private final ModifierParser modifierParser;
+
+    private final AnnotationParser annotationParser;
+
+    private final ArgumentParser argumentParser;
+
+    private final IndentParser indentParser;
+
+    private final ExceptionParser exceptionParser;
+
+    public ConstructorParser(ReflectionParserManager manager, GenericTypeParser genericTypeParser,
+                             ModifierParser modifierParser, AnnotationParser annotationParser,
+                             ArgumentParser argumentParser, IndentParser indentParser, ExceptionParser exceptionParser) {
+        this.manager = manager;
+        this.genericTypeParser = genericTypeParser;
+        this.modifierParser = modifierParser;
+        this.annotationParser = annotationParser;
+        this.argumentParser = argumentParser;
+        this.indentParser = indentParser;
+        this.exceptionParser = exceptionParser;
+    }
+
+    public String getConstructors(Class<?> clazz) {
         String constructors = "";
 
         List<String> constructorList = new ArrayList<>();
@@ -21,7 +47,7 @@ public class ConstructorParser {
             constructorList.add(getConstructor(constructor));
         }
 
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+        String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
         if (!constructorList.isEmpty()) {
             constructors += String.join(lineSeparator + lineSeparator, constructorList) + lineSeparator;
@@ -30,32 +56,32 @@ public class ConstructorParser {
         return constructors;
     }
 
-    private static String getConstructor(Constructor constructor) {
+    private String getConstructor(Constructor constructor) {
         String constructorSignature = "";
 
-        String lineSeparator = StateManager.getConfiguration().getLineSeparator();
+        String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
-        String annotations = AnnotationParser.getAnnotations(constructor);
+        String annotations = annotationParser.getAnnotations(constructor);
 
-        String indent = IndentParser.getIndent(constructor);
+        String indent = indentParser.getIndent(constructor);
 
-        String modifiers = ModifierParser.getModifiers(constructor.getModifiers());
+        String modifiers = modifierParser.getModifiers(constructor.getModifiers());
 
-        boolean isShowGeneric = StateManager.getConfiguration().isShowGenericSignatures();
+        boolean isShowGeneric = manager.getConfigurationManager().isShowGenericSignatures();
 
-        String generics = isShowGeneric ? GenericTypeParser.getGenerics(constructor) : "";
+        String generics = isShowGeneric ? genericTypeParser.getGenerics(constructor) : "";
 
-        boolean isShowTypeAnnotation = StateManager.getConfiguration().isShowAnnotationTypes();
+        boolean isShowTypeAnnotation = manager.getConfigurationManager().isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? constructor.getAnnotatedReturnType() : null;
 
-        String constructorName = GenericTypeParser.resolveType(constructor.getDeclaringClass(), annotatedType);
+        String constructorName = genericTypeParser.resolveType(constructor.getDeclaringClass(), annotatedType);
 
-        String arguments = ArgumentParser.getArguments(constructor);
+        String arguments = argumentParser.getArguments(constructor);
 
-        String exceptions = ExceptionParser.getExceptions(constructor);
+        String exceptions = exceptionParser.getExceptions(constructor);
 
-        String oneIndent = StateManager.getConfiguration().getIndentSpaces();
+        String oneIndent = manager.getConfigurationManager().getIndentSpaces();
 
         String body = " {" + lineSeparator + indent + oneIndent +
                 "/* Compiled code */" + lineSeparator + indent + '}';
