@@ -3,6 +3,7 @@ package com.classparser.bytecode.impl.decompile.procyon;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
 import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.collector.ChainByteCodeCollector;
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.decompile.procyon.configuration.ProcyonBuilderConfiguration;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
@@ -30,6 +31,8 @@ public final class ProcyonDecompiler implements Decompiler {
     private byte[] byteCode;
 
     private ConfigurationUtils utils;
+
+    private ConfigurationManager configurationManager;
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -132,6 +135,11 @@ public final class ProcyonDecompiler implements Decompiler {
                 .getConfiguration();
     }
 
+    @Override
+    public void setConfigurationManager(ConfigurationManager configurationManager) {
+        this.configurationManager = configurationManager;
+    }
+
     private class ProcyonTypeLoader implements ITypeLoader {
 
         private static final int START_POSITION = 0;
@@ -140,7 +148,7 @@ public final class ProcyonDecompiler implements Decompiler {
 
         private final boolean isLoadReferenceOnClass = utils.getConfig("ucr", Boolean.class);
 
-        private final ByteCodeCollector collector = new ChainByteCodeCollector();
+        private final ByteCodeCollector collector = new ChainByteCodeCollector(configurationManager);
 
         @Override
         public boolean tryLoadType(String baseClassName, Buffer buffer) {

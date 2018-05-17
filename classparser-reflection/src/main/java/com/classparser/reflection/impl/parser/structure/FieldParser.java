@@ -7,7 +7,7 @@ import com.classparser.reflection.impl.parser.base.GenericTypeParser;
 import com.classparser.reflection.impl.parser.base.IndentParser;
 import com.classparser.reflection.impl.parser.base.ModifierParser;
 import com.classparser.reflection.impl.parser.base.ValueParser;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;

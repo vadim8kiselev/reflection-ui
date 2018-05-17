@@ -3,7 +3,7 @@ package com.classparser.bytecode.impl.collector;
 import com.classparser.bytecode.api.agent.ByteCodeHolder;
 import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
-import com.classparser.bytecode.impl.configuration.StateManager;
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.exception.agent.InvalidRetransformClass;
 
@@ -13,19 +13,19 @@ import java.text.MessageFormat;
 
 public class FromJVMByteCodeCollector implements ByteCodeCollector {
 
-    private static final JavaAgent AGENT = StateManager.getConfiguration().getAgent();
+    private final JavaAgent agent;
 
     private Instrumentation instrumentation;
 
     private ByteCodeHolder holder;
 
+    public FromJVMByteCodeCollector(JavaAgent agent) {
+        this.agent = agent;
+    }
+
     @Override
     public byte[] getByteCode(Class<?> clazz) {
-        if (instrumentation == null || holder == null) {
-            instrumentation = AGENT.getInstrumentation();
-            holder = AGENT.getByteCodeHolder();
-        }
-
+        initAgent();
         if (clazz != null) {
             try {
                 if (instrumentation != null && instrumentation.isModifiableClass(clazz)) {
@@ -41,6 +41,13 @@ public class FromJVMByteCodeCollector implements ByteCodeCollector {
             return holder.get(javaBasedClassName);
         } else {
             return null;
+        }
+    }
+
+    private void initAgent() {
+        if (instrumentation == null || holder == null) {
+            instrumentation = agent.getInstrumentation();
+            holder = agent.getByteCodeHolder();
         }
     }
 }

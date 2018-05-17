@@ -1,6 +1,5 @@
 package com.classparser.bytecode.impl.assembly;
 
-import com.classparser.bytecode.api.agent.ByteCodeHolder;
 import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.impl.agent.Agent;
 import com.classparser.bytecode.impl.agent.Transformer;

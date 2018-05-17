@@ -1,7 +1,7 @@
 package com.classparser.reflection.impl.parser.structure;
 
 import com.classparser.api.ClassParser;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,6 +4,7 @@ import com.classparser.bytecode.api.collector.ByteCodeCollector;
 import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.collector.ChainByteCodeCollector;
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.decompile.cfr.configuration.CFRBuilderConfiguration;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
@@ -24,7 +25,12 @@ import org.benf.cfr.reader.util.output.IllegalIdentifierDump;
 import org.benf.cfr.reader.util.output.StdIODumper;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This decompiler can't show local classes
@@ -34,6 +40,11 @@ public final class CFRDecompiler implements Decompiler {
     private final Map<String, Object> configuration = getDefaultConfiguration();
 
     private final Collection<byte[]> innerClasses = new ArrayList<>();
+
+    private ConfigurationManager configurationManager;
+
+    public CFRDecompiler() {
+    }
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -79,7 +90,7 @@ public final class CFRDecompiler implements Decompiler {
             options.add(entry.getValue().toString());
         }
 
-        return options.toArray(new String[options.size()]);
+        return options.toArray(new String[0]);
     }
 
     private Map<String, Object> getDefaultConfiguration() {
@@ -111,6 +122,11 @@ public final class CFRDecompiler implements Decompiler {
                 .dumpClassPathForDebuggingPurposes(true)
                 .showDecompilerMessages(true)
                 .getConfiguration();
+    }
+
+    @Override
+    public void setConfigurationManager(ConfigurationManager configurationManager) {
+        this.configurationManager = configurationManager;
     }
 
     private class CFRBuilderDumper extends StdIODumper {
@@ -182,7 +198,7 @@ public final class CFRDecompiler implements Decompiler {
 
         private static final String EMPTY_MESSAGE = "";
         private final String outerClassName;
-        private final ByteCodeCollector codeCollector = new ChainByteCodeCollector();
+        private final ByteCodeCollector codeCollector = new ChainByteCodeCollector(configurationManager);
         private final Map<String, ClassFile> classFileMap = new HashMap<>();
 
         private CFRDCCommonState(Options options, ClassFileSource classFileSource, byte[] byteCode) {

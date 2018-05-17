@@ -6,6 +6,7 @@ public interface JavaAgent {
 
     /**
      * Getting instrumentation from agent premain or agentmain method
+     * Execute initialize if agent is not initialized
      *
      * @return {@link Instrumentation} instance
      */
@@ -13,6 +14,7 @@ public interface JavaAgent {
 
     /**
      * Getting bytecode holder which contains bytecode of retransform classes
+     * Execute initialize if agent is not initialized
      *
      * @return {@link ByteCodeHolder} instance
      */

@@ -2,7 +2,7 @@ package com.classparser.reflection.impl.parser.imports;
 
 import com.classparser.reflection.impl.parser.ClassNameParser;
 import com.classparser.reflection.impl.parser.structure.PackageParser;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.util.HashSet;
 import java.util.Set;

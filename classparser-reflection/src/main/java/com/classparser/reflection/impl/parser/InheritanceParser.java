@@ -1,7 +1,7 @@
 package com.classparser.reflection.impl.parser;
 
 import com.classparser.reflection.impl.parser.base.GenericTypeParser;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;

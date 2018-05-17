@@ -1,7 +1,7 @@
 package com.classparser.bytecode.impl.collector;
 
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
-import com.classparser.bytecode.impl.configuration.StateManager;
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +10,18 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
 
     private final List<ByteCodeCollector> collectors = new ArrayList<>();
 
-    public ChainByteCodeCollector() {
-        ByteCodeCollector customByteCodeCollector = StateManager.getConfiguration().getCustomByteCodeCollector();
-        if (StateManager.getConfiguration().isEnableCustomByteCodeCollector() && customByteCodeCollector != null) {
+    public ChainByteCodeCollector(ConfigurationManager configurationManager) {
+        ByteCodeCollector customByteCodeCollector = configurationManager.getCustomByteCodeCollector();
+        if (configurationManager.isEnableCustomByteCodeCollector() && customByteCodeCollector != null) {
             collectors.add(customByteCodeCollector);
         }
 
-        if (StateManager.getConfiguration().isEnableClassFileByteCodeCollector()) {
+        if (configurationManager.isEnableClassFileByteCodeCollector()) {
             collectors.add(new ClassFileByteCodeCollector());
         }
 
-        if (StateManager.getConfiguration().isEnableRetransformClassByteCodeCollector()) {
-            collectors.add(new FromJVMByteCodeCollector());
+        if (configurationManager.isEnableRetransformClassByteCodeCollector()) {
+            collectors.add(new FromJVMByteCodeCollector(configurationManager.getAgent()));
         }
     }
 

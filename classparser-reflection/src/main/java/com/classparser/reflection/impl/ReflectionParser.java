@@ -1,6 +1,7 @@
 package com.classparser.reflection.impl;
 
 import com.classparser.api.ClassParser;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 import com.classparser.reflection.impl.parser.ClassNameParser;
 import com.classparser.reflection.impl.parser.ClassTypeParser;
 import com.classparser.reflection.impl.parser.InheritanceParser;
@@ -17,7 +18,6 @@ import com.classparser.reflection.impl.parser.structure.executeble.ArgumentParse
 import com.classparser.reflection.impl.parser.structure.executeble.ConstructorParser;
 import com.classparser.reflection.impl.parser.structure.executeble.ExceptionParser;
 import com.classparser.reflection.impl.parser.structure.executeble.MethodParser;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;

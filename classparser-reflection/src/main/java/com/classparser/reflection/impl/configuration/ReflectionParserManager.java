@@ -1,6 +1,4 @@
-package com.classparser.reflection.impl.state;
-
-import com.classparser.reflection.impl.configuration.ConfigurationManager;
+package com.classparser.reflection.impl.configuration;
 
 public class ReflectionParserManager {
 

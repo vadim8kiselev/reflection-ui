@@ -4,7 +4,7 @@ import com.classparser.api.ClassParser;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
 import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.collector.ChainByteCodeCollector;
-import com.classparser.bytecode.impl.configuration.StateManager;
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.saver.ByteCodeSaver;
 import com.classparser.bytecode.impl.utils.InnerClassesCollector;
 import com.classparser.configuration.Configuration;
@@ -18,22 +18,25 @@ import java.util.Map;
 
 public class BytecodeParser implements ClassParser {
 
-    private final ByteCodeSaver saver = new ByteCodeSaver();
+    private final ConfigurationManager configurationManager = new ConfigurationManager();
+
+    private final ByteCodeSaver saver = new ByteCodeSaver(configurationManager);
 
     @Override
     public String parseClass(Class<?> clazz) {
         checkToCorrectClass(clazz);
 
-        ByteCodeCollector byteCodeCollector = new ChainByteCodeCollector();
+        ByteCodeCollector byteCodeCollector = new ChainByteCodeCollector(configurationManager);
         byte[] byteCode = getByteCodeOfClass(clazz, byteCodeCollector);
         List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz, byteCodeCollector);
 
-        if (StateManager.getConfiguration().isSaveToFile()) {
+        if (configurationManager.isSaveToFile()) {
             saveByteCodeToFile(byteCode, bytecodeOfInnerClasses);
         }
 
-        Decompiler decompiler = StateManager.getConfiguration().getDecompiler();
-        Configuration configuration = StateManager.getConfiguration().getCustomDecompilerConfiguration();
+        Decompiler decompiler = configurationManager.getDecompiler();
+        decompiler.setConfigurationManager(configurationManager);
+        Configuration configuration = configurationManager.getCustomDecompilerConfiguration();
         if (configuration != null) {
             decompiler.setConfiguration(configuration);
         }
@@ -49,10 +52,11 @@ public class BytecodeParser implements ClassParser {
     }
 
     private List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz, ByteCodeCollector byteCodeCollector) {
-        if (StateManager.getConfiguration().isDecompileInnerClasses()) {
+        if (configurationManager.isDecompileInnerClasses()) {
             List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
+            InnerClassesCollector classesCollector = new InnerClassesCollector(configurationManager);
 
-            for (Class<?> innerClass : InnerClassesCollector.getInnerClasses(clazz)) {
+            for (Class<?> innerClass : classesCollector.getInnerClasses(clazz)) {
                 byte[] byteCodeOfInnerClass = byteCodeCollector.getByteCode(innerClass);
                 if (byteCodeOfInnerClass != null) {
                     bytecodeOfInnerClasses.add(byteCodeOfInnerClass);
@@ -97,6 +101,6 @@ public class BytecodeParser implements ClassParser {
 
     @Override
     public void setConfiguration(Map<String, Object> configuration) {
-        StateManager.registerConfiguration(configuration);
+        configurationManager.reloadConfiguration(configuration);
     }
 }

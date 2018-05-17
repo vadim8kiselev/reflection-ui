@@ -1,7 +1,7 @@
 package com.classparser.reflection.impl.parser.base;
 
 import com.classparser.exception.ReflectionParserException;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
@@ -181,7 +181,7 @@ public class AnnotationParser {
         } else {
             Object[] arrayValue = valueParser.getArrayValues(value);
             Object[] arrayDefaultValue = valueParser.getArrayValues(defaultValue);
-            return Arrays.equals(arrayValue, arrayDefaultValue);
+            return Arrays.deepEquals(arrayValue, arrayDefaultValue);
         }
     }
 

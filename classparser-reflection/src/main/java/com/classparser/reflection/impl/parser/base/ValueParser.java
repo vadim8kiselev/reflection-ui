@@ -2,7 +2,7 @@ package com.classparser.reflection.impl.parser.base;
 
 import com.classparser.exception.ReflectionParserException;
 import com.classparser.reflection.impl.constants.Cast;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;

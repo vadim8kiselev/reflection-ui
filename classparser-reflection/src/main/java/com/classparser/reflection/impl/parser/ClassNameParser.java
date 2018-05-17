@@ -1,7 +1,7 @@
 package com.classparser.reflection.impl.parser;
 
 import com.classparser.reflection.impl.parser.imports.ImportParser;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.reflect.Member;
 

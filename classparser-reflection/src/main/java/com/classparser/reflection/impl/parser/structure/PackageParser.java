@@ -1,7 +1,7 @@
 package com.classparser.reflection.impl.parser.structure;
 
 import com.classparser.reflection.impl.parser.base.AnnotationParser;
-import com.classparser.reflection.impl.state.ReflectionParserManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 public class PackageParser {
 

@@ -2,7 +2,7 @@ package com.classparser.bytecode.impl.utils;
 
 import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
-import com.classparser.bytecode.impl.configuration.StateManager;
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.exception.agent.ClassLoadException;
 import com.classparser.exception.file.ReadFileException;
 
@@ -28,27 +28,34 @@ public class InnerClassesCollector {
 
     private static final String POSITIVE_NUMBER_PATTERN = "\\d+";
 
-    private static final JavaAgent agent = StateManager.getConfiguration().getAgent();
+    private final ConfigurationManager configurationManager;
 
-    public static List<Class<?>> getInnerClasses(Class<?> clazz) {
+    private final JavaAgent agent;
+
+    public InnerClassesCollector(ConfigurationManager configurationManager) {
+        this.configurationManager = configurationManager;
+        this.agent = configurationManager.getAgent();
+    }
+
+    public List<Class<?>> getInnerClasses(Class<?> clazz) {
         Set<Class<?>> innerClasses = new HashSet<>();
 
-        if (StateManager.getConfiguration().isDecompileAnonymousClasses()) {
+        if (configurationManager.isDecompileAnonymousClasses()) {
             innerClasses.addAll(getAnonymousOrSyntheticClasses(clazz));
         }
 
-        if (StateManager.getConfiguration().isDecompileInnerAndNestedClasses()) {
+        if (configurationManager.isDecompileInnerAndNestedClasses()) {
             innerClasses.addAll(getInnerAndNestedClasses(clazz));
         }
 
-        if (StateManager.getConfiguration().isDecompileLocalClasses()) {
+        if (configurationManager.isDecompileLocalClasses()) {
             innerClasses.addAll(getLocalClasses(clazz));
         }
 
         return new ArrayList<>(innerClasses);
     }
 
-    private static List<Class<?>> getAnonymousOrSyntheticClasses(Class<?> clazz) {
+    private List<Class<?>> getAnonymousOrSyntheticClasses(Class<?> clazz) {
         List<Class<?>> anonymousOrSyntheticClasses = new ArrayList<>();
 
         int classId = 0;
@@ -65,7 +72,7 @@ public class InnerClassesCollector {
         return anonymousOrSyntheticClasses;
     }
 
-    private static List<Class<?>> getInnerAndNestedClasses(Class<?> clazz) {
+    private List<Class<?>> getInnerAndNestedClasses(Class<?> clazz) {
         List<Class<?>> innerAndNestedClasses = new ArrayList<>();
 
         for (Class<?> innerOrNestedClass : clazz.getDeclaredClasses()) {
@@ -76,7 +83,7 @@ public class InnerClassesCollector {
         return innerAndNestedClasses;
     }
 
-    private static List<Class<?>> getLocalClasses(Class<?> clazz) {
+    private List<Class<?>> getLocalClasses(Class<?> clazz) {
         List<Class<?>> localClasses = new ArrayList<>();
 
         if (isDynamicCreateClass(clazz)) {
@@ -92,11 +99,11 @@ public class InnerClassesCollector {
         return localClasses;
     }
 
-    private static boolean isDynamicCreateClass(Class<?> clazz) {
+    private boolean isDynamicCreateClass(Class<?> clazz) {
         return ClassFileUtils.getFilePath(clazz).isEmpty();
     }
 
-    private static List<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
+    private List<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
         List<Class<?>> localClasses = new ArrayList<>();
 
         ClassLoader loader = ClassFileUtils.getClassLoader(clazz);
@@ -112,7 +119,7 @@ public class InnerClassesCollector {
         return localClasses;
     }
 
-    private static List<Class<?>> collectLocalClassesFromArchive(Class<?> clazz) {
+    private List<Class<?>> collectLocalClassesFromArchive(Class<?> clazz) {
         List<Class<?>> localClasses = new ArrayList<>();
 
         String path = ClassFileUtils.getFilePath(clazz);
@@ -132,7 +139,7 @@ public class InnerClassesCollector {
         return localClasses;
     }
 
-    private static List<Class<?>> collectLocalClassesFromDirectory(Class<?> clazz) {
+    private List<Class<?>> collectLocalClassesFromDirectory(Class<?> clazz) {
         List<Class<?>> localClasses = new ArrayList<>();
 
         File file = new File(ClassFileUtils.getClassPackagePath(clazz));
@@ -148,14 +155,14 @@ public class InnerClassesCollector {
         return localClasses;
     }
 
-    private static void addLocalClass(Class<?> localClass, Collection<Class<?>> localClasses) {
+    private void addLocalClass(Class<?> localClass, Collection<Class<?>> localClasses) {
         if (localClass != null) {
             localClasses.add(localClass);
             localClasses.addAll(getInnerClasses(localClass));
         }
     }
 
-    private static Class<?> collectLocalStaticClass(Class<?> clazz, String name) {
+    private Class<?> collectLocalStaticClass(Class<?> clazz, String name) {
         String fullName = ClassNameUtils.normalizeFullName(name);
         String simpleName = ClassNameUtils.normalizeSimpleName(name);
 
@@ -172,7 +179,7 @@ public class InnerClassesCollector {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<Class<?>> getLoadedClasses(ClassLoader classLoader) {
+    private List<Class<?>> getLoadedClasses(ClassLoader classLoader) {
         if (!agent.isInitialize()) {
             try {
                 Field classes = ClassLoader.class.getDeclaredField("classes");
@@ -187,7 +194,7 @@ public class InnerClassesCollector {
         }
     }
 
-    private static boolean isLocalClass(Class<?> clazz, String className) {
+    private boolean isLocalClass(Class<?> clazz, String className) {
         String name = ClassNameUtils.getSimpleName(clazz) + '$';
 
         return getPattern(name).matcher(className).matches() &&
@@ -195,11 +202,11 @@ public class InnerClassesCollector {
                 !ClassStringUtils.delete(className, name).contains("$");
     }
 
-    private static boolean isNumber(String line) {
+    private boolean isNumber(String line) {
         return Pattern.compile(POSITIVE_NUMBER_PATTERN).matcher(line).matches();
     }
 
-    private static Pattern getPattern(String name) {
+    private Pattern getPattern(String name) {
         String pattern = name.replace("$", File.separator + '$');
         return Pattern.compile(pattern + LOCAL_CLASS_PATTERN);
     }
