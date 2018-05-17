@@ -1,5 +1,6 @@
 package com.classparser.bytecode.api.decompile;
 
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.configuration.Configuration;
 
 import java.util.Collection;
@@ -32,4 +33,11 @@ public interface Decompiler {
      * @param configuration - decompiler configuration
      */
     void setConfiguration(Configuration configuration);
+
+    /**
+     * Method which called by ByteCodeParser for set instance configuration
+     *
+     * @param configurationManager current configuration manager
+     */
+    void setConfigurationManager(ConfigurationManager configurationManager);
 }

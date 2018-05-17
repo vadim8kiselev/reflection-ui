@@ -1,6 +1,7 @@
 package com.classparser.bytecode.impl.decompile.jd;
 
 import com.classparser.bytecode.api.decompile.Decompiler;
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.decompile.jd.configuration.JDBuilderConfiguration;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.bytecode.impl.utils.ClassStringUtils;
@@ -160,6 +161,10 @@ public final class JDDecompiler implements Decompiler {
                 .getConfiguration();
     }
 
+    @Override
+    public void setConfigurationManager(ConfigurationManager configurationManager) {
+    }
+
     private class JDLoader implements Loader {
 
         private final byte[] bytecode;
@@ -169,7 +174,7 @@ public final class JDDecompiler implements Decompiler {
         }
 
         @Override
-        public DataInputStream load(String dummy) throws LoaderException {
+        public DataInputStream load(String dummy) {
             return new DataInputStream(new ByteArrayInputStream(bytecode));
         }
 

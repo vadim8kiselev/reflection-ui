@@ -18,7 +18,7 @@ public final class Transformer implements ClassFileTransformer, ByteCodeHolder {
                                   String className,
                                   Class<?> classBeingRedefined,
                                   ProtectionDomain protectionDomain,
-                                  byte[] byteCode) throws IllegalClassFormatException {
+                                  byte[] byteCode) {
         uploadByteCodeOfClassToHolder(className, byteCode);
         return byteCode;
     }
