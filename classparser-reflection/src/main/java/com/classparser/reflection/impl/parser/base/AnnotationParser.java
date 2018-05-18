@@ -32,6 +32,7 @@ public class AnnotationParser {
                 return method;
             }
         }
+
         return null;
     }
 
@@ -132,7 +133,7 @@ public class AnnotationParser {
             }
         }
 
-        return annotations.toArray(new Annotation[annotations.size()]);
+        return annotations.toArray(new Annotation[0]);
     }
 
     private boolean isRepeatableAnnotation(Annotation annotation) {

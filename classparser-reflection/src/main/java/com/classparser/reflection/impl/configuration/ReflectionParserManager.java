@@ -6,7 +6,7 @@ public class ReflectionParserManager {
 
     private Class<?> currentParsedClass;
 
-    private ConfigurationManager configurationManager;
+    private final ConfigurationManager configurationManager;
 
     public ReflectionParserManager() {
         this.configurationManager = new ConfigurationManager();

@@ -36,8 +36,4 @@ public class ConfigurationUtils {
             return type.cast(defaultConfiguration.get(config));
         }
     }
-
-    public void appendConfiguration(Map<String, Object> configuration) {
-        this.configuration.putAll(configuration);
-    }
 }

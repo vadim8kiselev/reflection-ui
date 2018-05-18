@@ -8,7 +8,7 @@ public class ConfigurationManager {
 
     private final Map<String, Object> configuration;
 
-    private ConfigurationUtils utils;
+    private final ConfigurationUtils utils;
 
     public ConfigurationManager() {
         this.configuration = getDefaultConfiguration();

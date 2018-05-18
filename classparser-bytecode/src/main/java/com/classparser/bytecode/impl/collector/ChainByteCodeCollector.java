@@ -8,15 +8,18 @@ import java.util.List;
 
 public class ChainByteCodeCollector implements ByteCodeCollector {
 
-    private final List<ByteCodeCollector> collectors = new ArrayList<>();
+    private final List<ByteCodeCollector> collectors;
 
     public ChainByteCodeCollector(ConfigurationManager configurationManager) {
+        this.collectors = new ArrayList<>();
+
         ByteCodeCollector customByteCodeCollector = configurationManager.getCustomByteCodeCollector();
         if (configurationManager.isEnableCustomByteCodeCollector() && customByteCodeCollector != null) {
             collectors.add(customByteCodeCollector);
         }
 
         if (configurationManager.isEnableClassFileByteCodeCollector()) {
+            System.out.println(1);
             collectors.add(new ClassFileByteCodeCollector());
         }
 

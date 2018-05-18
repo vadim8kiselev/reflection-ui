@@ -4,14 +4,17 @@ import com.classparser.bytecode.api.agent.ByteCodeHolder;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class Transformer implements ClassFileTransformer, ByteCodeHolder {
 
-    private final Map<String, byte[]> bytecodeMap = new ConcurrentHashMap<>();
+    private final Map<String, byte[]> bytecodeMap;
+
+    public Transformer() {
+       this.bytecodeMap = new ConcurrentHashMap<>();
+    }
 
     @Override
     public final byte[] transform(ClassLoader loader,

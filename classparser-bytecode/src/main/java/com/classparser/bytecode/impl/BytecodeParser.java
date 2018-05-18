@@ -18,15 +18,24 @@ import java.util.Map;
 
 public class BytecodeParser implements ClassParser {
 
-    private final ConfigurationManager configurationManager = new ConfigurationManager();
+    private final ConfigurationManager configurationManager;
 
-    private final ByteCodeSaver saver = new ByteCodeSaver(configurationManager);
+    private final ByteCodeSaver saver;
+
+    private final InnerClassesCollector classesCollector;
+
+    public BytecodeParser() {
+        this.configurationManager = new ConfigurationManager();
+        this.classesCollector = new InnerClassesCollector(configurationManager);
+        this.saver = new ByteCodeSaver(configurationManager);
+    }
 
     @Override
     public String parseClass(Class<?> clazz) {
         checkToCorrectClass(clazz);
 
         ByteCodeCollector byteCodeCollector = new ChainByteCodeCollector(configurationManager);
+
         byte[] byteCode = getByteCodeOfClass(clazz, byteCodeCollector);
         List<byte[]> bytecodeOfInnerClasses = getByteCodeOfInnerClasses(clazz, byteCodeCollector);
 
@@ -45,16 +54,15 @@ public class BytecodeParser implements ClassParser {
     }
 
     private void saveByteCodeToFile(byte[] byteCode, List<byte[]> bytecodeOfInnerClasses) {
-        this.saver.saveToFile(byteCode);
+        saver.saveToFile(byteCode);
         for (byte[] bytecodeOfInnerClass : bytecodeOfInnerClasses) {
-            this.saver.saveToFile(bytecodeOfInnerClass);
+            saver.saveToFile(bytecodeOfInnerClass);
         }
     }
 
     private List<byte[]> getByteCodeOfInnerClasses(Class<?> clazz, ByteCodeCollector byteCodeCollector) {
         if (configurationManager.isDecompileInnerClasses()) {
             List<byte[]> bytecodeOfInnerClasses = new ArrayList<>();
-            InnerClassesCollector classesCollector = new InnerClassesCollector(configurationManager);
 
             for (Class<?> innerClass : classesCollector.getInnerClasses(clazz)) {
                 byte[] byteCodeOfInnerClass = byteCodeCollector.getByteCode(innerClass);

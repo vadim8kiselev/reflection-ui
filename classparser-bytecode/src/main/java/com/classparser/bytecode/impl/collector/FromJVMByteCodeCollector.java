@@ -3,7 +3,6 @@ package com.classparser.bytecode.impl.collector;
 import com.classparser.bytecode.api.agent.ByteCodeHolder;
 import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
-import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.exception.agent.InvalidRetransformClass;
 

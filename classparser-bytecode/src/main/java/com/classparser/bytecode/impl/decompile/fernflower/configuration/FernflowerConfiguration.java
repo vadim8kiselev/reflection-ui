@@ -4,6 +4,7 @@ import com.classparser.bytecode.impl.decompile.fernflower.FernflowerDecompiler;
 import com.classparser.configuration.Configuration;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
+import org.jetbrains.java.decompiler.modules.renamer.ConverterHelper;
 
 /**
  * Builder configuration for {@link FernflowerDecompiler}
@@ -164,7 +165,7 @@ public interface FernflowerConfiguration extends Configuration {
      * <p>
      * Default value:
      *
-     * @see org.jetbrains.java.decompiler.modules.renamer.ConverterHelper
+     * @see ConverterHelper
      */
     FernflowerConfiguration setNewIIdentifierRenamer(Class<? extends IIdentifierRenamer> renamer);
 

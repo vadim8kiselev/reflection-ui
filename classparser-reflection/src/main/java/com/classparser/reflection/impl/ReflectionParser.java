@@ -26,25 +26,25 @@ import java.util.Map;
 
 public class ReflectionParser implements ClassParser {
 
-    private AnnotationParser annotationParser;
-    private GenericTypeParser genericTypeParser;
-    private IndentParser indentParser;
-    private ModifierParser modifierParser;
-    private ClassTypeParser classTypeParser;
+    private final AnnotationParser annotationParser;
+    private final GenericTypeParser genericTypeParser;
+    private final IndentParser indentParser;
+    private final ModifierParser modifierParser;
+    private final ClassTypeParser classTypeParser;
 
-    private ImportParser importParser;
+    private final ImportParser importParser;
 
-    private ClassNameParser classNameParser;
-    private InheritanceParser inheritanceParser;
+    private final ClassNameParser classNameParser;
+    private final InheritanceParser inheritanceParser;
 
-    private PackageParser packageParser;
-    private FieldParser fieldParser;
-    private ClassesParser classesParser;
+    private final PackageParser packageParser;
+    private final FieldParser fieldParser;
+    private final ClassesParser classesParser;
 
-    private ConstructorParser constructorParser;
-    private MethodParser methodParser;
+    private final ConstructorParser constructorParser;
+    private final MethodParser methodParser;
 
-    private ReflectionParserManager reflectionParserManager;
+    private final ReflectionParserManager reflectionParserManager;
 
     public ReflectionParser() {
         reflectionParserManager = new ReflectionParserManager();
@@ -68,11 +68,11 @@ public class ReflectionParser implements ClassParser {
         classesParser = new ClassesParser(this, reflectionParserManager);
 
         packageParser = new PackageParser(annotationParser, reflectionParserManager);
-        ExceptionParser exceptionParser = new ExceptionParser(genericTypeParser, reflectionParserManager);
 
         ArgumentParser argumentParser = new ArgumentParser(reflectionParserManager, genericTypeParser,
                 modifierParser, annotationParser);
 
+        ExceptionParser exceptionParser = new ExceptionParser(genericTypeParser, reflectionParserManager);
         constructorParser = new ConstructorParser(reflectionParserManager, genericTypeParser, modifierParser,
                 annotationParser, argumentParser, indentParser, exceptionParser);
         methodParser = new MethodParser(reflectionParserManager, genericTypeParser, modifierParser,

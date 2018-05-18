@@ -31,9 +31,18 @@ public final class FernflowerDecompiler implements Decompiler {
 
     private static final int CLASS_FILE_TYPE = 0;
 
-    private final Map<String, Object> configuration = getDefaultConfiguration();
+    private final Map<String, Object> configuration;
 
-    private final FernflowerResultSaver saver = new FernflowerResultSaver();
+    private final FernflowerResultSaver saver;
+
+    private final BaseDecompiler decompiler;
+
+    public FernflowerDecompiler() {
+        this.saver = new FernflowerResultSaver();
+        this.configuration = getDefaultConfiguration();
+        IFernflowerLogger logger = new PrintStreamLogger(System.out);
+        this.decompiler = new BaseDecompiler(null, saver, configuration, logger);
+    }
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -42,8 +51,6 @@ public final class FernflowerDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
-        IFernflowerLogger logger = new PrintStreamLogger(System.out);
-        BaseDecompiler decompiler = new BaseDecompiler(null, saver, configuration, logger);
         for (byte[] nestedClass : classes) {
             uploadBytecode(decompiler, nestedClass);
         }
