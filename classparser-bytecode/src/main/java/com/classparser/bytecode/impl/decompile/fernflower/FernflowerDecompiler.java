@@ -19,11 +19,13 @@ import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.jar.Manifest;
 
 public final class FernflowerDecompiler implements Decompiler {
 
@@ -33,15 +35,20 @@ public final class FernflowerDecompiler implements Decompiler {
 
     private final Map<String, Object> configuration;
 
-    private final FernflowerResultSaver saver;
+    private final IResultSaver saver;
+
+    private final InvocationHandlerImpl invocationHandler;
 
     private final BaseDecompiler decompiler;
 
     public FernflowerDecompiler() {
-        this.saver = new FernflowerResultSaver();
-        this.configuration = getDefaultConfiguration();
+        ClassLoader classLoader = getClass().getClassLoader();
         IFernflowerLogger logger = new PrintStreamLogger(System.out);
-        this.decompiler = new BaseDecompiler(null, saver, configuration, logger);
+        Class<?>[] classes = new Class[]{IResultSaver.class};
+        this.invocationHandler = new InvocationHandlerImpl();
+        this.saver = (IResultSaver) Proxy.newProxyInstance(classLoader, classes, invocationHandler);
+        this.configuration = getDefaultConfiguration();
+        this.decompiler = new BaseDecompiler(null, this.saver, configuration, logger);
     }
 
     @Override
@@ -57,7 +64,7 @@ public final class FernflowerDecompiler implements Decompiler {
         uploadBytecode(decompiler, byteCode);
         decompiler.decompileContext();
 
-        return saver.getSource();
+        return invocationHandler.getSource();
     }
 
     @Override
@@ -151,46 +158,20 @@ public final class FernflowerDecompiler implements Decompiler {
     public void setConfigurationManager(ConfigurationManager configurationManager) {
     }
 
-    private static class FernflowerResultSaver implements IResultSaver {
+    private static class InvocationHandlerImpl implements InvocationHandler {
 
-        private String source = "";
+        private String source;
 
         @Override
-        public void saveClassFile(String dummy, String dummyTwo, String dummyThree, String source, int[] dummyFour) {
-            this.source = source;
+        public Object invoke(Object proxy, Method method, Object[] args) {
+            if (method.getName().equals("saveClassFile")) {
+                source = String.valueOf(args[3]);
+            }
+            return null;
         }
 
-        private String getSource() {
+        public String getSource() {
             return source;
-        }
-
-        @Override
-        public void createArchive(String dummy, String dummyTwo, Manifest manifest) {
-        }
-
-        @Override
-        public void saveDirEntry(String dummy, String dummyTwo, String dummyThree) {
-        }
-
-        @Override
-        public void copyEntry(String dummy, String dummyTwo, String dummyThree, String dummyFour) {
-        }
-
-        @Override
-        public void saveClassEntry(String dummy, String dummyTwo, String dummyThree,
-                                   String dummyFour, String dummyFive) {
-        }
-
-        @Override
-        public void closeArchive(String dummy, String dummyTwo) {
-        }
-
-        @Override
-        public void saveFolder(String dummy) {
-        }
-
-        @Override
-        public void copyFile(String dummy, String dummyTwo, String dummyThree) {
         }
     }
 }

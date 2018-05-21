@@ -15,6 +15,6 @@ public class Main {
                 .enableClassFileByteCodeCollector(false)
                 .getConfiguration();
         parser.setConfiguration(configuration);
-        System.out.println(parser.parseClass(String.class).length());
+        System.out.println(parser.parseClass(String.class));
     }
 }

@@ -7,6 +7,7 @@ import com.sun.tools.attach.VirtualMachine;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,7 +21,7 @@ public final class AgentAttacher {
     private static final char JVM_NAME_ID_SEPARATOR = '@';
     private static final int BYTE_BUFFER_SIZE = 1024;
 
-    private static final String CUSTOM_TOOLS = "classes";
+    private static final String CUSTOM_TOOL_FOLDER = "classes";
     private static final String ATTACH_CLASSES = "class-load.order";
 
     private static Method defineClass;
@@ -64,29 +65,38 @@ public final class AgentAttacher {
 
 
     private static void attachWithoutToolJar(String agentPath) {
-        loadAttachClassesFromCustomToolJar();
+        loadAttachClassesFromCustomTool();
         attachWithToolJar(agentPath);
     }
 
-    private static void loadAttachClassesFromCustomToolJar() {
+    private static void loadAttachClassesFromCustomTool() {
         InputStream classLoadOrder = getResourceAsStream(ATTACH_CLASSES);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoadOrder))) {
             String className = reader.readLine();
 
             while (className != null) {
-                String classFileName = CUSTOM_TOOLS + JAR_ENTRY_SEPARATOR +
-                        className.replace('.', JAR_ENTRY_SEPARATOR) +
+                String classFileName = CUSTOM_TOOL_FOLDER + File.separator +
+                        className.replace('.', File.separatorChar) +
                         Constants.Suffix.CLASS_FILE_SUFFIX;
 
-                InputStream resourceAsStream = getResourceAsStream(classFileName);
+                InputStream resourceAsStream;
+                try {
+                    resourceAsStream = getResourceAsStream(classFileName);
+                } catch (ByteCodeParserException exception) {
+                    classFileName = CUSTOM_TOOL_FOLDER + JAR_ENTRY_SEPARATOR +
+                            className.replace('.', JAR_ENTRY_SEPARATOR) +
+                            Constants.Suffix.CLASS_FILE_SUFFIX;
+                    resourceAsStream = getResourceAsStream(classFileName);
+                }
+
                 byte[] bytes = readBytesFromInputStream(resourceAsStream);
                 defineClass(bytes);
 
                 className = reader.readLine();
             }
         } catch (IOException exception) {
-            exception.printStackTrace();
+            throw new ByteCodeParserException("Problem occurred at loading classes from custom tool!", exception);
         }
     }
 
@@ -115,8 +125,10 @@ public final class AgentAttacher {
         int batchSize;
         byte[] data = new byte[BYTE_BUFFER_SIZE];
         try {
-            while ((batchSize = stream.read(data, 0, data.length)) != -1) {
+            batchSize = stream.read(data, 0, data.length);
+            while (batchSize != -1) {
                 buffer.write(data, 0, batchSize);
+                batchSize = stream.read(data, 0, data.length);
             }
 
             buffer.flush();

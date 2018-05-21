@@ -25,20 +25,6 @@
         <tools-jar>${java.home}/../lib/tools.jar</tools-jar>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>mac</id>
-            <activation>
-                <file>
-                    <exists>${java.home}/../Classes/classes.jar</exists>
-                </file>
-            </activation>
-            <properties>
-                <tools-jar>${java.home}/../Classes/classes.jar</tools-jar>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <!-- FernFlower Decompiler -->
         <dependency>
