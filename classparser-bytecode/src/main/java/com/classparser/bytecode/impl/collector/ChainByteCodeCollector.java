@@ -19,7 +19,6 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
         }
 
         if (configurationManager.isEnableClassFileByteCodeCollector()) {
-            System.out.println(1);
             collectors.add(new ClassFileByteCodeCollector());
         }
 

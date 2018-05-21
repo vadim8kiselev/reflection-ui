@@ -1,34 +1,27 @@
 package com.classparser.bytecode.impl.assembly.attach;
 
+import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.exception.ByteCodeParserException;
-import com.classparser.exception.file.ReadFileException;
 import com.sun.tools.attach.VirtualMachine;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 public final class AgentAttacher {
 
-    private static final String VIRTUAL_MACHINE_CLASS_NAME = "com.sun.tools.attach.VirtualMachine";
-
+    private static final String VIRTUAL_MACHINE_CLASS_NAME = "com.sun.tools.attach.VirtualMachine.class";
+    private static final char JAR_ENTRY_SEPARATOR = '/';
     private static final char JVM_NAME_ID_SEPARATOR = '@';
+    private static final int BYTE_BUFFER_SIZE = 1024;
 
-    private static final String CUSTOM_TOOLS = "attach-tools.jar";
-
-    private static final String ATTACH_CLASSES = "classes$load.order";
+    private static final String CUSTOM_TOOLS = "classes";
+    private static final String ATTACH_CLASSES = "class-load.order";
 
     private static Method defineClass;
 
@@ -76,48 +69,25 @@ public final class AgentAttacher {
     }
 
     private static void loadAttachClassesFromCustomToolJar() {
-        String resource = getResource(CUSTOM_TOOLS);
-        Map<String, byte[]> byteCodes = new HashMap<>();
-        try (JarFile jarFile = new JarFile(resource)) {
-            Enumeration<JarEntry> classes = jarFile.entries();
-            while (classes.hasMoreElements()) {
-                JarEntry classEntry = classes.nextElement();
-                int size = (int) classEntry.getSize();
-                if (!classEntry.getName().contains("MANIFEST.MF")) {
-                    try (InputStream stream = jarFile.getInputStream(classEntry)) {
-                        byte[] classBytecode = new byte[size];
-                        int read = stream.read(classBytecode);
-                        if (read != 0) {
-                            byteCodes.put(ClassNameUtils.normalizeFullName(classEntry.getName()), classBytecode);
-                        }
-                    }
-                }
-            }
-        } catch (IOException exception) {
-            throw new ReadFileException("Can't read file with custom tool jar!", exception);
-        }
+        InputStream classLoadOrder = getResourceAsStream(ATTACH_CLASSES);
 
-        for (byte[] byteCode : resolveOfOrderLoading(byteCodes)) {
-            defineClass(byteCode);
-        }
-    }
-
-    private static List<byte[]> resolveOfOrderLoading(Map<String, byte[]> orderMap) {
-        List<byte[]> orderedClasses = new ArrayList<>();
-
-        String resource = getResource(ATTACH_CLASSES);
-        try (BufferedReader reader = new BufferedReader(new FileReader(resource))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoadOrder))) {
             String className = reader.readLine();
 
             while (className != null) {
-                orderedClasses.add(orderMap.get(className));
+                String classFileName = CUSTOM_TOOLS + JAR_ENTRY_SEPARATOR +
+                        className.replace('.', JAR_ENTRY_SEPARATOR) +
+                        Constants.Suffix.CLASS_FILE_SUFFIX;
+
+                InputStream resourceAsStream = getResourceAsStream(classFileName);
+                byte[] bytes = readBytesFromInputStream(resourceAsStream);
+                defineClass(bytes);
+
                 className = reader.readLine();
             }
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-
-        return orderedClasses;
     }
 
     private static void defineClass(byte[] byteCode) {
@@ -140,12 +110,30 @@ public final class AgentAttacher {
         }
     }
 
-    private static String getResource(String fileName) {
-        URL systemResource = ClassLoader.getSystemResource(fileName);
-        if (systemResource == null) {
+    private static byte[] readBytesFromInputStream(InputStream stream) {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int batchSize;
+        byte[] data = new byte[BYTE_BUFFER_SIZE];
+        try {
+            while ((batchSize = stream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, batchSize);
+            }
+
+            buffer.flush();
+        } catch (IOException exception) {
+            throw new ByteCodeParserException("Occurred problems at class loading!", exception);
+        }
+
+        return buffer.toByteArray();
+    }
+
+    private static InputStream getResourceAsStream(String fileName) {
+        InputStream resourceStream = ClassLoader.getSystemResourceAsStream(fileName);
+
+        if (resourceStream == null) {
             throw new ByteCodeParserException("Can't load resource with name " + fileName);
         }
 
-        return systemResource.getFile();
+        return resourceStream;
     }
 }
