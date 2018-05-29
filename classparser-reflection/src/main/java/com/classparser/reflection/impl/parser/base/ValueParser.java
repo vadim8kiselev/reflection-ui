@@ -97,11 +97,13 @@ public class ValueParser {
         if (object instanceof Long) {
             return "L";
         } else if (object instanceof Float) {
-            if (!Float.isInfinite((Float) object) && !Float.isNaN((Float) object)) {
+            Float floatValue = (Float) object;
+            if (!Float.isInfinite(floatValue) && !Float.isNaN(floatValue)) {
                 return "f";
             }
         } else if (object instanceof Double) {
-            if (!Double.isInfinite((Double) object) && !Double.isNaN((Double) object)) {
+            Double doubleValue = (Double) object;
+            if (!Double.isInfinite(doubleValue) && !Double.isNaN(doubleValue)) {
                 return "d";
             }
         }

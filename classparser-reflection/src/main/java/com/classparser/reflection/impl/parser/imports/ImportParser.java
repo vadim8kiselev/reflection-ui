@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 public class ImportParser {
 
-    private final Set<Class<?>> classesForImport;
+    private final ThreadLocal<Set<Class<?>>> threadLocalClassesForImport;
 
     private final ReflectionParserManager manager;
 
@@ -18,7 +18,8 @@ public class ImportParser {
 
     public ImportParser(ReflectionParserManager manager) {
         this.manager = manager;
-        this.classesForImport = new HashSet<>();
+        this.threadLocalClassesForImport = new ThreadLocal<>();
+        this.threadLocalClassesForImport.set(new HashSet<>());
     }
 
     public boolean addImport(Class<?> classForImport) {
@@ -31,7 +32,7 @@ public class ImportParser {
         if (isNeedFullName(classForImport) || !manager.getConfigurationManager().isEnabledImports()) {
             return false;
         } else {
-            classesForImport.add(classForImport);
+            threadLocalClassesForImport.get().add(classForImport);
             return true;
         }
     }
@@ -40,7 +41,7 @@ public class ImportParser {
         Set<String> imports = new TreeSet<>();
         String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
-        for (Class<?> className : classesForImport) {
+        for (Class<?> className : threadLocalClassesForImport.get()) {
             if (isAppendToImports(className)) {
                 imports.add("import " + className.getName() + ';' + lineSeparator);
             }
@@ -52,13 +53,14 @@ public class ImportParser {
 
     private void clearState() {
         manager.clearState();
-        this.classesForImport.clear();
+        this.threadLocalClassesForImport.remove();
     }
 
     private boolean isNeedFullName(Class<?> classForImport) {
-        for (Class<?> clazz : classesForImport) {
+        Set<Class<?>> classes = threadLocalClassesForImport.get();
+        for (Class<?> clazz : classes) {
             if (areEqualBySimpleName(clazz, classForImport) && !areEqualByName(clazz, classForImport)) {
-                return !classesForImport.contains(classForImport);
+                return !classes.contains(classForImport);
             }
         }
 

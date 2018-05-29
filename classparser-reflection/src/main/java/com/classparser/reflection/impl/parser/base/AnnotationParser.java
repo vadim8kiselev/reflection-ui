@@ -17,8 +17,11 @@ import java.util.Map;
 public class AnnotationParser {
 
     private final IndentParser indentParser;
+
     private final ReflectionParserManager manager;
+
     private GenericTypeParser genericTypeParser;
+
     private ValueParser valueParser;
 
     public AnnotationParser(IndentParser indentParser, ReflectionParserManager manager) {

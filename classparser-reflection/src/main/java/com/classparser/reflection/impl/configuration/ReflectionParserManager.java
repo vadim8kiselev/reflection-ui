@@ -2,30 +2,32 @@ package com.classparser.reflection.impl.configuration;
 
 public class ReflectionParserManager {
 
-    private Class<?> parsedClass;
+    private final ThreadLocal<Class<?>> threadLocalParsedClass;
 
-    private Class<?> currentParsedClass;
+    private final ThreadLocal<Class<?>> threadLocalCurrentParsedClass;
 
     private final ConfigurationManager configurationManager;
 
     public ReflectionParserManager() {
         this.configurationManager = new ConfigurationManager();
+        this.threadLocalParsedClass = new ThreadLocal<>();
+        this.threadLocalCurrentParsedClass = new ThreadLocal<>();
     }
 
     public Class<?> getParsedClass() {
-        return parsedClass;
+        return threadLocalParsedClass.get();
     }
 
     public void setParsedClass(Class<?> parsedClass) {
-        this.parsedClass = parsedClass;
+        this.threadLocalParsedClass.set(parsedClass);
     }
 
     public Class<?> getCurrentParsedClass() {
-        return currentParsedClass;
+        return threadLocalCurrentParsedClass.get();
     }
 
     public void setCurrentParsedClass(Class<?> currentParsedClass) {
-        this.currentParsedClass = currentParsedClass;
+        this.threadLocalCurrentParsedClass.set(currentParsedClass);
     }
 
     public ConfigurationManager getConfigurationManager() {
@@ -39,7 +41,7 @@ public class ReflectionParserManager {
     }
 
     public void clearState() {
-        parsedClass = null;
-        currentParsedClass = null;
+        threadLocalCurrentParsedClass.remove();
+        threadLocalParsedClass.remove();
     }
 }
