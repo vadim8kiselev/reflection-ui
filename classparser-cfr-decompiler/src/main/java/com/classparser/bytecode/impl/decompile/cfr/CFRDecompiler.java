@@ -8,6 +8,7 @@ import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.decompile.cfr.configuration.CFRBuilderConfiguration;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
+import com.classparser.configuration.util.ConfigurationUtils;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
@@ -37,13 +38,17 @@ import java.util.Map;
  */
 public final class CFRDecompiler implements Decompiler {
 
-    private final Map<String, Object> configuration = getDefaultConfiguration();
+    private final Map<String, Object> configuration;
 
-    private final Collection<byte[]> innerClasses = new ArrayList<>();
+    private final Collection<byte[]> innerClasses;
+
+    private ConfigurationUtils utils;
 
     private ConfigurationManager configurationManager;
 
     public CFRDecompiler() {
+        this.configuration = new HashMap<>();
+        this.innerClasses = new ArrayList<>();
     }
 
     @Override
@@ -53,6 +58,7 @@ public final class CFRDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
+        initUtils();
         String className = ClassNameUtils.getClassName(byteCode);
         this.innerClasses.addAll(classes);
 
@@ -75,9 +81,16 @@ public final class CFRDecompiler implements Decompiler {
         return dumper.toString();
     }
 
+    private void initUtils() {
+        if (this.utils == null) {
+            this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+        }
+    }
+
     @Override
     public void setConfiguration(Configuration configuration) {
         this.configuration.putAll(configuration.getConfiguration());
+        this.utils = new ConfigurationUtils(this.configuration, getDefaultConfiguration());
     }
 
     private String[] getDefaultOptions(String className) {
@@ -85,9 +98,9 @@ public final class CFRDecompiler implements Decompiler {
 
         options.add(className);
 
-        for (Map.Entry<String, Object> entry : configuration.entrySet()) {
-            options.add("--" + entry.getKey());
-            options.add(entry.getValue().toString());
+        for (String key : configuration.keySet()) {
+            options.add("--" + key);
+            options.add(utils.getConfig(key, String.class));
         }
 
         return options.toArray(new String[0]);

@@ -40,11 +40,16 @@ public final class JDDecompiler implements Decompiler {
 
     private static final int INITIAL_CAPACITY = 1024;
 
-    private final Map<String, Object> configuration = getDefaultConfiguration();
+    private Map<String, Object> configuration;
 
-    private List<ClassFile> innerClasses = new ArrayList<>();
+    private List<ClassFile> innerClasses;
 
     private ConfigurationUtils utils;
+
+    public JDDecompiler() {
+        this.configuration = new HashMap<>();
+        this.innerClasses = new ArrayList<>();
+    }
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -53,10 +58,7 @@ public final class JDDecompiler implements Decompiler {
 
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
-        if (this.utils == null) {
-            this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
-        }
-
+        initUtils();
         try {
             appendAdditionalClasses(classes);
             Loader loader = new JDLoader(byteCode);
@@ -91,6 +93,12 @@ public final class JDDecompiler implements Decompiler {
             throw new DecompilationException("Decompilation process is interrupted", exception);
         } catch (Throwable throwable) {
             throw new DecompilationException("Some shit happens with JD decompiler", throwable);
+        }
+    }
+
+    private void initUtils() {
+        if (this.utils == null) {
+            this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
         }
     }
 
@@ -210,6 +218,7 @@ public final class JDDecompiler implements Decompiler {
                 builder.deleteCharAt(ClassStringUtils.getNumberLeftOfLineSeparator(builder));
                 builder.delete(ClassStringUtils.getFirstLeftNonCharNumber(builder, ' '), builder.length() - 1);
             }
+
             builder.append(csq);
             return STUB;
         }

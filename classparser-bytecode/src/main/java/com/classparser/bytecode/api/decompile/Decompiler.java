@@ -35,7 +35,7 @@ public interface Decompiler {
     void setConfiguration(Configuration configuration);
 
     /**
-     * Method which called by ByteCodeParser for set instance configuration
+     * Method which called by ByteCodeParser for set configuration instance
      *
      * @param configurationManager current configuration manager
      */

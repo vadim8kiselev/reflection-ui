@@ -24,15 +24,20 @@ import java.util.Map;
 
 public final class ProcyonDecompiler implements Decompiler {
 
-    private final Map<String, Object> configuration = getDefaultConfiguration();
+    private final Map<String, Object> configuration;
 
-    private final Map<String, byte[]> byteCodeMap = new HashMap<>();
+    private final Map<String, byte[]> byteCodeMap;
 
     private byte[] byteCode;
 
     private ConfigurationUtils utils;
 
     private ConfigurationManager configurationManager;
+
+    public ProcyonDecompiler() {
+        this.configuration = new HashMap<>();
+        this.byteCodeMap = new HashMap<>();
+    }
 
     @Override
     public String decompile(byte[] byteCode) {
@@ -42,9 +47,7 @@ public final class ProcyonDecompiler implements Decompiler {
     @Override
     public String decompile(byte[] byteCode, Collection<byte[]> classes) {
         this.byteCode = byteCode;
-        if (this.utils == null) {
-            this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
-        }
+        initUtils();
         String className = ClassNameUtils.getClassName(byteCode);
         byteCodeMap.put(className, byteCode);
         appendAdditionalClasses(classes);
@@ -69,6 +72,13 @@ public final class ProcyonDecompiler implements Decompiler {
 
         return output.toString();
     }
+
+    private void initUtils() {
+        if (this.utils == null) {
+            this.utils = new ConfigurationUtils(configuration, getDefaultConfiguration());
+        }
+    }
+
 
     @Override
     public void setConfiguration(Configuration configuration) {

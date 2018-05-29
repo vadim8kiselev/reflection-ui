@@ -13,6 +13,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
+import java.security.Principal;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 
 public final class AgentAttacher {
 
@@ -86,7 +92,7 @@ public final class AgentAttacher {
                 }
 
                 byte[] bytes = readBytesFromInputStream(resourceAsStream);
-                defineClass(bytes);
+                defineClass(bytes, ClassNameUtils.normalizeFullName(ClassNameUtils.getClassName(bytes)), getResource(classFileName));
 
                 className = reader.readLine();
             }
@@ -101,11 +107,11 @@ public final class AgentAttacher {
                 Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
-    private static void defineClass(byte[] byteCode) {
+    private static void defineClass(byte[] byteCode, String className, URL codeLocation) {
         ClassLoader systemClassLoader = AgentAttacher.class.getClassLoader();
         if (defineClass == null) {
             try {
-                Class<?>[] parameterTypes = {byte[].class, int.class, int.class};
+                Class<?>[] parameterTypes = {String.class, byte[].class, int.class, int.class, ProtectionDomain.class};
                 defineClass = ClassLoader.class.getDeclaredMethod("defineClass", parameterTypes);
             } catch (ReflectiveOperationException exception) {
                 throw new ByteCodeParserException("Can't obtains define class method!", exception);
@@ -113,13 +119,24 @@ public final class AgentAttacher {
         }
 
         try {
+            ProtectionDomain protectionDomain = createProtectionDomainForLoadedClasses(codeLocation, systemClassLoader);
             defineClass.setAccessible(true);
-            defineClass.invoke(systemClassLoader, byteCode, 0, byteCode.length);
+            defineClass.invoke(systemClassLoader, className, byteCode, 0, byteCode.length, protectionDomain);
             defineClass.setAccessible(false);
         } catch (ReflectiveOperationException exception) {
-            String className = ClassNameUtils.getClassName(byteCode);
             throw new ByteCodeParserException("Can't load class with name: " + className, exception);
         }
+    }
+
+    private static ProtectionDomain createProtectionDomainForLoadedClasses(URL codeLocation, ClassLoader classLoader) {
+        ProtectionDomain protectionDomain = AgentAttacher.class.getProtectionDomain();
+        Principal[] principals = protectionDomain.getPrincipals();
+        PermissionCollection permissions = protectionDomain.getPermissions();
+
+        Certificate[] certificates = protectionDomain.getCodeSource().getCertificates();
+        CodeSource codeSource = new CodeSource(codeLocation, certificates);
+
+        return new ProtectionDomain(codeSource, permissions, classLoader, principals);
     }
 
     private static byte[] readBytesFromInputStream(InputStream stream) {
@@ -149,5 +166,15 @@ public final class AgentAttacher {
         }
 
         return resourceStream;
+    }
+
+    private static URL getResource(String fileName) {
+        URL url = ClassLoader.getSystemResource(fileName);
+
+        if (url == null) {
+            throw new ByteCodeParserException("Can't load resource with name " + fileName);
+        }
+
+        return url;
     }
 }
