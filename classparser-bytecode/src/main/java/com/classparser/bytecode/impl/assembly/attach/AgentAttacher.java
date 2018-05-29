@@ -20,7 +20,7 @@ import java.security.Principal;
 import java.security.ProtectionDomain;
 import java.security.cert.Certificate;
 
-public final class AgentAttacher {
+public class AgentAttacher {
 
     private static final String VIRTUAL_MACHINE_CLASS_NAME = "com.sun.tools.attach.VirtualMachine.class";
     private static final char JAR_ENTRY_SEPARATOR = '/';
@@ -33,10 +33,15 @@ public final class AgentAttacher {
     private static Method defineClass;
 
     public static void attach(String agentPath) {
-        if (isExistsToolJar()) {
-            attachWithToolJar(agentPath);
+        File agentJar = new File(agentPath);
+        if (agentJar.exists()) {
+            if (isExistsToolJar()) {
+                attachWithToolJar(agentPath);
+            } else {
+                attachWithoutToolJar(agentPath);
+            }
         } else {
-            attachWithoutToolJar(agentPath);
+            throw new ByteCodeParserException("Could't find agent jar by follow path: " + agentPath);
         }
     }
 
@@ -92,7 +97,9 @@ public final class AgentAttacher {
                 }
 
                 byte[] bytes = readBytesFromInputStream(resourceAsStream);
-                defineClass(bytes, ClassNameUtils.normalizeFullName(ClassNameUtils.getClassName(bytes)), getResource(classFileName));
+                defineClass(bytes,
+                        ClassNameUtils.normalizeFullName(ClassNameUtils.getClassName(bytes)),
+                        getResource(classFileName));
 
                 className = reader.readLine();
             }
@@ -108,7 +115,7 @@ public final class AgentAttacher {
     }
 
     private static void defineClass(byte[] byteCode, String className, URL codeLocation) {
-        ClassLoader systemClassLoader = AgentAttacher.class.getClassLoader();
+        ClassLoader classLoader = AgentAttacher.class.getClassLoader();
         if (defineClass == null) {
             try {
                 Class<?>[] parameterTypes = {String.class, byte[].class, int.class, int.class, ProtectionDomain.class};
@@ -119,16 +126,16 @@ public final class AgentAttacher {
         }
 
         try {
-            ProtectionDomain protectionDomain = createProtectionDomainForLoadedClasses(codeLocation, systemClassLoader);
+            ProtectionDomain protectionDomain = createProtectionDomainForToolClasses(codeLocation, classLoader);
             defineClass.setAccessible(true);
-            defineClass.invoke(systemClassLoader, className, byteCode, 0, byteCode.length, protectionDomain);
+            defineClass.invoke(classLoader, className, byteCode, 0, byteCode.length, protectionDomain);
             defineClass.setAccessible(false);
         } catch (ReflectiveOperationException exception) {
             throw new ByteCodeParserException("Can't load class with name: " + className, exception);
         }
     }
 
-    private static ProtectionDomain createProtectionDomainForLoadedClasses(URL codeLocation, ClassLoader classLoader) {
+    private static ProtectionDomain createProtectionDomainForToolClasses(URL codeLocation, ClassLoader classLoader) {
         ProtectionDomain protectionDomain = AgentAttacher.class.getProtectionDomain();
         Principal[] principals = protectionDomain.getPrincipals();
         PermissionCollection permissions = protectionDomain.getPermissions();
