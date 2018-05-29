@@ -71,22 +71,17 @@ public final class AgentAttacher {
 
     private static void loadAttachClassesFromCustomTool() {
         InputStream classLoadOrder = getResourceAsStream(ATTACH_CLASSES);
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoadOrder))) {
             String className = reader.readLine();
 
             while (className != null) {
-                String classFileName = CUSTOM_TOOL_FOLDER + File.separator +
-                        className.replace('.', File.separatorChar) +
-                        Constants.Suffix.CLASS_FILE_SUFFIX;
+                String classFileName = createPathToClassFile(className, File.separatorChar);
 
                 InputStream resourceAsStream;
                 try {
                     resourceAsStream = getResourceAsStream(classFileName);
                 } catch (ByteCodeParserException exception) {
-                    classFileName = CUSTOM_TOOL_FOLDER + JAR_ENTRY_SEPARATOR +
-                            className.replace('.', JAR_ENTRY_SEPARATOR) +
-                            Constants.Suffix.CLASS_FILE_SUFFIX;
+                    classFileName = createPathToClassFile(className, JAR_ENTRY_SEPARATOR);
                     resourceAsStream = getResourceAsStream(classFileName);
                 }
 
@@ -100,20 +95,27 @@ public final class AgentAttacher {
         }
     }
 
+    private static String createPathToClassFile(String className, char separator) {
+        return CUSTOM_TOOL_FOLDER + separator +
+                className.replace('.', separator) +
+                Constants.Suffix.CLASS_FILE_SUFFIX;
+    }
+
     private static void defineClass(byte[] byteCode) {
         ClassLoader systemClassLoader = AgentAttacher.class.getClassLoader();
         if (defineClass == null) {
             try {
                 Class<?>[] parameterTypes = {byte[].class, int.class, int.class};
                 defineClass = ClassLoader.class.getDeclaredMethod("defineClass", parameterTypes);
-                defineClass.setAccessible(true);
             } catch (ReflectiveOperationException exception) {
                 throw new ByteCodeParserException("Can't obtains define class method!", exception);
             }
         }
 
         try {
+            defineClass.setAccessible(true);
             defineClass.invoke(systemClassLoader, byteCode, 0, byteCode.length);
+            defineClass.setAccessible(false);
         } catch (ReflectiveOperationException exception) {
             String className = ClassNameUtils.getClassName(byteCode);
             throw new ByteCodeParserException("Can't load class with name: " + className, exception);
