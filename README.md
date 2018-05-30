@@ -1,2 +1,2 @@
-# reflection-ui
-Util for displaying Java decompiled bytecode of static or dynamic generated classes
+# Class Parser
+Util for display class meta information and get decompile code by class instance 

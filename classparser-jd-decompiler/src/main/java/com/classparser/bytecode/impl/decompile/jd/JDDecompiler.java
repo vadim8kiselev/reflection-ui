@@ -34,7 +34,7 @@ import java.util.*;
 /**
  * Created by Aleksei Makarov on 07/19/2017.
  * <p>
- * This decompiler doesn't work with java 8 and can't show local classes
+ * This decompiler doesn't work with java 8 and can't display local classes
  */
 public final class JDDecompiler implements Decompiler {
 

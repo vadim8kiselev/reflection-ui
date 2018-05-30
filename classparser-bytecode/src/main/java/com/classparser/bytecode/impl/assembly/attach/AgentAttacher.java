@@ -1,7 +1,6 @@
 package com.classparser.bytecode.impl.assembly.attach;
 
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
-import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.exception.ByteCodeParserException;
 import com.sun.tools.attach.VirtualMachine;
 
@@ -12,13 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.security.CodeSource;
-import java.security.PermissionCollection;
-import java.security.Principal;
-import java.security.ProtectionDomain;
-import java.security.cert.Certificate;
 
 public class AgentAttacher {
 
@@ -30,7 +23,7 @@ public class AgentAttacher {
     private static final String CUSTOM_TOOL_FOLDER = "classes";
     private static final String ATTACH_CLASSES = "class-load.order";
 
-    private static Method defineClass;
+    private static final ClassDefiner classDefiner = new ClassDefiner();
 
     public static void attach(String agentPath) {
         File agentJar = new File(agentPath);
@@ -97,10 +90,8 @@ public class AgentAttacher {
                 }
 
                 byte[] bytes = readBytesFromInputStream(resourceAsStream);
-                defineClass(bytes,
-                        ClassNameUtils.normalizeFullName(ClassNameUtils.getClassName(bytes)),
-                        getResource(classFileName));
 
+                classDefiner.defineClass(bytes, getResource(classFileName));
                 className = reader.readLine();
             }
         } catch (IOException exception) {
@@ -112,38 +103,6 @@ public class AgentAttacher {
         return CUSTOM_TOOL_FOLDER + separator +
                 className.replace('.', separator) +
                 Constants.Suffix.CLASS_FILE_SUFFIX;
-    }
-
-    private static void defineClass(byte[] byteCode, String className, URL codeLocation) {
-        ClassLoader classLoader = AgentAttacher.class.getClassLoader();
-        if (defineClass == null) {
-            try {
-                Class<?>[] parameterTypes = {String.class, byte[].class, int.class, int.class, ProtectionDomain.class};
-                defineClass = ClassLoader.class.getDeclaredMethod("defineClass", parameterTypes);
-            } catch (ReflectiveOperationException exception) {
-                throw new ByteCodeParserException("Can't obtains define class method!", exception);
-            }
-        }
-
-        try {
-            ProtectionDomain protectionDomain = createProtectionDomainForToolClasses(codeLocation, classLoader);
-            defineClass.setAccessible(true);
-            defineClass.invoke(classLoader, className, byteCode, 0, byteCode.length, protectionDomain);
-            defineClass.setAccessible(false);
-        } catch (ReflectiveOperationException exception) {
-            throw new ByteCodeParserException("Can't load class with name: " + className, exception);
-        }
-    }
-
-    private static ProtectionDomain createProtectionDomainForToolClasses(URL codeLocation, ClassLoader classLoader) {
-        ProtectionDomain protectionDomain = AgentAttacher.class.getProtectionDomain();
-        Principal[] principals = protectionDomain.getPrincipals();
-        PermissionCollection permissions = protectionDomain.getPermissions();
-
-        Certificate[] certificates = protectionDomain.getCodeSource().getCertificates();
-        CodeSource codeSource = new CodeSource(codeLocation, certificates);
-
-        return new ProtectionDomain(codeSource, permissions, classLoader, principals);
     }
 
     private static byte[] readBytesFromInputStream(InputStream stream) {

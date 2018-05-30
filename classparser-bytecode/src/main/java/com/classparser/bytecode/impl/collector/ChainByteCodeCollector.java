@@ -23,7 +23,7 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
         }
 
         if (configurationManager.isEnableRetransformClassByteCodeCollector()) {
-            collectors.add(new FromJVMByteCodeCollector(configurationManager.getAgent()));
+            collectors.add(new JVMByteCodeCollector(configurationManager.getAgent()));
         }
     }
 

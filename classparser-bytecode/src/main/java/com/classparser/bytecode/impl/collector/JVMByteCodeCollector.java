@@ -10,7 +10,7 @@ import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.text.MessageFormat;
 
-public class FromJVMByteCodeCollector implements ByteCodeCollector {
+public class JVMByteCodeCollector implements ByteCodeCollector {
 
     private final JavaAgent agent;
 
@@ -18,7 +18,7 @@ public class FromJVMByteCodeCollector implements ByteCodeCollector {
 
     private ByteCodeHolder holder;
 
-    public FromJVMByteCodeCollector(JavaAgent agent) {
+    public JVMByteCodeCollector(JavaAgent agent) {
         this.agent = agent;
     }
 

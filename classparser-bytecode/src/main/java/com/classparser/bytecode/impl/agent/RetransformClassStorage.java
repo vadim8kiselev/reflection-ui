@@ -8,11 +8,11 @@ import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class Transformer implements ClassFileTransformer, ByteCodeHolder {
+public final class RetransformClassStorage implements ClassFileTransformer, ByteCodeHolder {
 
     private final Map<String, byte[]> bytecodeMap;
 
-    public Transformer() {
+    public RetransformClassStorage() {
        this.bytecodeMap = new ConcurrentHashMap<>();
     }
 
