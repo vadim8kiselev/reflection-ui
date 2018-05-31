@@ -1,5 +1,6 @@
 package com.classparser.bytecode.impl.assembly.attach;
 
+import com.classparser.bytecode.impl.utils.ClassFileUtils;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.exception.ByteCodeParserException;
 
@@ -25,7 +26,7 @@ public class ClassDefiner {
     }
 
     public void defineClass(byte[] byteCode, URL location) {
-        String className = ClassNameUtils.getClassName(byteCode);
+        String className = ClassNameUtils.normalizeFullName(ClassNameUtils.getClassName(byteCode));
         try {
             ProtectionDomain protectionDomain = createProtectionDomainForToolClasses(location, getCurrentClassLoader());
             defineClassMethod.setAccessible(true);
@@ -37,8 +38,8 @@ public class ClassDefiner {
         }
     }
 
-    private ProtectionDomain createProtectionDomainForToolClasses(URL codeLocation, ClassLoader classLoader) {
-        ProtectionDomain protectionDomain = AgentAttacher.class.getProtectionDomain();
+    protected ProtectionDomain createProtectionDomainForToolClasses(URL codeLocation, ClassLoader classLoader) {
+        ProtectionDomain protectionDomain = getClass().getProtectionDomain();
         Principal[] principals = protectionDomain.getPrincipals();
         PermissionCollection permissions = protectionDomain.getPermissions();
 
@@ -49,6 +50,6 @@ public class ClassDefiner {
     }
 
     private ClassLoader getCurrentClassLoader() {
-        return ClassDefiner.class.getClassLoader();
+        return ClassFileUtils.getClassLoader(getClass());
     }
 }

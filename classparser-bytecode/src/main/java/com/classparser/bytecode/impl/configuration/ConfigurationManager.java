@@ -5,6 +5,8 @@ import com.classparser.bytecode.api.collector.ByteCodeCollector;
 import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.agent.Agent;
 import com.classparser.bytecode.impl.assembly.AgentAssembler;
+import com.classparser.bytecode.impl.assembly.attach.AgentAttacher;
+import com.classparser.bytecode.impl.assembly.attach.ClassDefiner;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.decompile.fernflower.FernflowerDecompiler;
 import com.classparser.configuration.Configuration;
@@ -40,7 +42,7 @@ public class ConfigurationManager {
                 .addCustomByteCodeCollector(null)
                 .enableCustomByteCodeCollector(false)
                 .setDirectoryToSaveByteCode(HOME_DIR + File.separatorChar + "classes")
-                .setAgentClass(new Agent(new AgentAssembler()))
+                .setAgentClass(new Agent(new AgentAssembler(new AgentAttacher(new ClassDefiner()))))
                 .getConfiguration();
     }
 

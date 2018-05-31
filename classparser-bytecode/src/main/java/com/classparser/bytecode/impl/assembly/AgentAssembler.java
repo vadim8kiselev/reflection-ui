@@ -14,6 +14,12 @@ public class AgentAssembler {
 
     private static final String DEFAULT_AGENT_JAR_NAME = "agent.jar";
 
+    private final AgentAttacher agentAttacher;
+
+    public AgentAssembler(AgentAttacher agentAttacher) {
+        this.agentAttacher = agentAttacher;
+    }
+
     public void assembly(JavaAgent agent) {
         if (!agent.isInitialize()) {
             String agentPath = AgentBuilder.getAgentPath(getAgentJarName());
@@ -27,7 +33,11 @@ public class AgentAssembler {
                         .build();
             }
 
-            AgentAttacher.attach(agentPath);
+            agentAttacher.attach(agentPath);
+            File agentJar = new File(agentPath);
+            if (!agentJar.exists() || !agentJar.delete()) {
+                System.err.println("Problems occurred with removing agent jar file: " + getAgentJarName());
+            }
         }
     }
 
@@ -35,7 +45,7 @@ public class AgentAssembler {
         return DEFAULT_AGENT_JAR_NAME;
     }
 
-    protected Class<?> getAgentClass() {
+    protected Class<? extends JavaAgent> getAgentClass() {
         return Agent.class;
     }
 

@@ -144,13 +144,15 @@ public final class CFRDecompiler implements Decompiler {
 
     private class CFRBuilderDumper extends StdIODumper {
 
-        private final StringBuilder builder = new StringBuilder();
+        private final StringBuilder builder;
 
-        private boolean skipLineSeparator = false;
+        private boolean skipLineSeparator;
 
         private CFRBuilderDumper(TypeUsageInformation typeUsageInformation, Options options,
                                  IllegalIdentifierDump illegalIdentifierDump) {
             super(typeUsageInformation, options, illegalIdentifierDump);
+            this.builder = new StringBuilder();
+            this.skipLineSeparator = false;
         }
 
         @Override
@@ -210,13 +212,19 @@ public final class CFRDecompiler implements Decompiler {
     private class CFRDCCommonState extends DCCommonState {
 
         private static final String EMPTY_MESSAGE = "";
+
         private final String outerClassName;
-        private final ByteCodeCollector codeCollector = new ChainByteCodeCollector(configurationManager);
-        private final Map<String, ClassFile> classFileMap = new HashMap<>();
+
+        private final ByteCodeCollector codeCollector;
+
+        private final Map<String, ClassFile> classFileCache;
+
 
         private CFRDCCommonState(Options options, ClassFileSource classFileSource, byte[] byteCode) {
             super(options, classFileSource);
             this.outerClassName = ClassNameUtils.getClassName(byteCode);
+            this.codeCollector = new ChainByteCodeCollector(configurationManager);
+            this.classFileCache = new HashMap<>();
 
             loadClassFile(byteCode);
             for (byte[] innerClass : innerClasses) {
@@ -234,7 +242,7 @@ public final class CFRDecompiler implements Decompiler {
                 className = className.substring(0, className.lastIndexOf(Constants.Suffix.CLASS_FILE_SUFFIX));
             }
 
-            ClassFile classFile = classFileMap.get(className);
+            ClassFile classFile = classFileCache.get(className);
             if (classFile != null) {
                 return classFile;
             }
@@ -277,7 +285,7 @@ public final class CFRDecompiler implements Decompiler {
             String className = ClassNameUtils.getClassName(bytecode);
             ByteData data = new BaseByteData(bytecode);
             ClassFile classFile = new ClassFile(data, className, this);
-            classFileMap.put(className, classFile);
+            classFileCache.put(className, classFile);
             return classFile;
         }
     }

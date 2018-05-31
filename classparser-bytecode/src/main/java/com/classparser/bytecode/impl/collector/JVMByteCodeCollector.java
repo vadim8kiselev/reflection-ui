@@ -27,8 +27,14 @@ public class JVMByteCodeCollector implements ByteCodeCollector {
         initAgent();
         if (clazz != null) {
             try {
-                if (instrumentation != null && instrumentation.isModifiableClass(clazz)) {
-                    instrumentation.retransformClasses(clazz);
+                if (instrumentation != null) {
+                    if (instrumentation.isRetransformClassesSupported() && instrumentation.isModifiableClass(clazz)) {
+                        instrumentation.retransformClasses(clazz);
+                    } else {
+                        System.err.println("Class " + clazz.getName() + " is can't be retransform.");
+                    }
+                } else {
+                    System.err.println("Instrumentation instance is null!");
                 }
             } catch (UnmodifiableClassException exception) {
                 String message = MessageFormat.format("Class: \"{0}\" is can't retransform", clazz.getName());

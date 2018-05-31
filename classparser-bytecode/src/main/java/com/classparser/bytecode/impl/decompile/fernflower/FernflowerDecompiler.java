@@ -4,6 +4,7 @@ import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
+import com.classparser.bytecode.impl.utils.ClassFileUtils;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
 import com.classparser.exception.decompile.DecompilationException;
@@ -37,15 +38,15 @@ public final class FernflowerDecompiler implements Decompiler {
 
     private final IResultSaver saver;
 
-    private final InvocationHandlerImpl invocationHandler;
+    private final SourceCodeGetterInvocationHandler invocationHandler;
 
     private final BaseDecompiler decompiler;
 
     public FernflowerDecompiler() {
-        ClassLoader classLoader = getClass().getClassLoader();
+        ClassLoader classLoader = ClassFileUtils.getClassLoader(getClass());
         IFernflowerLogger logger = new PrintStreamLogger(System.out);
         Class<?>[] classes = new Class[]{IResultSaver.class};
-        this.invocationHandler = new InvocationHandlerImpl();
+        this.invocationHandler = new SourceCodeGetterInvocationHandler();
         this.saver = (IResultSaver) Proxy.newProxyInstance(classLoader, classes, invocationHandler);
         this.configuration = getDefaultConfiguration();
         this.decompiler = new BaseDecompiler(null, this.saver, configuration, logger);
@@ -158,7 +159,7 @@ public final class FernflowerDecompiler implements Decompiler {
     public void setConfigurationManager(ConfigurationManager configurationManager) {
     }
 
-    private static class InvocationHandlerImpl implements InvocationHandler {
+    private static class SourceCodeGetterInvocationHandler implements InvocationHandler {
 
         private String source;
 

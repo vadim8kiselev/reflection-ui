@@ -81,7 +81,8 @@ public final class JDDecompiler implements Decompiler {
             int minorVersion = classFile.getMinorVersion();
             int majorVersion = classFile.getMajorVersion();
 
-            ClassFileWriter.Write(loader, printer, referenceMap, maxLineNumber, majorVersion, minorVersion, layoutBlockList);
+            ClassFileWriter.Write(loader, printer, referenceMap, maxLineNumber,
+                    majorVersion, minorVersion, layoutBlockList);
 
             return jdPrinter.getSource();
         } catch (ClassFormatException | NullPointerException exception) {
@@ -195,13 +196,18 @@ public final class JDDecompiler implements Decompiler {
     private class JDPrinter extends PrintStream {
 
         private static final String JD_INDENT = "  ";
-        private final PrintStream STUB = null;
-        private final StringBuilder builder = new StringBuilder();
+
+        private final PrintStream stub;
+
+        private final StringBuilder builder;
+
         private final String indent;
 
         private JDPrinter(OutputStream stream) {
             super(stream);
             this.indent = utils.getConfig("ind", String.class);
+            this.builder = new StringBuilder();
+            this.stub = null;
         }
 
         @Override
@@ -213,14 +219,14 @@ public final class JDDecompiler implements Decompiler {
                 }
             } else if (csq.equals(JD_INDENT)) {
                 builder.append(indent);
-                return STUB;
+                return stub;
             } else if (csq.equals("throws") || csq.equals("implements") || csq.equals("extends")) {
                 builder.deleteCharAt(ClassStringUtils.getNumberLeftOfLineSeparator(builder));
                 builder.delete(ClassStringUtils.getFirstLeftNonCharNumber(builder, ' '), builder.length() - 1);
             }
-
             builder.append(csq);
-            return STUB;
+
+            return stub;
         }
 
         private String getSource() {

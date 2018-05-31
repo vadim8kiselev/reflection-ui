@@ -14,7 +14,7 @@ public final class Agent implements JavaAgent {
 
     private AgentAssembler agentAssembler;
 
-    private boolean isInitialize = false;
+    private static boolean isInitialize = false;
 
     public Agent(AgentAssembler agentAssembler) {
         this.agentAssembler = agentAssembler;
@@ -34,10 +34,10 @@ public final class Agent implements JavaAgent {
         return instrumentation;
     }
 
-    private void initialize() {
+    private synchronized void initialize() {
         if (!isInitialize()) {
             this.agentAssembler.assembly(this);
-            this.isInitialize = true;
+            isInitialize = true;
         }
     }
 

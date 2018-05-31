@@ -17,7 +17,11 @@ public class ByteCodeBuilderConfiguration {
 
     private static class Builder implements ByteCodeConfiguration {
 
-        private final HashMap<String, Object> configuration = new HashMap<>();
+        private final HashMap<String, Object> configuration;
+
+        public Builder() {
+            this.configuration = new HashMap<>();
+        }
 
         @Override
         public Map<String, Object> getConfiguration() {

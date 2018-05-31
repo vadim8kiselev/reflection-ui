@@ -23,9 +23,13 @@ public class AgentAttacher {
     private static final String CUSTOM_TOOL_FOLDER = "classes";
     private static final String ATTACH_CLASSES = "class-load.order";
 
-    private static final ClassDefiner classDefiner = new ClassDefiner();
+    private final ClassDefiner classDefiner;
 
-    public static void attach(String agentPath) {
+    public AgentAttacher(ClassDefiner classDefiner) {
+        this.classDefiner = classDefiner;
+    }
+
+    public void attach(String agentPath) {
         File agentJar = new File(agentPath);
         if (agentJar.exists()) {
             if (isExistsToolJar()) {
@@ -38,7 +42,7 @@ public class AgentAttacher {
         }
     }
 
-    private static boolean isExistsToolJar() {
+    private boolean isExistsToolJar() {
         try {
             Class.forName(VIRTUAL_MACHINE_CLASS_NAME);
             return true;
@@ -47,7 +51,7 @@ public class AgentAttacher {
         }
     }
 
-    private static void attachWithToolJar(String agentPath) {
+    private void attachWithToolJar(String agentPath) {
         String processID = getCurrentJVMProcessID();
         try {
             VirtualMachine virtualMachine = VirtualMachine.attach(processID);
@@ -61,19 +65,19 @@ public class AgentAttacher {
         }
     }
 
-    public static String getCurrentJVMProcessID() {
+    public String getCurrentJVMProcessID() {
         String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
         int processID = nameOfRunningVM.indexOf(JVM_NAME_ID_SEPARATOR);
         return nameOfRunningVM.substring(0, processID);
     }
 
 
-    private static void attachWithoutToolJar(String agentPath) {
+    private void attachWithoutToolJar(String agentPath) {
         loadAttachClassesFromCustomTool();
         attachWithToolJar(agentPath);
     }
 
-    private static void loadAttachClassesFromCustomTool() {
+    private void loadAttachClassesFromCustomTool() {
         InputStream classLoadOrder = getResourceAsStream(ATTACH_CLASSES);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoadOrder))) {
             String className = reader.readLine();
@@ -99,13 +103,13 @@ public class AgentAttacher {
         }
     }
 
-    private static String createPathToClassFile(String className, char separator) {
+    private String createPathToClassFile(String className, char separator) {
         return CUSTOM_TOOL_FOLDER + separator +
                 className.replace('.', separator) +
                 Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
-    private static byte[] readBytesFromInputStream(InputStream stream) {
+    private byte[] readBytesFromInputStream(InputStream stream) {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int batchSize;
         byte[] data = new byte[BYTE_BUFFER_SIZE];

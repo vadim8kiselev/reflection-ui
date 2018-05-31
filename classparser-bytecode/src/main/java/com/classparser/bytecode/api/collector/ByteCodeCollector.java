@@ -3,9 +3,9 @@ package com.classparser.bytecode.api.collector;
 public interface ByteCodeCollector {
 
     /**
-     * Get bytecode of class
+     * Trying find bytecode of class
      *
-     * @param clazz - class for which getting bytecode
+     * @param clazz - class for which is getting bytecode
      * @return bytecode of class or null if bytecode is not found
      */
     byte[] getByteCode(Class<?> clazz);

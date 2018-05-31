@@ -10,8 +10,31 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
 
     private final List<ByteCodeCollector> collectors;
 
+    private final ConfigurationManager configurationManager;
+
     public ChainByteCodeCollector(ConfigurationManager configurationManager) {
         this.collectors = new ArrayList<>();
+        this.configurationManager = configurationManager;
+    }
+
+    @Override
+    public byte[] getByteCode(Class<?> clazz) {
+        loadCollectors();
+        if (clazz != null) {
+            for (ByteCodeCollector collector : collectors) {
+                byte[] byteCode = collector.getByteCode(clazz);
+
+                if (byteCode != null) {
+                    return byteCode;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private void loadCollectors() {
+        collectors.clear();
 
         ByteCodeCollector customByteCodeCollector = configurationManager.getCustomByteCodeCollector();
         if (configurationManager.isEnableCustomByteCodeCollector() && customByteCodeCollector != null) {
@@ -25,20 +48,5 @@ public class ChainByteCodeCollector implements ByteCodeCollector {
         if (configurationManager.isEnableRetransformClassByteCodeCollector()) {
             collectors.add(new JVMByteCodeCollector(configurationManager.getAgent()));
         }
-    }
-
-    @Override
-    public byte[] getByteCode(Class<?> clazz) {
-        if (clazz != null) {
-            for (ByteCodeCollector collector : collectors) {
-                byte[] byteCode = collector.getByteCode(clazz);
-
-                if (byteCode != null) {
-                    return byteCode;
-                }
-            }
-        }
-
-        return null;
     }
 }
