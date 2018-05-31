@@ -22,16 +22,13 @@ public class AgentAssembler {
 
     public void assembly(JavaAgent agent) {
         if (!agent.isInitialize()) {
-            String agentPath = AgentBuilder.getAgentPath(getAgentJarName());
-            File file = new File(agentPath);
-            if (!file.exists()) {
-                agentPath = AgentBuilder.getBuilder()
-                        .addAgentName(getAgentJarName())
-                        .addAgentClass(getAgentClass())
-                        .addManifest(getManifestFileName())
-                        .addClasses(getAgentJarClasses())
-                        .build();
-            }
+            String agentPath = AgentBuilder.getBuilder()
+                    .addAgentName(getAgentJarName())
+                    .addAgentClass(getAgentClass())
+                    .addManifest(getManifestFileName())
+                    .addClasses(getAgentJarClasses())
+                    .build();
+
 
             agentAttacher.attach(agentPath);
             File agentJar = new File(agentPath);

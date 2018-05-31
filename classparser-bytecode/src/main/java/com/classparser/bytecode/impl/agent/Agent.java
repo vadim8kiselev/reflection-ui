@@ -8,7 +8,7 @@ import java.lang.instrument.Instrumentation;
 
 public final class Agent implements JavaAgent {
 
-    private static final RetransformClassStorage RETRANSFORM_CLASS_STORAGE = new RetransformClassStorage();
+    private static final RetransformClassStorage CLASS_STORAGE = new RetransformClassStorage();
 
     private static Instrumentation instrumentation;
 
@@ -20,9 +20,9 @@ public final class Agent implements JavaAgent {
         this.agentAssembler = agentAssembler;
     }
 
-    public static void agentmain(String args, Instrumentation instrumentation) {
-        Agent.instrumentation = instrumentation;
-        instrumentation.addTransformer(RETRANSFORM_CLASS_STORAGE, true);
+    public static void agentmain(String args, Instrumentation instrument) {
+        instrumentation = instrument;
+        instrumentation.addTransformer(CLASS_STORAGE, true);
     }
 
     @Override
@@ -47,7 +47,7 @@ public final class Agent implements JavaAgent {
             initialize();
         }
 
-        return RETRANSFORM_CLASS_STORAGE;
+        return CLASS_STORAGE;
     }
 
     @Override

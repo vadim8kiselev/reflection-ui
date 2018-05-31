@@ -1,41 +1,45 @@
 package com.classparser.bytecode.impl.assembly.attach;
 
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
+import com.classparser.bytecode.impl.utils.IOUtils;
 import com.classparser.exception.ByteCodeParserException;
 import com.sun.tools.attach.VirtualMachine;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
-import java.net.URL;
 
 public class AgentAttacher {
 
-    private static final String VIRTUAL_MACHINE_CLASS_NAME = "com.sun.tools.attach.VirtualMachine.class";
-    private static final char JAR_ENTRY_SEPARATOR = '/';
+    private static final String VIRTUAL_MACHINE_CLASS_NAME = "com.sun.tools.attach.VirtualMachine";
     private static final char JVM_NAME_ID_SEPARATOR = '@';
-    private static final int BYTE_BUFFER_SIZE = 1024;
 
     private static final String CUSTOM_TOOL_FOLDER = "classes";
-    private static final String ATTACH_CLASSES = "class-load.order";
+    private static final String ATTACH_CLASSES = "attach.classes";
 
     private final ClassDefiner classDefiner;
 
-    public AgentAttacher(ClassDefiner classDefiner) {
+    private final ResourceLoader resourceLoader;
+
+    public AgentAttacher(ClassDefiner classDefiner, ResourceLoader resourceLoader) {
         this.classDefiner = classDefiner;
+        this.resourceLoader = resourceLoader;
     }
 
     public void attach(String agentPath) {
+        attach(agentPath, "");
+    }
+
+    public void attach(String agentPath, String parameters) {
         File agentJar = new File(agentPath);
         if (agentJar.exists()) {
             if (isExistsToolJar()) {
-                attachWithToolJar(agentPath);
+                attachWithToolJar(agentPath, parameters);
             } else {
-                attachWithoutToolJar(agentPath);
+                attachWithoutToolJar(agentPath, parameters);
             }
         } else {
             throw new ByteCodeParserException("Could't find agent jar by follow path: " + agentPath);
@@ -51,12 +55,12 @@ public class AgentAttacher {
         }
     }
 
-    private void attachWithToolJar(String agentPath) {
+    private void attachWithToolJar(String agentPath, String parameters) {
         String processID = getCurrentJVMProcessID();
         try {
             VirtualMachine virtualMachine = VirtualMachine.attach(processID);
             try {
-                virtualMachine.loadAgent(agentPath);
+                virtualMachine.loadAgent(agentPath, parameters);
             } finally {
                 virtualMachine.detach();
             }
@@ -72,79 +76,29 @@ public class AgentAttacher {
     }
 
 
-    private void attachWithoutToolJar(String agentPath) {
+    private void attachWithoutToolJar(String agentPath, String parameters) {
         loadAttachClassesFromCustomTool();
-        attachWithToolJar(agentPath);
+        attachWithToolJar(agentPath, parameters);
     }
 
     private void loadAttachClassesFromCustomTool() {
-        InputStream classLoadOrder = getResourceAsStream(ATTACH_CLASSES);
+        InputStream classLoadOrder = resourceLoader.getResourceAsStream(ATTACH_CLASSES);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoadOrder))) {
             String className = reader.readLine();
 
             while (className != null) {
-                String classFileName = createPathToClassFile(className, File.separatorChar);
+                String classFileName = CUSTOM_TOOL_FOLDER + File.separatorChar +
+                        className.replace('.', File.separatorChar) +
+                        Constants.Suffix.CLASS_FILE_SUFFIX;
 
-                InputStream resourceAsStream;
-                try {
-                    resourceAsStream = getResourceAsStream(classFileName);
-                } catch (ByteCodeParserException exception) {
-                    classFileName = createPathToClassFile(className, JAR_ENTRY_SEPARATOR);
-                    resourceAsStream = getResourceAsStream(classFileName);
-                }
+                InputStream resourceAsStream = resourceLoader.getResourceAsStream(classFileName);
+                byte[] bytes = IOUtils.readBytesFromInputStream(resourceAsStream);
 
-                byte[] bytes = readBytesFromInputStream(resourceAsStream);
-
-                classDefiner.defineClass(bytes, getResource(classFileName));
+                classDefiner.defineClass(bytes, resourceLoader.getResource(classFileName));
                 className = reader.readLine();
             }
         } catch (IOException exception) {
             throw new ByteCodeParserException("Problem occurred at loading classes from custom tool!", exception);
         }
-    }
-
-    private String createPathToClassFile(String className, char separator) {
-        return CUSTOM_TOOL_FOLDER + separator +
-                className.replace('.', separator) +
-                Constants.Suffix.CLASS_FILE_SUFFIX;
-    }
-
-    private byte[] readBytesFromInputStream(InputStream stream) {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int batchSize;
-        byte[] data = new byte[BYTE_BUFFER_SIZE];
-        try {
-            batchSize = stream.read(data, 0, data.length);
-            while (batchSize != -1) {
-                buffer.write(data, 0, batchSize);
-                batchSize = stream.read(data, 0, data.length);
-            }
-
-            buffer.flush();
-        } catch (IOException exception) {
-            throw new ByteCodeParserException("Occurred problems at class loading!", exception);
-        }
-
-        return buffer.toByteArray();
-    }
-
-    private static InputStream getResourceAsStream(String fileName) {
-        InputStream resourceStream = ClassLoader.getSystemResourceAsStream(fileName);
-
-        if (resourceStream == null) {
-            throw new ByteCodeParserException("Can't load resource with name " + fileName);
-        }
-
-        return resourceStream;
-    }
-
-    private static URL getResource(String fileName) {
-        URL url = ClassLoader.getSystemResource(fileName);
-
-        if (url == null) {
-            throw new ByteCodeParserException("Can't load resource with name " + fileName);
-        }
-
-        return url;
     }
 }
