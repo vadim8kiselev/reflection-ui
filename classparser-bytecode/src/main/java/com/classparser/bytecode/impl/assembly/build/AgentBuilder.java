@@ -30,6 +30,10 @@ public final class AgentBuilder {
         return new AgentJarBuilder();
     }
 
+    public static String getAgentPath(String agentName) {
+        return System.getProperty(Constants.Properties.HOME_DIR) + File.separatorChar + agentName;
+    }
+
     private static class AgentJarBuilder implements Builder {
 
         private String agentName;
@@ -138,7 +142,7 @@ public final class AgentBuilder {
 
                 for (Class<?> attachedClass : this.attachedClasses) {
                     if (attachedClass != null) {
-                        jarStream.putNextEntry(new JarEntry(ClassNameUtils.getClassToFileName(attachedClass)));
+                        jarStream.putNextEntry(new JarEntry(ClassNameUtils.getClassToJarFileName(attachedClass)));
 
                         byte[] byteCode = reader.getByteCode(attachedClass);
                         if (byteCode == null) {
@@ -171,6 +175,7 @@ public final class AgentBuilder {
                     attributes.put(Constants.Manifest.RETRANSFORM, "true");
                     attributes.put(Constants.Manifest.REDEFINE, "true");
                     attributes.put(Constants.Manifest.AGENT_CLASS, agentClass.getName());
+                    attributes.put(Constants.Manifest.PRE_MAIN, agentClass.getName());
 
                     return manifest;
                 }

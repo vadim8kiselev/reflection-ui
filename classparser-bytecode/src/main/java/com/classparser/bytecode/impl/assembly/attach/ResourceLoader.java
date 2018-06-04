@@ -1,7 +1,5 @@
 package com.classparser.bytecode.impl.assembly.attach;
 
-import com.classparser.exception.ByteCodeParserException;
-
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -13,7 +11,7 @@ public class ResourceLoader {
     private static final char JAR_ENTRY_SEPARATOR = '/';
 
     public ResourceLoader() {
-        this.resourceClassLoader = ClassLoader.getSystemClassLoader();
+        this(ClassLoader.getSystemClassLoader());
     }
 
     public ResourceLoader(ClassLoader resourceClassLoader) {
@@ -27,7 +25,7 @@ public class ResourceLoader {
             fileName = fileName.replace(File.separatorChar, JAR_ENTRY_SEPARATOR);
             resourceStream = ClassLoader.getSystemResourceAsStream(fileName);
             if (resourceStream == null) {
-                throw new ByteCodeParserException("Can't load resource with name " + fileName);
+                return null;
             }
         }
 
@@ -41,7 +39,7 @@ public class ResourceLoader {
             fileName = fileName.replace(File.separatorChar, JAR_ENTRY_SEPARATOR);
             url = ClassLoader.getSystemResource(fileName);
             if (url == null) {
-                throw new ByteCodeParserException("Can't load resource with name " + fileName);
+                return null;
             }
         }
 

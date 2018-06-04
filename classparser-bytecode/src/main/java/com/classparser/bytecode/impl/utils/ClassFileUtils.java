@@ -17,7 +17,7 @@ public class ClassFileUtils {
         ClassLoader loader = getClassLoader(clazz);
 
         if (loader != null && clazz != null) {
-            URL resource = loader.getResource(ClassNameUtils.getClassToFileName(clazz));
+            URL resource = loader.getResource(ClassNameUtils.getClassToJarFileName(clazz));
             if (resource != null) {
                 return resource.getFile();
             }

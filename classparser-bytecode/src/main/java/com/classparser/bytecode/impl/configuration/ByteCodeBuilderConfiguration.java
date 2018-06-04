@@ -100,6 +100,12 @@ public class ByteCodeBuilderConfiguration {
             return this;
         }
 
+        @Override
+        public ByteCodeConfiguration cacheAgentJar(boolean flag) {
+            configuration.put("caj", flag);
+            return this;
+        }
+
         public ByteCodeConfiguration setAgentClass(JavaAgent agent) {
             configuration.put("jaa", agent);
             return this;

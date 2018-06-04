@@ -99,6 +99,13 @@ public interface ByteCodeConfiguration extends Configuration {
     ByteCodeConfiguration enableCustomByteCodeCollector(boolean flag);
 
     /**
+     * Enable caching agent file
+     * <p>
+     * Default value: false
+     */
+    ByteCodeConfiguration cacheAgentJar(boolean flag);
+
+    /**
      * Set custom agent class
      * <p>
      * Default value: Agent

@@ -42,8 +42,15 @@ public class ConfigurationManager {
                 .setDecompilerConfiguration(null)
                 .addCustomByteCodeCollector(null)
                 .enableCustomByteCodeCollector(false)
+                .cacheAgentJar(false)
                 .setDirectoryToSaveByteCode(HOME_DIR + File.separatorChar + "classes")
-                .setAgentClass(new Agent(new AgentAssembler(new AgentAttacher(new ClassDefiner(), new ResourceLoader()))))
+                .setAgentClass(new Agent(
+                        new AgentAssembler(
+                                new AgentAttacher(
+                                        new ClassDefiner(), new ResourceLoader()
+                                )
+                        )
+                ))
                 .getConfiguration();
     }
 
@@ -98,6 +105,10 @@ public class ConfigurationManager {
 
     public boolean isEnableCustomByteCodeCollector() {
         return utils.getConfig("cbc", Boolean.class);
+    }
+
+    public boolean isCacheAgentJar() {
+        return utils.getConfig("caj", Boolean.class);
     }
 
     public JavaAgent getAgent() {

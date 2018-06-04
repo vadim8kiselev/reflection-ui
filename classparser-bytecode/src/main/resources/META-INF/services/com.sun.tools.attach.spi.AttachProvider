@@ -2,3 +2,4 @@ sun.tools.attach.WindowsAttachProvider
 sun.tools.attach.SolarisAttachProvider
 sun.tools.attach.LinuxAttachProvider
 sun.tools.attach.BsdAttachProvider
+sun.tools.attach.AixAttachProvider

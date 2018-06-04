@@ -21,6 +21,8 @@ public interface Constants {
         Attributes.Name REDEFINE = new Attributes.Name("Can-Redefine-Classes");
 
         Attributes.Name AGENT_CLASS = new Attributes.Name("Agent-Class");
+
+        Attributes.Name PRE_MAIN = new Attributes.Name("Premain-Class");
     }
 
     interface Suffix {

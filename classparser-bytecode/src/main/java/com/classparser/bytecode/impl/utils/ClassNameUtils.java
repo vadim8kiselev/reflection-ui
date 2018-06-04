@@ -35,7 +35,7 @@ public class ClassNameUtils {
         return className.replace('/', '.');
     }
 
-    public static String getClassToFileName(Class<?> clazz) {
+    public static String getClassToJarFileName(Class<?> clazz) {
         return getJavaBasedClassName(clazz).replace('.', '/')
                 + Constants.Suffix.CLASS_FILE_SUFFIX;
     }

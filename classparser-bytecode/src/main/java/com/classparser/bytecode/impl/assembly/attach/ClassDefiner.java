@@ -28,17 +28,16 @@ public class ClassDefiner {
     public void defineClass(byte[] byteCode, URL location) {
         String className = ClassNameUtils.normalizeFullName(ClassNameUtils.getClassName(byteCode));
         try {
-            ProtectionDomain protectionDomain = createProtectionDomainForToolClasses(location, getCurrentClassLoader());
+            ProtectionDomain protectionDomain = createProtectionDomainForToolClass(location, getCurrentClassLoader());
             defineClassMethod.setAccessible(true);
-            defineClassMethod.invoke(getCurrentClassLoader(), className,
-                    byteCode, 0, byteCode.length, protectionDomain);
+            defineClassMethod.invoke(getCurrentClassLoader(), className, byteCode, 0, byteCode.length, protectionDomain);
             defineClassMethod.setAccessible(false);
         } catch (ReflectiveOperationException exception) {
             throw new ByteCodeParserException("Can't load class with name: " + className, exception);
         }
     }
 
-    protected ProtectionDomain createProtectionDomainForToolClasses(URL codeLocation, ClassLoader classLoader) {
+    protected ProtectionDomain createProtectionDomainForToolClass(URL codeLocation, ClassLoader classLoader) {
         ProtectionDomain protectionDomain = getClass().getProtectionDomain();
         Principal[] principals = protectionDomain.getPrincipals();
         PermissionCollection permissions = protectionDomain.getPermissions();

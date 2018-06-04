@@ -1,5 +1,7 @@
 package com.classparser.bytecode.api.agent;
 
+import com.classparser.bytecode.impl.configuration.ConfigurationManager;
+
 import java.lang.instrument.Instrumentation;
 
 public interface JavaAgent {
@@ -26,4 +28,11 @@ public interface JavaAgent {
      * @return boolean status
      */
     boolean isInitialize();
+
+    /**
+     * Set parser configuration
+     *
+     * @param configuration - parser configuration
+     */
+    void setConfiguration(ConfigurationManager configuration);
 }
