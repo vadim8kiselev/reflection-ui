@@ -1,10 +1,17 @@
 package com.classparser.bytecode.api.decompile;
 
 import com.classparser.bytecode.impl.configuration.ConfigurationManager;
+import com.classparser.bytecode.impl.decompile.fernflower.FernflowerDecompiler;
 import com.classparser.configuration.Configuration;
 
 import java.util.Collection;
 
+/**
+ * Interface provides methods for bytecode decompilation
+ * Default Implementation is {@link FernflowerDecompiler}
+ * Before decompilation will use method #setConfigurationManager
+ * for setting parser configuration into decompiler
+ */
 public interface Decompiler {
 
     /**

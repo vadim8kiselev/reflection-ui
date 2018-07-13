@@ -2,8 +2,8 @@ package com.classparser.reflection.impl.configuration;
 
 import com.classparser.reflection.impl.configuration.api.ReflectionConfiguration;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ReflectionBuilderConfiguration {
 
@@ -13,10 +13,10 @@ public class ReflectionBuilderConfiguration {
 
     private static class Builder implements ReflectionConfiguration {
 
-        private final HashMap<String, Object> configuration;
+        private final Map<String, Object> configuration;
 
         public Builder() {
-            this.configuration = new HashMap<>();
+            this.configuration = new ConcurrentHashMap<>();
         }
 
         @Override

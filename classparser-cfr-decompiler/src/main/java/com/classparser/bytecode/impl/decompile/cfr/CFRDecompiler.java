@@ -10,6 +10,7 @@ import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
 import com.classparser.configuration.util.ConfigurationUtils;
 import org.benf.cfr.reader.api.ClassFileSource;
+import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
 import org.benf.cfr.reader.entities.ClassFile;
 import org.benf.cfr.reader.state.ClassFileSourceImpl;
 import org.benf.cfr.reader.state.DCCommonState;
@@ -63,7 +64,9 @@ public final class CFRDecompiler implements Decompiler {
         this.innerClasses.addAll(classes);
 
         GetOptParser getOptParser = new GetOptParser();
-        Options options = getOptParser.parse(getDefaultOptions(className), OptionsImpl.getFactory());
+        Pair<List<String>, Options> parse = getOptParser.parse(getDefaultOptions(className), OptionsImpl.getFactory());
+
+        Options options = parse.getSecond();
         DCCommonState dcCommonState = new CFRDCCommonState(options, new ClassFileSourceImpl(options), byteCode);
 
         ClassFile classFile = dcCommonState.getClassFileMaybePath(className);

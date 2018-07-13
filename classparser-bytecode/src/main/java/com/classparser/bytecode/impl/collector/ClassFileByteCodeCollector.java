@@ -2,9 +2,9 @@ package com.classparser.bytecode.impl.collector;
 
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
 import com.classparser.bytecode.impl.utils.ClassFileUtils;
+import com.classparser.bytecode.impl.utils.IOUtils;
 import com.classparser.exception.file.ReadFileException;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +30,7 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
 
     private byte[] getByteCodeFromFile(String path) {
         try (FileInputStream stream = new FileInputStream(path)) {
-            return readByteFromStream(stream);
+            return IOUtils.readBytesFromInputStream(stream);
         } catch (IOException exception) {
             String message = MessageFormat.format("Can't read file by path: {0}", path);
             throw new ReadFileException(message, exception);
@@ -45,26 +45,11 @@ public class ClassFileByteCodeCollector implements ByteCodeCollector {
             JarFile file = new JarFile(archiveName);
             JarEntry jarEntry = file.getJarEntry(className);
             try (InputStream fileStream = file.getInputStream(jarEntry)) {
-                return readByteFromStream(fileStream);
+                return IOUtils.readBytesFromInputStream(fileStream);
             }
         } catch (Exception exception) {
             String message = MessageFormat.format("Can't read file by path: {0}", path);
             throw new ReadFileException(message, exception);
-        }
-    }
-
-    private byte[] readByteFromStream(InputStream stream) {
-        try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
-            int read = stream.read();
-
-            while (read != -1) {
-                byteStream.write(read);
-                read = stream.read();
-            }
-
-            return byteStream.toByteArray();
-        } catch (IOException exception) {
-            throw new ReadFileException("Can't read bytes from stream", exception);
         }
     }
 }

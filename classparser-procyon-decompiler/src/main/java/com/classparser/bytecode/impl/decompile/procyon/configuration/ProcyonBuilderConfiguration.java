@@ -3,8 +3,8 @@ package com.classparser.bytecode.impl.decompile.procyon.configuration;
 import com.strobel.decompiler.languages.Language;
 import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ProcyonBuilderConfiguration {
 
@@ -14,7 +14,11 @@ public class ProcyonBuilderConfiguration {
 
     private static class Builder implements ProcyonConfiguration {
 
-        private final Map<String, Object> configuration = new HashMap<>();
+        private final Map<String, Object> configuration;
+
+        public Builder() {
+            this.configuration = new ConcurrentHashMap<>();
+        }
 
         @Override
         public Map<String, Object> getConfiguration() {

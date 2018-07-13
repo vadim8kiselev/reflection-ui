@@ -64,8 +64,9 @@ public final class ProcyonDecompiler implements Decompiler {
         DecompilationOptions options = new DecompilationOptions();
         options.setSettings(settings);
 
-        if (settings.getFormattingOptions() == null) {
-            settings.setFormattingOptions(JavaFormattingOptions.createDefault());
+
+        if (settings.getJavaFormattingOptions() == null) {
+            settings.setJavaFormattingOptions(JavaFormattingOptions.createDefault());
         }
 
         settings.getLanguage().decompileType(resolvedType, output, options);
@@ -100,7 +101,7 @@ public final class ProcyonDecompiler implements Decompiler {
         settings.setForceExplicitImports(utils.getConfig("fei", Boolean.class));
         settings.setForceExplicitTypeArguments(utils.getConfig("eta", Boolean.class));
         settings.setLanguage(utils.getConfig("lan", Language.class));
-        settings.setFormattingOptions(utils.getConfig("jfo", JavaFormattingOptions.class));
+        settings.setJavaFormattingOptions(utils.getConfig("jfo", JavaFormattingOptions.class));
         settings.setShowSyntheticMembers(utils.getConfig("ssm", Boolean.class));
         settings.setAlwaysGenerateExceptionVariableForCatchBlocks(utils.getConfig("gec", Boolean.class));
         settings.setIncludeErrorDiagnostics(utils.getConfig("ied", Boolean.class));

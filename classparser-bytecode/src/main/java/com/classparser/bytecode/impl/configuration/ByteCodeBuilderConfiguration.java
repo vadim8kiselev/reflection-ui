@@ -6,8 +6,8 @@ import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.configuration.api.ByteCodeConfiguration;
 import com.classparser.configuration.Configuration;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ByteCodeBuilderConfiguration {
 
@@ -17,10 +17,10 @@ public class ByteCodeBuilderConfiguration {
 
     private static class Builder implements ByteCodeConfiguration {
 
-        private final HashMap<String, Object> configuration;
+        private final Map<String, Object> configuration;
 
         public Builder() {
-            this.configuration = new HashMap<>();
+            this.configuration = new ConcurrentHashMap<>();
         }
 
         @Override

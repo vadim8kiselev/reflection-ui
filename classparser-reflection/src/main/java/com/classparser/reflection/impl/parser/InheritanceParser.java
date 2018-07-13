@@ -49,11 +49,9 @@ public class InheritanceParser {
         AnnotatedType[] annotatedTypes = isShowTypeAnnotation ? clazz.getAnnotatedInterfaces() : null;
         String interfaces;
         if (manager.getConfigurationManager().isShowGenericSignatures()) {
-            interfaces = String.join(", ",
-                    getMultipleParentTypes(clazz.getGenericInterfaces(), annotatedTypes));
+            interfaces = String.join(", ", getMultipleParentTypes(clazz.getGenericInterfaces(), annotatedTypes));
         } else {
-            interfaces = String.join(", ",
-                    getMultipleParentTypes(clazz.getInterfaces(), annotatedTypes));
+            interfaces = String.join(", ", getMultipleParentTypes(clazz.getInterfaces(), annotatedTypes));
         }
 
         String relationship = clazz.isInterface() ? "extends " : "implements ";

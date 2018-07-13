@@ -29,7 +29,7 @@ public class AnnotationParser {
         this.manager = manager;
     }
 
-    private static Method retrieveValueMethodFromAnnotation(Class<? extends Annotation> annotationType) {
+    private Method retrieveValueMethodFromAnnotation(Class<? extends Annotation> annotationType) {
         for (Method method : annotationType.getDeclaredMethods()) {
             if ("value".equals(method.getName())) {
                 return method;

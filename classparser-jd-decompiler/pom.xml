@@ -24,6 +24,8 @@
             <systemPath>${project.basedir}/lib/jd-core-0.7.1.jar</systemPath>
         </dependency>
 
+
+
         <!-- JD Decompiler common-->
         <dependency>
             <groupId>jd.common</groupId>
@@ -37,7 +39,7 @@
             <groupId>com.classparser.bytecode</groupId>
             <artifactId>classparser-bytecode</artifactId>
             <scope>provided</scope>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

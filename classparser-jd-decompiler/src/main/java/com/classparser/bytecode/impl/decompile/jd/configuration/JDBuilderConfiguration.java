@@ -1,7 +1,7 @@
 package com.classparser.bytecode.impl.decompile.jd.configuration;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class JDBuilderConfiguration {
 
@@ -11,9 +11,10 @@ public class JDBuilderConfiguration {
 
     private static class Builder implements JDConfiguration {
 
-        private final Map<String, Object> configuration = new HashMap<>();
+        private final Map<String, Object> configuration;
 
         private Builder() {
+            this.configuration = new ConcurrentHashMap<>();
         }
 
         @Override

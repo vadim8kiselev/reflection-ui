@@ -5,6 +5,7 @@ import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FernflowerBuilderConfiguration {
 
@@ -21,7 +22,7 @@ public class FernflowerBuilderConfiguration {
         private final Map<String, Object> configuration;
 
         private Builder() {
-            this.configuration = new HashMap<>();
+            this.configuration = new ConcurrentHashMap<>();
         }
 
         public Map<String, Object> getConfiguration() {

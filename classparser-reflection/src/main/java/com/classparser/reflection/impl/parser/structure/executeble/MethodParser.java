@@ -1,13 +1,13 @@
 package com.classparser.reflection.impl.parser.structure.executeble;
 
 import com.classparser.reflection.impl.configuration.ConfigurationManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 import com.classparser.reflection.impl.parser.ClassNameParser;
 import com.classparser.reflection.impl.parser.base.AnnotationParser;
 import com.classparser.reflection.impl.parser.base.GenericTypeParser;
 import com.classparser.reflection.impl.parser.base.IndentParser;
 import com.classparser.reflection.impl.parser.base.ModifierParser;
 import com.classparser.reflection.impl.parser.base.ValueParser;
-import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
@@ -107,8 +107,7 @@ public class MethodParser {
 
         String body = ";";
         if (isMethodRealization(method)) {
-            body = " {" + lineSeparator + indent + oneIndent +
-                    "/* Compiled code */" + lineSeparator + indent + '}';
+            body = " {" + lineSeparator + indent + oneIndent + "/* Compiled code */" + lineSeparator + indent + '}';
         }
 
         methodSignature += annotations + indent + modifiers + generics + returnType;

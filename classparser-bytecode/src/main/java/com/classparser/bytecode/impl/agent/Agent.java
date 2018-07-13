@@ -6,6 +6,8 @@ import com.classparser.bytecode.impl.assembly.AgentAssembler;
 import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 
 import java.lang.instrument.Instrumentation;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class Agent implements JavaAgent {
 
@@ -13,11 +15,11 @@ public final class Agent implements JavaAgent {
 
     private static Instrumentation instrumentation;
 
-    private static boolean isInitialize = false;
+    private static volatile boolean isInitialize = false;
 
     private final AgentAssembler agentAssembler;
 
-    private ConfigurationManager configurationManager;
+    private volatile ConfigurationManager configurationManager;
 
     public Agent(AgentAssembler agentAssembler) {
         this.agentAssembler = agentAssembler;
@@ -67,6 +69,8 @@ public final class Agent implements JavaAgent {
 
     @Override
     public void setConfiguration(ConfigurationManager configuration) {
-        this.configurationManager = configuration;
+        if (this.configurationManager == null) {
+            this.configurationManager = configuration;
+        }
     }
 }

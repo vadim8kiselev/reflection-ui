@@ -13,6 +13,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.classparser.reflection.impl.constants.Cast.ANNOTATION;
+import static com.classparser.reflection.impl.constants.Cast.CLASS;
+import static com.classparser.reflection.impl.constants.Cast.FIELD;
+import static com.classparser.reflection.impl.constants.Cast.METHOD;
+
 public class ValueParser {
 
     private final GenericTypeParser genericTypeParser;
@@ -30,11 +35,11 @@ public class ValueParser {
 
     public String getValue(Object object) {
         if (isField(object)) {
-            return getFieldValue(Cast.FIELD.cast(object));
+            return getFieldValue(FIELD.cast(object));
         }
 
         if (isAnnotationMethod(object)) {
-            return getDefaultAnnotationValue(Cast.METHOD.cast(object));
+            return getDefaultAnnotationValue(METHOD.cast(object));
         }
 
         if (object != null) {
@@ -64,9 +69,9 @@ public class ValueParser {
             } else if (object instanceof Number || object instanceof Boolean) {
                 return object.toString() + getLiteral(object);
             } else if (object instanceof Annotation) {
-                return annotationParser.getAnnotation(Cast.ANNOTATION.cast(object));
+                return annotationParser.getAnnotation(ANNOTATION.cast(object));
             } else if (object instanceof Class) {
-                return genericTypeParser.resolveType(Cast.CLASS.cast(object)) + ".class";
+                return genericTypeParser.resolveType(CLASS.cast(object)) + ".class";
             } else {
                 return "";
             }
@@ -144,12 +149,10 @@ public class ValueParser {
     }
 
     private boolean isField(Object object) {
-        return object instanceof Field &&
-                Cast.FIELD.cast(object).getDeclaringClass() == manager.getCurrentParsedClass();
+        return object instanceof Field && FIELD.cast(object).getDeclaringClass() == manager.getCurrentParsedClass();
     }
 
     private boolean isAnnotationMethod(Object object) {
-        return object instanceof Method &&
-                Cast.METHOD.cast(object).getDeclaringClass().isAnnotation();
+        return object instanceof Method && METHOD.cast(object).getDeclaringClass().isAnnotation();
     }
 }

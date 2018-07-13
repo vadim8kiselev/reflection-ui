@@ -1,6 +1,5 @@
 package com.classparser.bytecode.impl.utils;
 
-import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.exception.agent.ClassLoadException;
@@ -8,11 +7,8 @@ import com.classparser.exception.file.ReadFileException;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.instrument.Instrumentation;
-import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -30,11 +26,8 @@ public class InnerClassesCollector {
 
     private final ConfigurationManager configurationManager;
 
-    private final JavaAgent agent;
-
     public InnerClassesCollector(ConfigurationManager configurationManager) {
         this.configurationManager = configurationManager;
-        this.agent = configurationManager.getAgent();
     }
 
     public List<Class<?>> getInnerClasses(Class<?> clazz) {
@@ -106,9 +99,9 @@ public class InnerClassesCollector {
     private List<Class<?>> collectLocalDynamicClass(Class<?> clazz) {
         List<Class<?>> localClasses = new ArrayList<>();
 
-        ClassLoader loader = ClassFileUtils.getClassLoader(clazz);
+        ClassLoader loader = ClassLoadUtils.getClassLoader(clazz);
 
-        List<Class<?>> classes = getLoadedClasses(loader);
+        List<Class<?>> classes = ClassLoadUtils.getLoadedClasses(loader, configurationManager.getAgent());
         for (Class<?> loadedClass : classes) {
             String className = ClassNameUtils.getSimpleName(loadedClass);
             if (loadedClass.isLocalClass() && isLocalClass(clazz, className)) {
@@ -176,22 +169,6 @@ public class InnerClassesCollector {
         }
 
         return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Class<?>> getLoadedClasses(ClassLoader classLoader) {
-        if (agent.isInitialize()) {
-            Instrumentation instrumentation = agent.getInstrumentation();
-            return Arrays.asList(instrumentation.getInitiatedClasses(classLoader));
-        } else {
-            try {
-                Field classes = ClassLoader.class.getDeclaredField("classes");
-                classes.setAccessible(true);
-                return new ArrayList<>((Collection<Class<?>>) classes.get(classLoader));
-            } catch (ReflectiveOperationException exception) {
-                throw new ClassLoadException("Can't get loaded classes", exception);
-            }
-        }
     }
 
     private boolean isLocalClass(Class<?> clazz, String className) {

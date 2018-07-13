@@ -12,19 +12,17 @@ import java.text.MessageFormat;
 
 public class JVMByteCodeCollector implements ByteCodeCollector {
 
-    private final JavaAgent agent;
+    private JavaAgent agent;
 
-    private Instrumentation instrumentation;
-
-    private ByteCodeHolder holder;
-
-    public JVMByteCodeCollector(JavaAgent agent) {
-        this.agent = agent;
+    public JVMByteCodeCollector(JavaAgent javaAgent) {
+        this.agent = javaAgent;
     }
 
     @Override
     public byte[] getByteCode(Class<?> clazz) {
-        initAgent();
+        Instrumentation instrumentation = agent.getInstrumentation();
+        ByteCodeHolder holder = agent.getByteCodeHolder();
+
         if (clazz != null) {
             try {
                 if (instrumentation != null) {
@@ -46,13 +44,6 @@ public class JVMByteCodeCollector implements ByteCodeCollector {
             return holder.get(javaBasedClassName);
         } else {
             return null;
-        }
-    }
-
-    private void initAgent() {
-        if (instrumentation == null || holder == null) {
-            instrumentation = agent.getInstrumentation();
-            holder = agent.getByteCodeHolder();
         }
     }
 }

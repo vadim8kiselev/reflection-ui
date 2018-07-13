@@ -1,9 +1,8 @@
 package com.classparser.reflection.impl.parser.base;
 
-import com.classparser.reflection.impl.constants.Cast;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 import com.classparser.reflection.impl.parser.ClassNameParser;
 import com.classparser.reflection.impl.parser.structure.PackageParser;
-import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -19,6 +18,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.classparser.reflection.impl.constants.Cast.ANNOTATED_ARRAY_TYPE;
+import static com.classparser.reflection.impl.constants.Cast.ANNOTATED_PARAMETERIZED_TYPE;
+import static com.classparser.reflection.impl.constants.Cast.ANNOTATED_WILDCARD_TYPE;
+import static com.classparser.reflection.impl.constants.Cast.CLASS;
+import static com.classparser.reflection.impl.constants.Cast.GENERIC_ARRAY_TYPE;
+import static com.classparser.reflection.impl.constants.Cast.PARAMETERIZED_TYPE;
+import static com.classparser.reflection.impl.constants.Cast.TYPE_VARIABLE;
+import static com.classparser.reflection.impl.constants.Cast.WILDCARD_TYPE;
+
 public class GenericTypeParser {
 
     private final AnnotationParser annotationParser;
@@ -27,7 +35,8 @@ public class GenericTypeParser {
 
     private final ReflectionParserManager manager;
 
-    public GenericTypeParser(AnnotationParser annotationParser, ClassNameParser classNameParser,
+    public GenericTypeParser(AnnotationParser annotationParser,
+                             ClassNameParser classNameParser,
                              ReflectionParserManager manager) {
         this.annotationParser = annotationParser;
         this.classNameParser = classNameParser;
@@ -61,10 +70,10 @@ public class GenericTypeParser {
         }
 
         if (type instanceof Class) {
-            Class clazz = Cast.CLASS.cast(type);
+            Class clazz = CLASS.cast(type);
 
             if (clazz.isArray()) {
-                AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
+                AnnotatedArrayType annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedType);
                 boundType = resolveType(clazz.getComponentType(), annotatedArrayType);
                 AnnotatedType annotatedForArrayType = getAnnotatedTypeForArray(clazz, annotatedArrayType);
                 boundType += annotationParser.getInlineAnnotations(annotatedForArrayType) + "[]";
@@ -85,12 +94,12 @@ public class GenericTypeParser {
                 }
             }
         } else if (type instanceof TypeVariable) {
-            TypeVariable typeVariable = Cast.TYPE_VARIABLE.cast(type);
+            TypeVariable typeVariable = TYPE_VARIABLE.cast(type);
             boundType = typeVariable.getName();
 
         } else if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = Cast.PARAMETERIZED_TYPE.cast(type);
-            if (isNeedNameForInnerClass(Cast.CLASS.cast(parameterizedType.getRawType()))) {
+            ParameterizedType parameterizedType = PARAMETERIZED_TYPE.cast(type);
+            if (isNeedNameForInnerClass(CLASS.cast(parameterizedType.getRawType()))) {
                 // Have problems because of https://bugs.openjdk.java.net/browse/JDK-8146861
                 AnnotatedParameterizedType annotatedOwnerParametrizedType = null;
                 String correctAnnotations = getCorrectAnnotations(annotations);
@@ -100,10 +109,10 @@ public class GenericTypeParser {
             }
 
             String genericArguments = "";
-            Class<?> clazz = Cast.CLASS.cast(parameterizedType.getRawType());
+            Class<?> clazz = CLASS.cast(parameterizedType.getRawType());
             String parametrizedRawTypeName = classNameParser.getTypeName(clazz);
             annotatedType = getAnnotatedType(annotatedType);
-            AnnotatedParameterizedType annotatedParameterizedType = Cast.ANNOTATED_PARAMETERIZED_TYPE.cast(annotatedType);
+            AnnotatedParameterizedType annotatedParameterizedType = ANNOTATED_PARAMETERIZED_TYPE.cast(annotatedType);
 
             List<String> innerGenericTypes = getGenericArguments(parameterizedType, annotatedParameterizedType);
             if (!innerGenericTypes.isEmpty()) {
@@ -112,8 +121,8 @@ public class GenericTypeParser {
             boundType += parametrizedRawTypeName + genericArguments;
 
         } else if (type instanceof GenericArrayType) {
-            GenericArrayType genericArrayType = Cast.GENERIC_ARRAY_TYPE.cast(type);
-            AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
+            GenericArrayType genericArrayType = GENERIC_ARRAY_TYPE.cast(type);
+            AnnotatedArrayType annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             boundType = resolveType(genericArrayType.getGenericComponentType(), annotatedArrayType);
             AnnotatedType annotatedTypeForArray = getAnnotatedTypeForArray(genericArrayType, annotatedArrayType);
             boundType += annotationParser.getInlineAnnotations(annotatedTypeForArray) + "[]";
@@ -155,7 +164,7 @@ public class GenericTypeParser {
     private AnnotatedType getAnnotatedTypeForArray(GenericArrayType array, AnnotatedArrayType annotatedType) {
         int dimensionIndex = 0;
         while (array.getGenericComponentType() instanceof GenericArrayType) {
-            array = Cast.GENERIC_ARRAY_TYPE.cast(array.getGenericComponentType());
+            array = GENERIC_ARRAY_TYPE.cast(array.getGenericComponentType());
             dimensionIndex++;
         }
 
@@ -164,7 +173,7 @@ public class GenericTypeParser {
 
     private AnnotatedType getAnnotatedType(AnnotatedArrayType annotatedType, int countIncludes) {
         for (int index = 0; index < countIncludes; index++) {
-            annotatedType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType.getAnnotatedGenericComponentType());
+            annotatedType = ANNOTATED_ARRAY_TYPE.cast(annotatedType.getAnnotatedGenericComponentType());
         }
 
         return annotatedType;
@@ -172,9 +181,9 @@ public class GenericTypeParser {
 
     private AnnotatedType getAnnotatedType(AnnotatedType annotatedType) {
         if (annotatedType instanceof AnnotatedArrayType) {
-            AnnotatedArrayType annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE.cast(annotatedType);
+            AnnotatedArrayType annotatedArrayType = ANNOTATED_ARRAY_TYPE.cast(annotatedType);
             while (annotatedArrayType.getAnnotatedGenericComponentType() instanceof AnnotatedArrayType) {
-                annotatedArrayType = Cast.ANNOTATED_ARRAY_TYPE
+                annotatedArrayType = ANNOTATED_ARRAY_TYPE
                         .cast(annotatedArrayType.getAnnotatedGenericComponentType());
             }
             annotatedType = annotatedArrayType.getAnnotatedGenericComponentType();
@@ -192,9 +201,9 @@ public class GenericTypeParser {
 
         for (int index = 0; index < actualTypeArguments.length; index++) {
             if (actualTypeArguments[index] instanceof WildcardType) {
-                WildcardType wildcardType = Cast.WILDCARD_TYPE.cast(actualTypeArguments[index]);
+                WildcardType wildcardType = WILDCARD_TYPE.cast(actualTypeArguments[index]);
                 AnnotatedType annotatedType = ifEmpty(annotatedActualTypeArguments, index);
-                AnnotatedWildcardType annotatedWildcardType = Cast.ANNOTATED_WILDCARD_TYPE.cast(annotatedType);
+                AnnotatedWildcardType annotatedWildcardType = ANNOTATED_WILDCARD_TYPE.cast(annotatedType);
                 String annotations = annotationParser.getInlineAnnotations(annotatedWildcardType);
                 String wildcard = getCorrectAnnotations(annotations) + "?";
 
@@ -256,7 +265,7 @@ public class GenericTypeParser {
 
     private boolean isArray(Type type) {
         return type instanceof Class &&
-                Cast.CLASS.cast(type).isArray() ||
+                CLASS.cast(type).isArray() ||
                 type instanceof GenericArrayType;
     }
 

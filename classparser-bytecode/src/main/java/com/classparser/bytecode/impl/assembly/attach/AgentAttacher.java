@@ -84,9 +84,8 @@ public class AgentAttacher {
     private void loadAttachClassesFromCustomTool() {
         InputStream classLoadOrder = resourceLoader.getResourceAsStream(ATTACH_CLASSES);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoadOrder))) {
-            String className = reader.readLine();
-
-            while (className != null) {
+            String className;
+            while ((className = reader.readLine())!= null) {
                 String classFileName = CUSTOM_TOOL_FOLDER + File.separatorChar +
                         className.replace('.', File.separatorChar) +
                         Constants.Suffix.CLASS_FILE_SUFFIX;
@@ -95,7 +94,6 @@ public class AgentAttacher {
                 byte[] bytes = IOUtils.readBytesFromInputStream(resourceAsStream);
 
                 classDefiner.defineClass(bytes, resourceLoader.getResource(classFileName));
-                className = reader.readLine();
             }
         } catch (IOException exception) {
             throw new ByteCodeParserException("Problem occurred at loading classes from custom tool!", exception);

@@ -33,6 +33,10 @@ public class ConfigurationUtils {
                 String message = MessageFormat.format("Default option: \"{0}\" it isn't put down", config);
                 throw new OptionNotFoundException(message);
             }
+
+            System.err.println("Option {" + config + "} have invalid default class type {" + type + "}!" +
+                    "Will be get the default option.");
+
             return type.cast(defaultConfiguration.get(config));
         }
     }

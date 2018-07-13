@@ -1,10 +1,11 @@
 package com.classparser.reflection.impl.parser.structure.executeble;
 
+import com.classparser.reflection.impl.configuration.ConfigurationManager;
+import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 import com.classparser.reflection.impl.parser.base.AnnotationParser;
 import com.classparser.reflection.impl.parser.base.GenericTypeParser;
 import com.classparser.reflection.impl.parser.base.IndentParser;
 import com.classparser.reflection.impl.parser.base.ModifierParser;
-import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Constructor;
@@ -59,7 +60,9 @@ public class ConstructorParser {
     private String getConstructor(Constructor constructor) {
         String constructorSignature = "";
 
-        String lineSeparator = manager.getConfigurationManager().getLineSeparator();
+        ConfigurationManager configurationManager = manager.getConfigurationManager();
+
+        String lineSeparator = configurationManager.getLineSeparator();
 
         String annotations = annotationParser.getAnnotations(constructor);
 
@@ -67,11 +70,11 @@ public class ConstructorParser {
 
         String modifiers = modifierParser.getModifiers(constructor.getModifiers());
 
-        boolean isShowGeneric = manager.getConfigurationManager().isShowGenericSignatures();
+        boolean isShowGeneric = configurationManager.isShowGenericSignatures();
 
         String generics = isShowGeneric ? genericTypeParser.getGenerics(constructor) : "";
 
-        boolean isShowTypeAnnotation = manager.getConfigurationManager().isShowAnnotationTypes();
+        boolean isShowTypeAnnotation = configurationManager.isShowAnnotationTypes();
 
         AnnotatedType annotatedType = isShowTypeAnnotation ? constructor.getAnnotatedReturnType() : null;
 
@@ -83,11 +86,10 @@ public class ConstructorParser {
 
         String oneIndent = manager.getConfigurationManager().getIndentSpaces();
 
-        String body = " {" + lineSeparator + indent + oneIndent +
-                "/* Compiled code */" + lineSeparator + indent + '}';
+        String body = " {" + lineSeparator + indent + oneIndent + "/* Compiled code */" + lineSeparator + indent + '}';
 
-        constructorSignature += annotations + indent + modifiers +
-                generics + constructorName + arguments + exceptions + body;
+        constructorSignature += annotations + indent + modifiers + generics +
+                constructorName + arguments + exceptions + body;
 
         return constructorSignature;
     }

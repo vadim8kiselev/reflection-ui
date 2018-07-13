@@ -35,6 +35,7 @@ public final class RetransformClassStorage implements ClassFileTransformer, Byte
     public byte[] get(String className) {
         byte[] byteCode = bytecodeMap.get(className);
         bytecodeMap.remove(className);
+
         return byteCode;
     }
 }

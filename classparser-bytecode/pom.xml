@@ -28,15 +28,15 @@
     <dependencies>
         <!-- FernFlower Decompiler -->
         <dependency>
-            <groupId>com.github.fesh0r</groupId>
+            <groupId>org.jboss.windup.decompiler.fernflower</groupId>
             <artifactId>fernflower</artifactId>
-            <version>adbf29f8ce</version>
+            <version>2.5.0.Final</version>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.core</groupId>
             <artifactId>classparser-core</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -44,6 +44,7 @@
             <artifactId>tools</artifactId>
             <version>1.8.0</version>
             <scope>system</scope>
+            <optional>true</optional>
             <systemPath>${tools-jar}</systemPath>
         </dependency>
     </dependencies>

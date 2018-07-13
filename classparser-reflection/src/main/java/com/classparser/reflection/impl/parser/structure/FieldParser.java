@@ -61,9 +61,9 @@ public class FieldParser {
     }
 
     private String getField(Field field) {
-        ConfigurationManager configurationManager = manager.getConfigurationManager();
-
         String fieldSignature = "";
+
+        ConfigurationManager configurationManager = manager.getConfigurationManager();
 
         String annotations = annotationParser.getAnnotations(field);
 

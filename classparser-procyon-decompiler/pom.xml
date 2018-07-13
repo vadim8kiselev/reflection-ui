@@ -14,21 +14,38 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
+    <properties>
+        <procyon.decompiler.version>0.5.32</procyon.decompiler.version>
+    </properties>
+
     <dependencies>
         <!-- Procyon Decompiler -->
         <dependency>
-            <groupId>com.strombel</groupId>
-            <artifactId>procjon-decompiler</artifactId>
-            <version>0.5.30</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/procyon-decompiler-0.5.30.jar</systemPath>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-core</artifactId>
+            <version>${procyon.decompiler.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-reflection</artifactId>
+            <version>${procyon.decompiler.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-compilertools</artifactId>
+            <version>${procyon.decompiler.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-expressions</artifactId>
+            <version>${procyon.decompiler.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode</groupId>
             <artifactId>classparser-bytecode</artifactId>
             <scope>provided</scope>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

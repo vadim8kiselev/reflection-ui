@@ -1,6 +1,7 @@
 package com.classparser.bytecode.impl;
 
 import com.classparser.api.ClassParser;
+import com.classparser.bytecode.api.agent.JavaAgent;
 import com.classparser.bytecode.api.collector.ByteCodeCollector;
 import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.collector.ChainByteCodeCollector;
@@ -9,6 +10,7 @@ import com.classparser.bytecode.impl.saver.ByteCodeSaver;
 import com.classparser.bytecode.impl.utils.InnerClassesCollector;
 import com.classparser.configuration.Configuration;
 import com.classparser.exception.agent.InvalidRetransformClass;
+import com.sun.jdi.VirtualMachine;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class BytecodeParser implements ClassParser {
         this.classesCollector = new InnerClassesCollector(configurationManager);
         this.saver = new ByteCodeSaver(configurationManager);
         this.byteCodeCollector = new ChainByteCodeCollector(configurationManager);
+        this.configurationManager.getAgent().setConfiguration(configurationManager);
     }
 
     @Override

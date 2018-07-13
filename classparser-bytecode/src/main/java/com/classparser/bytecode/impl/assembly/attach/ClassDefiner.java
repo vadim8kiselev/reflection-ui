@@ -1,6 +1,7 @@
 package com.classparser.bytecode.impl.assembly.attach;
 
 import com.classparser.bytecode.impl.utils.ClassFileUtils;
+import com.classparser.bytecode.impl.utils.ClassLoadUtils;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.exception.ByteCodeParserException;
 
@@ -25,13 +26,19 @@ public class ClassDefiner {
         }
     }
 
-    public void defineClass(byte[] byteCode, URL location) {
+    public Class<?> defineClass(byte[] byteCode, URL location) {
+        return defineClass(byteCode, location, getCurrentClassLoader());
+    }
+
+    public Class<?> defineClass(byte[] byteCode, URL location, ClassLoader classLoader) {
         String className = ClassNameUtils.normalizeFullName(ClassNameUtils.getClassName(byteCode));
         try {
-            ProtectionDomain protectionDomain = createProtectionDomainForToolClass(location, getCurrentClassLoader());
+            ProtectionDomain protectionDomain = createProtectionDomainForToolClass(location, classLoader);
             defineClassMethod.setAccessible(true);
-            defineClassMethod.invoke(getCurrentClassLoader(), className, byteCode, 0, byteCode.length, protectionDomain);
+            Class<?> loadedClass = (Class<?>) defineClassMethod.invoke(classLoader, className,
+                    byteCode, 0, byteCode.length, protectionDomain);
             defineClassMethod.setAccessible(false);
+            return loadedClass;
         } catch (ReflectiveOperationException exception) {
             throw new ByteCodeParserException("Can't load class with name: " + className, exception);
         }
@@ -49,6 +56,6 @@ public class ClassDefiner {
     }
 
     private ClassLoader getCurrentClassLoader() {
-        return ClassFileUtils.getClassLoader(getClass());
+        return ClassLoadUtils.getClassLoader(getClass());
     }
 }

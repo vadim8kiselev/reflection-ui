@@ -19,16 +19,16 @@
         <dependency>
             <groupId>org.benf.cfr.reader</groupId>
             <artifactId>cfr-decompiler</artifactId>
-            <version>0.125</version>
+            <version>0.132</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cfr-decompiler-0.125.jar</systemPath>
+            <systemPath>${project.basedir}/lib/cfr-decompiler-0.132.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>com.classparser.bytecode</groupId>
             <artifactId>classparser-bytecode</artifactId>
             <scope>provided</scope>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -5,6 +5,7 @@ import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
 import com.classparser.bytecode.impl.utils.ClassFileUtils;
+import com.classparser.bytecode.impl.utils.ClassLoadUtils;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;
 import com.classparser.exception.decompile.DecompilationException;
@@ -43,9 +44,10 @@ public final class FernflowerDecompiler implements Decompiler {
     private final BaseDecompiler decompiler;
 
     public FernflowerDecompiler() {
-        ClassLoader classLoader = ClassFileUtils.getClassLoader(getClass());
         IFernflowerLogger logger = new PrintStreamLogger(System.out);
         Class<?>[] classes = new Class[]{IResultSaver.class};
+        ClassLoader classLoader = ClassLoadUtils.getClassLoader(getClass());
+
         this.invocationHandler = new SourceCodeGetterInvocationHandler();
         this.saver = (IResultSaver) Proxy.newProxyInstance(classLoader, classes, invocationHandler);
         this.configuration = getDefaultConfiguration();
@@ -134,7 +136,7 @@ public final class FernflowerDecompiler implements Decompiler {
     }
 
     private StructClass createClassStruct(byte[] byteCode) throws IOException {
-        LazyLoader lazyLoader = new LazyLoader((dummy, dummyTwo) -> byteCode);
+        LazyLoader lazyLoader = new LazyLoader((p1, p2) -> byteCode);
         StructClass structClass = new StructClass(byteCode, true, lazyLoader);
         LazyLoader.Link link = new LazyLoader.Link(CLASS_TYPE, structClass.qualifiedName, "");
         lazyLoader.addClassLink(structClass.qualifiedName, link);
@@ -147,8 +149,9 @@ public final class FernflowerDecompiler implements Decompiler {
             throws NoSuchFieldException, IllegalAccessException {
         Field fieldUnits = StructContext.class.getDeclaredField("units");
         fieldUnits.setAccessible(true);
-
-        return (Map<String, ContextUnit>) fieldUnits.get(context);
+        Map<String, ContextUnit> contextUnitMap = (Map<String, ContextUnit>) fieldUnits.get(context);
+        fieldUnits.setAccessible(false);
+        return contextUnitMap;
     }
 
     private ContextUnit createFakeContextUnit(Fernflower fernflower) {
@@ -163,11 +166,14 @@ public final class FernflowerDecompiler implements Decompiler {
 
         private String source;
 
+        private static final int SOURCE_PARAMETER_INDEX = 3;
+
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) {
             if (method.getName().equals("saveClassFile")) {
-                source = String.valueOf(args[3]);
+                source = String.valueOf(args[SOURCE_PARAMETER_INDEX]);
             }
+
             return null;
         }
 

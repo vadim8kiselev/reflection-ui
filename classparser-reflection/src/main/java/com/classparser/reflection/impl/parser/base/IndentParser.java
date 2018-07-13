@@ -6,6 +6,9 @@ import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
 import java.lang.reflect.Member;
 
+import static com.classparser.reflection.impl.constants.Cast.CLASS;
+import static com.classparser.reflection.impl.constants.Cast.MEMBER;
+
 public class IndentParser {
 
     private final ReflectionParserManager manager;
@@ -21,14 +24,14 @@ public class IndentParser {
         Class<?> declaringClass;
 
         if (object instanceof Member) {
-            Member member = Cast.MEMBER.cast(object);
+            Member member = MEMBER.cast(object);
             declaringClass = member.getDeclaringClass();
 
             if (declaringClass != null) {
                 indent.append(configurationManager.getIndentSpaces());
             }
         } else if (object instanceof Class) {
-            declaringClass = Cast.CLASS.cast(object);
+            declaringClass = CLASS.cast(object);
         } else {
             return "";
         }

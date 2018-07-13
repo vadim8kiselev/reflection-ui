@@ -14,7 +14,7 @@ public class ClassFileUtils {
     private static final String PROTOCOL = "file://";
 
     public static String getFilePath(Class<?> clazz) {
-        ClassLoader loader = getClassLoader(clazz);
+        ClassLoader loader = ClassLoadUtils.getClassLoader(clazz);
 
         if (loader != null && clazz != null) {
             URL resource = loader.getResource(ClassNameUtils.getClassToJarFileName(clazz));
@@ -24,23 +24,6 @@ public class ClassFileUtils {
         }
 
         return "";
-    }
-
-    public static ClassLoader getClassLoader(Class<?> clazz) {
-        ClassLoader loader = null;
-
-        if (clazz != null) {
-            loader = clazz.getClassLoader();
-
-            if (loader == null) {
-                loader = ClassLoader.getSystemClassLoader();
-                while (loader != null && loader.getParent() != null) {
-                    loader = loader.getParent();
-                }
-            }
-        }
-
-        return loader;
     }
 
     public static boolean isArchive(String path) {

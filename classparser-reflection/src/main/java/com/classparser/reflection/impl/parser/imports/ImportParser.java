@@ -22,6 +22,16 @@ public class ImportParser {
         this.threadLocalClassesForImport.set(new HashSet<>());
     }
 
+    private Set<Class<?>> getImportClasses() {
+        Set<Class<?>> classes = threadLocalClassesForImport.get();
+        if (classes == null) {
+            classes = new HashSet<>();
+            threadLocalClassesForImport.set(classes);
+        }
+
+        return classes;
+    }
+
     public boolean addImport(Class<?> classForImport) {
         if (manager.getParsedClass() == null) {
             return false;
@@ -32,7 +42,7 @@ public class ImportParser {
         if (isNeedFullName(classForImport) || !manager.getConfigurationManager().isEnabledImports()) {
             return false;
         } else {
-            threadLocalClassesForImport.get().add(classForImport);
+            getImportClasses().add(classForImport);
             return true;
         }
     }
@@ -41,7 +51,7 @@ public class ImportParser {
         Set<String> imports = new TreeSet<>();
         String lineSeparator = manager.getConfigurationManager().getLineSeparator();
 
-        for (Class<?> className : threadLocalClassesForImport.get()) {
+        for (Class<?> className : getImportClasses()) {
             if (isAppendToImports(className)) {
                 imports.add("import " + className.getName() + ';' + lineSeparator);
             }
@@ -57,7 +67,7 @@ public class ImportParser {
     }
 
     private boolean isNeedFullName(Class<?> classForImport) {
-        Set<Class<?>> classes = threadLocalClassesForImport.get();
+        Set<Class<?>> classes = getImportClasses();
         for (Class<?> clazz : classes) {
             if (areEqualBySimpleName(clazz, classForImport) && !areEqualByName(clazz, classForImport)) {
                 return !classes.contains(classForImport);

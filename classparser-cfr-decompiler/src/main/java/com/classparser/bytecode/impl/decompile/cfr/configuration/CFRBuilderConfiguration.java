@@ -1,7 +1,7 @@
 package com.classparser.bytecode.impl.decompile.cfr.configuration;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CFRBuilderConfiguration {
 
@@ -11,9 +11,10 @@ public class CFRBuilderConfiguration {
 
     private static class Builder implements CFRConfiguration {
 
-        private final Map<String, Object> configuration = new HashMap<>();
+        private final Map<String, Object> configuration;
 
         private Builder() {
+            this.configuration = new ConcurrentHashMap<>();
         }
 
         @Override
