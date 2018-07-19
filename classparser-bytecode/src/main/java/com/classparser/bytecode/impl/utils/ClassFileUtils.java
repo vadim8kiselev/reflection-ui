@@ -77,12 +77,15 @@ public class ClassFileUtils {
         if (path.contains(".jar!")) {
             return "jar";
         }
+
         if (path.contains(".war!")) {
             return "war";
         }
+
         if (path.contains(".ear!")) {
             return "ear";
         }
+
         if (path.contains(".zip!")) {
             return "zip";
         }

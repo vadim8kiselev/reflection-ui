@@ -75,7 +75,6 @@ public class AgentAttacher {
         return nameOfRunningVM.substring(0, processID);
     }
 
-
     private void attachWithoutToolJar(String agentPath, String parameters) {
         loadAttachClassesFromCustomTool();
         attachWithToolJar(agentPath, parameters);
@@ -85,7 +84,7 @@ public class AgentAttacher {
         InputStream classLoadOrder = resourceLoader.getResourceAsStream(ATTACH_CLASSES);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoadOrder))) {
             String className;
-            while ((className = reader.readLine())!= null) {
+            while ((className = reader.readLine()) != null) {
                 String classFileName = CUSTOM_TOOL_FOLDER + File.separatorChar +
                         className.replace('.', File.separatorChar) +
                         Constants.Suffix.CLASS_FILE_SUFFIX;

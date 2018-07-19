@@ -36,14 +36,23 @@ public class ClassNameUtils {
     }
 
     public static String getClassToJarFileName(Class<?> clazz) {
-        return getJavaBasedClassName(clazz).replace('.', '/')
+        return getClassToJarFileName(getJavaBasedClassName(clazz));
+    }
+
+    public static String getClassToJarFileName(String className) {
+        return className.replace('.', '/')
                 + Constants.Suffix.CLASS_FILE_SUFFIX;
     }
 
     public static String getSimpleName(Class<?> clazz) {
         String typeName = getJavaBasedClassName(clazz);
-        return typeName.substring(typeName.lastIndexOf('.') + 1);
+        return getSimpleName(typeName);
     }
+
+    public static String getSimpleName(String className) {
+        return className.substring(className.lastIndexOf('.') + 1);
+    }
+
 
     public static String getPackageName(Class<?> clazz) {
         return clazz.getPackage() != null ? clazz.getPackage().getName() : "";

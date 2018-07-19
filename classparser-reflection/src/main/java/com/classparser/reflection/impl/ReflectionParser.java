@@ -27,57 +27,54 @@ import java.util.Map;
 public class ReflectionParser implements ClassParser {
 
     private final AnnotationParser annotationParser;
+
     private final GenericTypeParser genericTypeParser;
+
     private final IndentParser indentParser;
+
     private final ModifierParser modifierParser;
+
     private final ClassTypeParser classTypeParser;
 
     private final ImportParser importParser;
 
     private final ClassNameParser classNameParser;
+
     private final InheritanceParser inheritanceParser;
 
     private final PackageParser packageParser;
+
     private final FieldParser fieldParser;
+
     private final ClassesParser classesParser;
 
     private final ConstructorParser constructorParser;
+
     private final MethodParser methodParser;
 
     private final ReflectionParserManager reflectionParserManager;
 
     public ReflectionParser() {
         reflectionParserManager = new ReflectionParserManager();
-
         classTypeParser = new ClassTypeParser();
         indentParser = new IndentParser(reflectionParserManager);
         modifierParser = new ModifierParser(reflectionParserManager);
-
         importParser = new ImportParser(reflectionParserManager);
         classNameParser = new ClassNameParser(importParser, reflectionParserManager);
-        importParser.setClassNameParser(classNameParser);
-
-        annotationParser = new AnnotationParser(indentParser, reflectionParserManager);
-        genericTypeParser = new GenericTypeParser(annotationParser, classNameParser, reflectionParserManager);
-        annotationParser.setGenericTypeParser(genericTypeParser);
-
-        ValueParser valueParser = new ValueParser(genericTypeParser, annotationParser, reflectionParserManager);
-        annotationParser.setValueParser(valueParser);
-
+        genericTypeParser = new GenericTypeParser(classNameParser, reflectionParserManager);
+        ValueParser valueParser = new ValueParser(genericTypeParser, reflectionParserManager);
+        annotationParser = new AnnotationParser(indentParser, valueParser, genericTypeParser, reflectionParserManager);
+        genericTypeParser.setAnnotationParser(annotationParser);
         inheritanceParser = new InheritanceParser(genericTypeParser, reflectionParserManager);
         classesParser = new ClassesParser(this, reflectionParserManager);
-
         packageParser = new PackageParser(annotationParser, reflectionParserManager);
-
         ArgumentParser argumentParser = new ArgumentParser(reflectionParserManager, genericTypeParser,
                 modifierParser, annotationParser);
-
         ExceptionParser exceptionParser = new ExceptionParser(genericTypeParser, reflectionParserManager);
         constructorParser = new ConstructorParser(reflectionParserManager, genericTypeParser, modifierParser,
                 annotationParser, argumentParser, indentParser, exceptionParser);
         methodParser = new MethodParser(reflectionParserManager, genericTypeParser, modifierParser,
                 annotationParser, argumentParser, indentParser, exceptionParser, classNameParser, valueParser);
-
         fieldParser = new FieldParser(reflectionParserManager, annotationParser, indentParser,
                 modifierParser, genericTypeParser, classNameParser, valueParser);
     }
@@ -107,9 +104,11 @@ public class ReflectionParser implements ClassParser {
         String classContent = getClassContent(clazz);
 
         String imports = "";
-        if (clazz.equals(reflectionParserManager.getParsedClass()) &&
-                reflectionParserManager.getConfigurationManager().isEnabledImports()) {
-            imports = importParser.getImports();
+        if (clazz.equals(reflectionParserManager.getParsedClass())) {
+            if (reflectionParserManager.getConfigurationManager().isEnabledImports()) {
+                imports = importParser.getImports();
+            }
+            reflectionParserManager.clearState();
         }
 
         parsedClass += packageName + imports + classSignature;

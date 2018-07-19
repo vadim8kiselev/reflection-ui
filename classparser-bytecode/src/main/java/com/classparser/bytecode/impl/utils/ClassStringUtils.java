@@ -2,13 +2,9 @@ package com.classparser.bytecode.impl.utils;
 
 public class ClassStringUtils {
 
-    private static final Character OPEN_BLOCK = '{';
-
-    private static final Character LINE_SEPARATOR = '\n';
-
     public static int getNumberLeftOfLineSeparator(StringBuilder builder) {
         int index = builder.length() - 1;
-        while (builder.charAt(index) != LINE_SEPARATOR) {
+        while (builder.charAt(index) != '\n') {
             index--;
         }
 
@@ -29,10 +25,6 @@ public class ClassStringUtils {
         return -1;
     }
 
-    public static boolean contains(CharSequence charSequence) {
-        return contains(charSequence, OPEN_BLOCK);
-    }
-
     public static boolean contains(CharSequence charSequence, char character) {
         int index = charSequence.length() - 1;
         for (int i = 0; i < index; i++) {
@@ -47,9 +39,9 @@ public class ClassStringUtils {
     public static String normalizeOpenBlockCharacter(StringBuilder builder) {
         int index = 1;
         while (index != 0) {
-            int openBlock = builder.indexOf(OPEN_BLOCK.toString(), index);
+            int openBlock = builder.indexOf("{", index);
             int nonSpace = getFirstLeftNonCharNumber(builder, ' ', openBlock);
-            if (nonSpace != -1 && builder.charAt(nonSpace) == LINE_SEPARATOR) {
+            if (nonSpace != -1 && builder.charAt(nonSpace) == '\n') {
                 builder.delete(nonSpace, openBlock);
                 builder.insert(nonSpace, ' ');
                 index = openBlock;

@@ -1,8 +1,7 @@
 package com.classparser.reflection.impl.parser.imports;
 
-import com.classparser.reflection.impl.parser.ClassNameParser;
-import com.classparser.reflection.impl.parser.structure.PackageParser;
 import com.classparser.reflection.impl.configuration.ReflectionParserManager;
+import com.classparser.reflection.impl.parser.structure.PackageParser;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,8 +12,6 @@ public class ImportParser {
     private final ThreadLocal<Set<Class<?>>> threadLocalClassesForImport;
 
     private final ReflectionParserManager manager;
-
-    private ClassNameParser classNameParser;
 
     public ImportParser(ReflectionParserManager manager) {
         this.manager = manager;
@@ -62,7 +59,6 @@ public class ImportParser {
     }
 
     private void clearState() {
-        manager.clearState();
         this.threadLocalClassesForImport.remove();
     }
 
@@ -88,7 +84,7 @@ public class ImportParser {
     }
 
     private boolean areEqualBySimpleName(Class<?> source, Class<?> target) {
-        return classNameParser.getSimpleName(source).equals(classNameParser.getSimpleName(target));
+        return getSimpleName(source).equals(getSimpleName(target));
     }
 
     private Class<?> resolveClass(Class<?> clazz) {
@@ -111,7 +107,11 @@ public class ImportParser {
         return clazz.isMemberClass() ? resolveMemberClass(clazz.getEnclosingClass()) : clazz;
     }
 
-    public void setClassNameParser(ClassNameParser parser) {
-        this.classNameParser = parser;
+    private String getSimpleName(Class<?> clazz) {
+        String typeName = clazz.getSimpleName();
+        if (typeName.isEmpty()) {
+            typeName = clazz.getName().substring(clazz.getName().lastIndexOf('.') + 1);
+        }
+        return typeName;
     }
 }

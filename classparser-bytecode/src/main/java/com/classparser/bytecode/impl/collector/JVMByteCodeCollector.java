@@ -19,29 +19,32 @@ public class JVMByteCodeCollector implements ByteCodeCollector {
     }
 
     @Override
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public byte[] getByteCode(Class<?> clazz) {
         Instrumentation instrumentation = agent.getInstrumentation();
         ByteCodeHolder holder = agent.getByteCodeHolder();
 
         if (clazz != null) {
-            try {
-                if (instrumentation != null) {
-                    if (instrumentation.isRetransformClassesSupported() && instrumentation.isModifiableClass(clazz)) {
-                        instrumentation.retransformClasses(clazz);
+            synchronized (clazz) {
+                try {
+                    if (instrumentation != null) {
+                        if (instrumentation.isRetransformClassesSupported() && instrumentation.isModifiableClass(clazz)) {
+                            instrumentation.retransformClasses(clazz);
+                        } else {
+                            System.err.println("Class " + clazz.getName() + " is can't be retransform.");
+                        }
                     } else {
-                        System.err.println("Class " + clazz.getName() + " is can't be retransform.");
+                        System.err.println("Instrumentation instance is not initialize!");
                     }
-                } else {
-                    System.err.println("Instrumentation instance is null!");
+                } catch (UnmodifiableClassException exception) {
+                    String message = MessageFormat.format("Class: \"{0}\" is can't retransform", clazz.getName());
+                    throw new InvalidRetransformClass(message, exception);
                 }
-            } catch (UnmodifiableClassException exception) {
-                String message = MessageFormat.format("Class: \"{0}\" is can't retransform", clazz.getName());
-                throw new InvalidRetransformClass(message, exception);
+
+                String javaBasedClassName = ClassNameUtils.getJavaBasedClassName(clazz);
+
+                return holder.get(javaBasedClassName);
             }
-
-            String javaBasedClassName = ClassNameUtils.getJavaBasedClassName(clazz);
-
-            return holder.get(javaBasedClassName);
         } else {
             return null;
         }

@@ -6,8 +6,6 @@ import com.classparser.bytecode.impl.assembly.AgentAssembler;
 import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 
 import java.lang.instrument.Instrumentation;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public final class Agent implements JavaAgent {
 

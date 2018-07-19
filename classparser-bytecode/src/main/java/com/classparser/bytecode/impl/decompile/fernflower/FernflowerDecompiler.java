@@ -4,7 +4,6 @@ import com.classparser.bytecode.api.decompile.Decompiler;
 import com.classparser.bytecode.impl.assembly.build.constant.Constants;
 import com.classparser.bytecode.impl.configuration.ConfigurationManager;
 import com.classparser.bytecode.impl.decompile.fernflower.configuration.FernflowerBuilderConfiguration;
-import com.classparser.bytecode.impl.utils.ClassFileUtils;
 import com.classparser.bytecode.impl.utils.ClassLoadUtils;
 import com.classparser.bytecode.impl.utils.ClassNameUtils;
 import com.classparser.configuration.Configuration;

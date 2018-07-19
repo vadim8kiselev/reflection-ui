@@ -212,7 +212,7 @@ public final class JDDecompiler implements Decompiler {
 
         @Override
         public PrintStream append(CharSequence csq) {
-            if (ClassStringUtils.contains(csq)) {
+            if (ClassStringUtils.contains(csq, '{')) {
                 int index = ClassStringUtils.getFirstLeftNonCharNumber(builder, ' ');
                 if (builder.charAt(index) == '\n') {
                     builder.deleteCharAt(index);

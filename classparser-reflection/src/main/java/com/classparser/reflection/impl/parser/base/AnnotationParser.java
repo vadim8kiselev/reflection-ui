@@ -20,12 +20,17 @@ public class AnnotationParser {
 
     private final ReflectionParserManager manager;
 
-    private GenericTypeParser genericTypeParser;
+    private final ValueParser valueParser;
 
-    private ValueParser valueParser;
+    private final GenericTypeParser genericTypeParser;
 
-    public AnnotationParser(IndentParser indentParser, ReflectionParserManager manager) {
+    public AnnotationParser(IndentParser indentParser,
+                            ValueParser valueParser,
+                            GenericTypeParser genericTypeParser,
+                            ReflectionParserManager manager) {
         this.indentParser = indentParser;
+        this.valueParser = valueParser;
+        this.genericTypeParser = genericTypeParser;
         this.manager = manager;
     }
 
@@ -106,13 +111,15 @@ public class AnnotationParser {
 
         try {
             Class<? extends Annotation> annotationTypeClass = annotation.annotationType();
-            Method[] methods = annotationTypeClass.getDeclaredMethods();
+            if (annotationTypeClass != null) {
+                Method[] methods = annotationTypeClass.getDeclaredMethods();
 
-            for (Method method : methods) {
-                method.setAccessible(true);
-                Object value = method.invoke(annotation);
-                if (!isDefaultValue(value, method.getDefaultValue())) {
-                    map.put(method.getName(), valueParser.getValue(value));
+                for (Method method : methods) {
+                    method.setAccessible(true);
+                    Object value = method.invoke(annotation);
+                    if (!isDefaultValue(value, method.getDefaultValue())) {
+                        map.put(method.getName(), valueParser.getValue(value));
+                    }
                 }
             }
         } catch (Exception exception) {
@@ -187,13 +194,5 @@ public class AnnotationParser {
             Object[] arrayDefaultValue = valueParser.getArrayValues(defaultValue);
             return Arrays.deepEquals(arrayValue, arrayDefaultValue);
         }
-    }
-
-    public void setGenericTypeParser(GenericTypeParser genericTypeParser) {
-        this.genericTypeParser = genericTypeParser;
-    }
-
-    public void setValueParser(ValueParser valueParser) {
-        this.valueParser = valueParser;
     }
 }

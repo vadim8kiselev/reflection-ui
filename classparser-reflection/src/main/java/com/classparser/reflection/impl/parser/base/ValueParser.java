@@ -1,10 +1,8 @@
 package com.classparser.reflection.impl.parser.base;
 
 import com.classparser.exception.ReflectionParserException;
-import com.classparser.reflection.impl.constants.Cast;
 import com.classparser.reflection.impl.configuration.ReflectionParserManager;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,7 +11,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.classparser.reflection.impl.constants.Cast.ANNOTATION;
 import static com.classparser.reflection.impl.constants.Cast.CLASS;
 import static com.classparser.reflection.impl.constants.Cast.FIELD;
 import static com.classparser.reflection.impl.constants.Cast.METHOD;
@@ -22,14 +19,10 @@ public class ValueParser {
 
     private final GenericTypeParser genericTypeParser;
 
-    private final AnnotationParser annotationParser;
-
     private final ReflectionParserManager manager;
 
-    public ValueParser(GenericTypeParser genericTypeParser, AnnotationParser annotationParser,
-                       ReflectionParserManager manager) {
+    public ValueParser(GenericTypeParser genericTypeParser, ReflectionParserManager manager) {
         this.genericTypeParser = genericTypeParser;
-        this.annotationParser = annotationParser;
         this.manager = manager;
     }
 
@@ -68,8 +61,6 @@ public class ValueParser {
                 return "\'" + object + "\'";
             } else if (object instanceof Number || object instanceof Boolean) {
                 return object.toString() + getLiteral(object);
-            } else if (object instanceof Annotation) {
-                return annotationParser.getAnnotation(ANNOTATION.cast(object));
             } else if (object instanceof Class) {
                 return genericTypeParser.resolveType(CLASS.cast(object)) + ".class";
             } else {
@@ -85,17 +76,18 @@ public class ValueParser {
     }
 
     public Object[] getArrayValues(Object object) {
-        Object[] objects = new Object[0];
         if (object.getClass().isArray()) {
             int length = Array.getLength(object);
-            objects = new Object[length];
+            Object[] objects = new Object[length];
 
             for (int i = 0; i < length; i++) {
                 objects[i] = Array.get(object, i);
             }
+
+            return objects;
         }
 
-        return objects;
+        return new Object[0];
     }
 
     private String getLiteral(Object object) {
