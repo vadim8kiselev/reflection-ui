@@ -24,8 +24,6 @@
             <systemPath>${project.basedir}/lib/jd-core-0.7.1.jar</systemPath>
         </dependency>
 
-
-
         <!-- JD Decompiler common-->
         <dependency>
             <groupId>jd.common</groupId>
